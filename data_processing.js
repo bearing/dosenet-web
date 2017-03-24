@@ -10,22 +10,24 @@ var bin_size;
 var time_bins = [];
 var colorMap = new Map();
 
-// timeParMap structure: key = selected time range, value = [absolute time range,max nentries,data compression factor]
-timeParMap.set('Hour',[3600*1000,13,1]);
-timeParMap.set('Day',[24*3600*1000,289,6]);
-timeParMap.set('Week',[7*24*3600*1000,2017,12]);
-timeParMap.set('Month',[30*24*3600*1000,8641,48]);
-timeParMap.set('Year',[365*24*3600*1000,105121,288]);
+// timeParMap structure:
+//   key = selected time range
+//   value = [absolute time range,max nentries,data compression factor]
+timeParMap.set('hour',[3600*1000,13,1]);
+timeParMap.set('day',[24*3600*1000,289,6]);
+timeParMap.set('week',[7*24*3600*1000,2017,12]);
+timeParMap.set('month',[30*24*3600*1000,8641,48]);
+timeParMap.set('year',[365*24*3600*1000,105121,288]);
 timeParMap.set('All',[365*24*3600*10000,1000000,1]);
 
 var calibMap = new Map();
 // calibMap structure: key = unit, value = calibration
-calibMap.set('CPM',1.0);
-calibMap.set('mrem/hr',0.0036);
-calibMap.set('&microSv/hr',0.036);
-calibMap.set('air travel/hr',0.420168067*0.036);
-calibMap.set('cigarettes/hr',0.00833333335*0.036);
-calibMap.set('X-rays/hr',0.2*0.036);
+calibMap.set('CPM',[1.0,1.0]);
+calibMap.set('mrem/hr',[0.0036,0.00000427]);
+calibMap.set('&microSv/hr',[0.036,0.0000427]);
+calibMap.set('air travel/hr',[0.420168067*0.036,0.420168067*0.0000427]);
+calibMap.set('cigarettes/hr',[0.00833333335*0.036,0.00833333335*0.0000427]);
+calibMap.set('X-rays/hr',[0.2*0.036,0.2*0.0000427]);
 
 
 function componentToHex(c) {
@@ -45,12 +47,19 @@ function get_sample_size(nentries) {
   return sample;
 }
 
-//var url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/pinewood.csv?'
-//+ Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-function parse_date(input,timezone) {
-  var parts = input.replace('-',' ').replace('-',' ').replace(':',' ').replace(':',' ').replace('+',' ').replace('-',' ').split(' ');
+//var url = '<main-page>/sites/default/files/dosenet/pinewood.csv?'
+//+ Math.random().toString(36).replace(/[^a-z]+/g, ''); 
+// - to solve browser caching issue
+function parse_date(input) {
+  var parts = input.replace('-',' ')
+                   .replace('-',' ')
+                   .replace(':',' ')
+                   .replace(':',' ')
+                   .replace('+',' ')
+                   .replace('-',' ')
+                   .split(' ');
   // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-  //this_date = Date.UTC(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]); // Note: months are 0-based
+  // Note: months are 0-based
   //tz_date = this_date.toLocaleString('UTC', { timeZone: timezone });
   this_date =  new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
   return this_date;
@@ -192,10 +201,17 @@ function find_nearest_date(alist, date, delta) {
 
 function get_time_range(text,time,timezone) {
   var lines = text.split("\n");
+  oldest_index = 2;
+  if( lines.length-2 > 0 )
+    oldest_index = lines.length-2;
   var oldest_data = lines[lines.length-2].split(",");
   var newest_data = lines[1].split(",");
-  var newest_date = new Date(parse_date(newest_data[1],timezone));
-  var oldest_date = new Date(parse_date(oldest_data[1],timezone));
+  var time_index = 1;
+  console.log(oldest_data);
+  console.log(newest_data);
+  if ( timezone=="UTC" ) time_index = 0;
+  var newest_date = new Date(parse_date(newest_data[time_index]));
+  var oldest_date = new Date(parse_date(oldest_data[time_index]));
 
   var time_pars = get_time_pars(time,newest_date,lines.length);
   oldest_date = time_pars[0];
@@ -211,6 +227,91 @@ function get_time_range(text,time,timezone) {
   if( newest_date > end_date ) end_date = newest_date;
 }
 
+function process_time_csv(text,dose,timezone) {
+  var data_input = [];
+  var lines = text.split("\n");
+  var scale = calibMap.get(dose)[0];
+  console.log(scale);
+
+  for( var i = 0; i < nentries+1; ++i ) {
+    if( i < 1 ) { continue; } // skip first line(s) with meta-data
+    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+    var line = lines[i];
+    time_index = 1;
+    if ( timezone=="UTC" ) time_index = 0;
+    if (typeof line != 'undefined') {
+      if(line.length>3) {
+        var data = line.split(",");
+        var x = new Date(parse_date(data[time_index]));
+        var y = parseFloat(data[3]);
+        var y_err = parseFloat(data[4]);
+        data_input.push([x,[y*scale,y_err*scale]]);
+      }
+    }
+  }
+  data_input.sort((function(index){
+    return function(a,b){
+      return a[index].getTime() - b[index].getTime();
+    };
+  })(0));
+
+  return data_input;
+}
+
+function process_d3s_csv(text,dose,timezone) {
+  var data_input = [];
+  var lines = text.split("\n");
+  var scale = calibMap.get(dose)[1];
+  console.log(scale);
+
+  for( var i = 1; i < nentries+1; ++i ) {
+    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+    var line = lines[i];
+    time_index = 1;
+    if ( timezone=="UTC" ) time_index = 0;
+    if (typeof line != 'undefined') {
+      if(line.length>3) {
+        var data = line.split(",");
+        var x = new Date(parse_date(data[time_index]));
+        var y = parseFloat(data[3]);
+        var y_err = parseFloat(data[4]);
+        data_input.push([x,[y*scale,y_err*scale]]);
+      }
+    }
+  }
+  data_input.sort((function(index){
+    return function(a,b){
+      return a[index].getTime() - b[index].getTime();
+    };
+  })(0));
+
+  return data_input;
+}
+
+function process_d3s_spectrum(text) {
+  var channel_sums = [];
+  var lines = text.split("\n");
+
+  for(var i = 1; i < nentries+1; ++i ) {
+    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+    var line = lines[i];
+    if(typeof line != 'undefined') {
+      var data = line.split(",");
+      for( var j = 5; j < data.length; ++j) {
+        if( i==1 ) channel_sums.push(parseFloat(data[j]));
+        else channel_sums[j-5] += parseFloat(data[j]);
+      }
+    }
+  }
+
+  channel_count_data = [];
+  for( var i = 0; i < channel_sums.length; ++i) {
+    channel_count_data.push([i,[channel_sums[i],Math.sqrt(channel_sums[i])]]);
+  }
+
+  return channel_count_data;
+}
+
 function process_csv(text,dose,time,timezone) {
   var raw_data = [];
   var data_input = [];
@@ -220,10 +321,12 @@ function process_csv(text,dose,time,timezone) {
     if( i < 1 ) { continue; } // skip first line(s) with meta-data
     if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
     var line = lines[i];
+    time_index = 1;
+    if ( timezone=="UTC" ) time_index = 0;
     if (typeof line != 'undefined') {
       if(line.length>3) {
         var data = line.split(",");
-        var x = new Date(parse_date(data[1],timezone));
+        var x = new Date(parse_date(data[time_index]));
         if( x.getTime() < start_date.getTime() ) { continue; }
         var y = parseFloat(data[6]);
         raw_data.push([x,y]);
@@ -240,18 +343,20 @@ function process_csv_average(text,dose,timezone) {
   var average = 0;
   var count = 0;
   var lines = text.split("\n");
-  var scale = calibMap.get(dose);
+  var scale = calibMap.get(dose)[0];
 
   for( var i = 0; i < nentries+1; ++i ) {
     if( i < 1 ) { continue; } // skip first line(s) with meta-data
     if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
     var line = lines[i];
+    time_index = 1;
+    if ( timezone=="UTC" ) time_index = 0;
     if (typeof line != 'undefined') {
       if(line.length>3) {
         var data = line.split(",");
-        var x = new Date(parse_date(data[1],timezone));
+        var x = new Date(parse_date(data[time_index]));
         if( x.getTime() < start_date.getTime() ) { continue; }
-        var y = parseFloat(data[6]);
+        var y = parseFloat(data[3]);
         average += y;
         count += 1;
       }
@@ -306,7 +411,8 @@ function fill_binned_data(data_map,time_bins,bin_size) {
         continue;
       }
       var this_data = data[i][1]; // this is [cmp,error]
-      // map data to given location for next step (need to know which locations went in to each bin)
+      // map data to given location for next step 
+      //   (need to know which locations went in to each bin)
       var this_data_map = new Map();
       this_data_map.set(location,this_data);
       if( time_map.has(this_bin) ) {
@@ -366,7 +472,7 @@ function process_all_data(csv_map,dose,time) {
   // Now get and average all data based on full time range available for all locations
   data_map.clear();
   csv_map.forEach( function(csv, location, csv_map ) {
-    var this_data = process_csv(csv,dose,time,'UTC');
+    var this_data = process_time_csv(csv,dose,'UTC');
     data_map.set(location,this_data);
   });
 
@@ -380,7 +486,7 @@ function get_averages(csv_map,dose) {
   var location_averages = [];
   var counter = 0;
   csv_map.forEach( function(csv, location, csv_map ) {
-    get_time_range(csv,'Month','UTC');
+    get_time_range(csv,'month','UTC');
   });
   csv_map.forEach( function(csv, location, csv_map ) {
     var average = process_csv_average(csv,dose,'UTC');
@@ -469,6 +575,32 @@ function plot_bar_chart(location_averages,locations,dose,div) {
   );
 }
 
+function plot_spectra(location,spectra_input,time,div) {
+  var title_text = 'Integrated spectrum';
+  f = new Dygraph(
+    document.getElementById(div),
+    spectra_input,
+    { title: title_text,
+      errorBars: true,
+      connectSeparatedPoints: false,
+      drawPoints: true,
+      pointSize: 1,
+      showRangeSelector: false,
+      sigFigs: 4,
+      ylabel: 'counts',
+      xlabel: 'channels',
+      labels: ['channel','counts'],
+      strokeWidth: 0.0,
+      highlightCircleSize: 3,
+      logscale: true,
+      plotter: [
+        singleErrorPlotter,
+        Dygraph.Plotters.linePlotter
+        ],
+    }
+  );
+}
+
 function plot_data(location,data_input,dose,timezone,data_labels,time,div) {
   var title_text = location;
   var y_text = dose;
@@ -501,10 +633,52 @@ function plot_data(location,data_input,dose,timezone,data_labels,time,div) {
       	y: {
       		    //reserveSpaceLeft: 2,
           		axisLabelFormatter: function(x) {
-        	  		                          			var shift = Math.pow(10, 5);
-      		      		                          	return Math.round(x * shift) / shift;
-        		      		                        }
+        	  		                          var shift = Math.pow(10, 5);
+      		      		                      return Math.round(x * shift) / shift;
+        		      		                  }
       	   },
+      }
+    }
+  );
+}
+
+function plot_d3s_data(location,data_input,dose,timezone,data_labels,time,div)
+{
+  var title_text = location;
+  var y_text = dose;
+  // add x-label to beginning of data label array
+  time_label = 'Time ('+timezone+')';
+  data_labels.unshift(time_label);
+  if( time=="All" ) { title_text = 'All data for ' + title_text; }
+
+  g = new Dygraph(
+    // containing div
+    document.getElementById(div),
+    data_input,
+    { title: title_text,
+      errorBars: true,
+      connectSeparatedPoints: false,
+      drawPoints: true,
+      pointSize: 3,
+      showRangeSelector: false,
+      sigFigs: 3,
+      ylabel: y_text,
+      xlabel: data_labels[0],
+      labels: data_labels,
+      strokeWidth: 0.0,
+      highlightCircleSize: 5,
+      plotter: [
+        singleErrorPlotter,
+        Dygraph.Plotters.linePlotter
+        ],
+      axes: {
+        y: {
+              //reserveSpaceLeft: 2,
+              axisLabelFormatter: function(x) {
+                                          var shift = Math.pow(10, 5);
+                                          return Math.round(x * shift) / shift;
+                                        }
+           },
       }
     }
   );
@@ -562,12 +736,6 @@ function get_all_data(url_array,locations,dose,time,div) {
   });
 }
 
-function shift_time(data_input,diff) {
-  for( var i=0; i<data_input.length; i++ ) {
-    data_input[i][0] = new Date(data_input[i][0].getTime() + diff*60000);
-  }
-}
-
 function data_reset(){
   start_date = new Date();
   end_date = new Date();
@@ -579,13 +747,31 @@ function get_data(url,location,timezone,dose,time,div) {
       var data_input = []; // Clear any old data out before filling!
       data_reset();
       get_time_range(data,time,timezone);
-      data_input = process_csv(data,dose,time,timezone);
-      // shift date by 12hrs (argument to function is minutes)
-      //if( timezone=="Asia/Tokyo" ) shift_time(data_input,16*60);
-      //if( timezone=="Asia/Seoul" ) shift_time(data_input,16*60);
+      data_input = process_time_csv(data,dose);
       var data_label = [];
       if ( dose=="&microSv/hr" ) { data_label.push("µSv/hr"); }
       else data_label.push(dose);
       plot_data(location,data_input,dose,timezone,data_label,time,div);
+  },dataType='text');
+}
+
+function get_d3s_data(url,location,timezone,dose,time,div) {
+  $.get(url, function (data) {
+      var data_input = []; // Clear any old data out before filling!
+      data_reset();
+      get_time_range(data,time,timezone);
+      data_input = process_d3s_csv(data,dose);
+      var data_label = [];
+      if ( dose=="&microSv/hr" ) { data_label.push("µSv/hr"); }
+      else data_label.push(dose);
+      plot_d3s_data(location,data_input,dose,timezone,data_label,time,div);
+  },dataType='text');
+}
+
+function get_d3s_spectra(url,location,time,div) {
+  $.get(url, function(data) {
+    var data_input = [];
+    data_input = process_d3s_spectrum(data);
+    plot_spectra(location,data_input,time,div);
   },dataType='text');
 }

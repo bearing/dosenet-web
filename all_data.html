@@ -44,6 +44,7 @@ Check out all data together!
 			done = $.each(data.features, function(key, val){
 				location_array.push(val.properties["Name"]);
 				var csv = val.properties["csv_location"];
+				csv = csv + '_month.csv'
 				var csv_url = '/sites/default/files/dosenet/' + csv + '?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
 				url_array.push(csv_url);
 				//create div for each data-set for static labeling
@@ -55,7 +56,7 @@ Check out all data together!
 		    });
 		    $.when.apply($, done).then( function() {
 		    	get_bar_chart(url_array,location_array,'&microSv/hr','chartdata');
-				get_all_data(url_array,location_array,'&microSv/hr','Month','alldata');
+				get_all_data(url_array,location_array,'&microSv/hr','month','alldata');
 		    });
 		});
 	});

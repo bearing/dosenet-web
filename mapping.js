@@ -7,7 +7,8 @@ var marks = [];
 var infowindow = new google.maps.InfoWindow();
 // url for geoJSON file
 var url = '/sites/default/files/output.geojson?'
-	+ Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
+	+ Math.random().toString(36).replace(/[^a-z]+/g, ''); 
+	// - to solve browser caching issue
 var json = $($.parseJSON(JSON.stringify($.getJSON(url))));
 var parsed_json = '';
 var time = '';
@@ -46,10 +47,15 @@ function centerMap(center){
 }
 
 // These two functions should be temporary until this can be done in makeGeoJSON as we phase out plot.ly
-function getURL(val){
+function getURL(val,time,sensor_type){
 	var csv = val.properties["csv_location"];
+	var sensor_text = "";
+	if( sensor_type=="pocket")
+		sensor_text = time;
+	else
+		sensor_text = sensor_type + '_' + time;
 	var url;
-	url = '/sites/default/files/dosenet/' + csv + '?'
+	url = '/sites/default/files/dosenet/' + csv + '_' + sensor_text + '.csv?'
 	  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 	return url;
 }
@@ -68,14 +74,24 @@ function updateInfowindowContent(val){
 	var time = getTimeframe();
 	console.log(time);
 	var dose = getDoseUnit();
-	var url = getURL(val);
+	console.log(dose);
+	var sensor = getSensor();
+	var url = getURL(val,time,sensor);
 	var name = getName(val);
 	var timezone = getTZ(val);
 
 	var node_name = dose + '_' + time + '_' + name;
 	//var content_string = '<div id="' + node_name + '"" style="max-width:500px; max-height=400px"><div id="graph_div"></div></div>';
 	var content_string = '<div id="graph_wrapper_div"><div id="graph_div"></div></div>';
-	get_data(url.toString(),name.toString(),timezone,dose,time,"graph_div");
+	if( sensor == "d3s" ) {
+		content_string = '<div id="graph_wrapper_div"><div id="small_graph_div"></div><div id="spectra_div"></div></div>';
+		get_d3s_data(url.toString(),name.toString(),timezone,
+					 dose,time,"small_graph_div");
+		get_d3s_spectra(url.toString(),name.toString(),time,"spectra_div");
+	}
+	else
+		get_data(url.toString(),name.toString(),timezone,
+				 dose,time,"graph_div");
 	return content_string;
 }
 
@@ -92,12 +108,19 @@ function getDoseUnit(){
 	return sel.options[sel.selectedIndex].value;
 }
 
+// Sensor type for plot, called in updateInfowindowContent
+function getSensor(){
+	var sel = document.getElementById('sensor_list');
+	return sel.options[sel.selectedIndex].value;
+}
+
 function clearMarkers() {
-  markerCluster.clearMarkers();
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
-  markers = [];
+	markerCluster.clearMarkers();
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(null);
+	}
+	markers = [];
+	json_vals = []
 }
 
 function setMarkerIcon(marker){
@@ -105,9 +128,12 @@ function setMarkerIcon(marker){
     marker.setIcon('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
 }
 
-function repopulateMarkers(){
+function repopulateMarkers(sensor_type){
+	clearMarkers();
 	$.getJSON(url, function(data){
 		$.each(data.features, function(key, val){
+			if( sensor_type=="d3s" && !val.properties["has_d3s"])
+				return true;
 			var lon = getCoords(val).lon;
 			var lat = getCoords(val).lat;
 	        var marker = new MarkerWithLabel({
@@ -119,11 +145,18 @@ function repopulateMarkers(){
 	            labelClass: "labels",
 	        });
 	        markers.push(marker);
+	        json_vals.push(val);
 	        setMarkerIcon(marker);
 			addMarkerEventListeners(val, marker);
       	});
-		markerCluster.addMarkers(markers);
+      	var mcOptions = {gridSize: 40, maxZoom: 15};
+		markerCluster = new MarkerClusterer(map, markers, mcOptions);
 	});
+}
+
+function changeSensor(){
+	var sensor_type = getSensor();
+	repopulateMarkers(sensor_type);
 }
 
 function changeDoseUnits(){
