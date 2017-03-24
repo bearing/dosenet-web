@@ -7,7 +7,11 @@ var marks = [];
 var infowindow = new google.maps.InfoWindow();
 // url for geoJSON file
 var url = '/sites/default/files/output.geojson?'
+<<<<<<< cd06b20f6c5e81e38506086fde472f5188e04dfb
 	+ Math.random().toString(36).replace(/[^a-z]+/g, '');
+=======
+	+ Math.random().toString(36).replace(/[^a-z]+/g, ''); 
+>>>>>>> updated for d3s files and data format
 	// - to solve browser caching issue
 var json = $($.parseJSON(JSON.stringify($.getJSON(url))));
 var parsed_json = '';
@@ -74,12 +78,18 @@ function updateInfowindowContent(val){
 	//updates the marker pop up info window
 	var time = getTimeframe();
 	var dose = getDoseUnit();
+<<<<<<< cd06b20f6c5e81e38506086fde472f5188e04dfb
 	var sensor = getSensor();
 	var plotoptions = "";
 	if( sensor != "pocket" && sensor != "adc" )
 		plotoptions = getPlotOptions();
 	var url = getURL(val,time,sensor);
 	console.log(url);
+=======
+	console.log(dose);
+	var sensor = getSensor();
+	var url = getURL(val,time,sensor);
+>>>>>>> updated for d3s files and data format
 	var name = getName(val);
 	var timezone = getTZ(val);
 
@@ -87,6 +97,7 @@ function updateInfowindowContent(val){
 	//var content_string = '<div id="' + node_name + '"" style="max-width:500px; max-height=400px"><div id="graph_div"></div></div>';
 	var content_string = '<div id="graph_wrapper_div"><div id="graph_div"></div></div>';
 	if( sensor == "d3s" ) {
+<<<<<<< cd06b20f6c5e81e38506086fde472f5188e04dfb
 		//change graphs based on selected plot option from the drop down selector
 	    if( plotoptions == "Dose Plot") {
     		content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
@@ -118,6 +129,14 @@ function updateInfowindowContent(val){
 		content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
 		get_co2_data(url.toString(),name.toString(),timezone,time,"only_small_graph_div",true);		
 	} else
+=======
+		content_string = '<div id="graph_wrapper_div"><div id="small_graph_div"></div><div id="spectra_div"></div></div>';
+		get_d3s_data(url.toString(),name.toString(),timezone,
+					 dose,time,"small_graph_div");
+		get_d3s_spectra(url.toString(),name.toString(),time,"spectra_div");
+	}
+	else
+>>>>>>> updated for d3s files and data format
 		get_data(url.toString(),name.toString(),timezone,
 				 dose,time,"graph_div");
 	return content_string;
@@ -139,6 +158,7 @@ function getDoseUnit(){
 // Sensor type for plot, called in updateInfowindowContent
 function getSensor(){
 	var sel = document.getElementById('sensor_list');
+<<<<<<< cd06b20f6c5e81e38506086fde472f5188e04dfb
 	var sensor = sel.options[sel.selectedIndex].value;
 	if ( sensor == "A")
 		sensor = "d3s";
@@ -156,6 +176,9 @@ function getPlotOptions() {
   infowindow.close();
 	var sel_option = document.getElementById('plotoptions_dropdown');
 	return sel_option.options[sel_option.selectedIndex].value;
+=======
+	return sel.options[sel.selectedIndex].value;
+>>>>>>> updated for d3s files and data format
 }
 
 function clearMarkers() {
@@ -178,12 +201,15 @@ function repopulateMarkers(sensor_type){
 		$.each(data.features, function(key, val){
 			if( sensor_type=="d3s" && !val.properties["has_d3s"])
 				return true;
+<<<<<<< cd06b20f6c5e81e38506086fde472f5188e04dfb
 			if( sensor_type=="aq" && !val.properties["has_aq"])
 				return true;
 			if( sensor_type=="adc" && !val.properties["has_co2"])
 				return true;
 			if( sensor_type=="weather" && !val.properties["has_w"])
 				return true;
+=======
+>>>>>>> updated for d3s files and data format
 			var lon = getCoords(val).lon;
 			var lat = getCoords(val).lat;
 	        var marker = new MarkerWithLabel({
@@ -204,6 +230,7 @@ function repopulateMarkers(sensor_type){
 	});
 }
 
+<<<<<<< cd06b20f6c5e81e38506086fde472f5188e04dfb
 function defaultPlotOptions() {
   //plot options should not be visible when the page is loaded
 	//called with window.onload in the <head> of dosenet_map.html
@@ -263,6 +290,11 @@ function changeSensor(){
 	var sensor_type = getSensor();
 	repopulateMarkers(sensor_type);
   hidePlotOptions();
+=======
+function changeSensor(){
+	var sensor_type = getSensor();
+	repopulateMarkers(sensor_type);
+>>>>>>> updated for d3s files and data format
 }
 
 function changeDoseUnits(){

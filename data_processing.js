@@ -40,28 +40,28 @@ function rgbToHex(r, g, b) {
 
 // Set sample size based on number of entries available rather than time window
 function get_sample_size(nentries) {
- // sample such that there are roughly 150 entries max
- var sample = Math.floor(nentries/150);
- if( sample === 0 ) sample = 1;
- return sample;
+  // sample such that there are roughly 150 entries max
+  var sample = Math.floor(nentries/150);
+  if( sample === 0 ) sample = 1;
+  return sample;
 }
 
 //var url = '<main-page>/sites/default/files/dosenet/pinewood.csv?'
 //+ Math.random().toString(36).replace(/[^a-z]+/g, '');
 // - to solve browser caching issue
 function parse_date(input) {
- var parts = input.replace('-',' ')
-                  .replace('-',' ')
-                  .replace(':',' ')
-                  .replace(':',' ')
-                  .replace('+',' ')
-                  .replace('-',' ')
-                  .split(' ');
- // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
- // Note: months are 0-based
- //tz_date = this_date.toLocaleString('UTC', { timeZone: timezone });
- this_date =  new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
- return this_date;
+  var parts = input.replace('-',' ')
+                   .replace('-',' ')
+                   .replace(':',' ')
+                   .replace(':',' ')
+                   .replace('+',' ')
+                   .replace('-',' ')
+                   .split(' ');
+  // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+  // Note: months are 0-based
+  //tz_date = this_date.toLocaleString('UTC', { timeZone: timezone });
+  this_date =  new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
+  return this_date;
 }
 
 /**
@@ -437,6 +437,91 @@ function process_all_aq_csv(text,timezone) {
  return data_input;
 }
 
+function process_time_csv(text,dose,timezone) {
+  var data_input = [];
+  var lines = text.split("\n");
+  var scale = calibMap.get(dose)[0];
+  console.log(scale);
+
+  for( var i = 0; i < nentries+1; ++i ) {
+    if( i < 1 ) { continue; } // skip first line(s) with meta-data
+    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+    var line = lines[i];
+    time_index = 1;
+    if ( timezone=="UTC" ) time_index = 0;
+    if (typeof line != 'undefined') {
+      if(line.length>3) {
+        var data = line.split(",");
+        var x = new Date(parse_date(data[time_index]));
+        var y = parseFloat(data[3]);
+        var y_err = parseFloat(data[4]);
+        data_input.push([x,[y*scale,y_err*scale]]);
+      }
+    }
+  }
+  data_input.sort((function(index){
+    return function(a,b){
+      return a[index].getTime() - b[index].getTime();
+    };
+  })(0));
+
+  return data_input;
+}
+
+function process_d3s_csv(text,dose,timezone) {
+  var data_input = [];
+  var lines = text.split("\n");
+  var scale = calibMap.get(dose)[1];
+  console.log(scale);
+
+  for( var i = 1; i < nentries+1; ++i ) {
+    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+    var line = lines[i];
+    time_index = 1;
+    if ( timezone=="UTC" ) time_index = 0;
+    if (typeof line != 'undefined') {
+      if(line.length>3) {
+        var data = line.split(",");
+        var x = new Date(parse_date(data[time_index]));
+        var y = parseFloat(data[3]);
+        var y_err = parseFloat(data[4]);
+        data_input.push([x,[y*scale,y_err*scale]]);
+      }
+    }
+  }
+  data_input.sort((function(index){
+    return function(a,b){
+      return a[index].getTime() - b[index].getTime();
+    };
+  })(0));
+
+  return data_input;
+}
+
+function process_d3s_spectrum(text) {
+  var channel_sums = [];
+  var lines = text.split("\n");
+
+  for(var i = 1; i < nentries+1; ++i ) {
+    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+    var line = lines[i];
+    if(typeof line != 'undefined') {
+      var data = line.split(",");
+      for( var j = 5; j < data.length; ++j) {
+        if( i==1 ) channel_sums.push(parseFloat(data[j]));
+        else channel_sums[j-5] += parseFloat(data[j]);
+      }
+    }
+  }
+
+  channel_count_data = [];
+  for( var i = 0; i < channel_sums.length; ++i) {
+    channel_count_data.push([i,[channel_sums[i],Math.sqrt(channel_sums[i])]]);
+  }
+
+  return channel_count_data;
+}
+
 function process_csv(text,dose,time,timezone) {
  var raw_data = [];
  var data_input = [];
@@ -810,6 +895,48 @@ function plot_d3s_data(location,data_input,dose,timezone,data_labels,time,div)
  );
 }
 
+function plot_d3s_data(location,data_input,dose,timezone,data_labels,time,div)
+{
+  var title_text = location;
+  var y_text = dose;
+  // add x-label to beginning of data label array
+  time_label = 'Time ('+timezone+')';
+  data_labels.unshift(time_label);
+  if( time=="All" ) { title_text = 'All data for ' + title_text; }
+
+  g = new Dygraph(
+    // containing div
+    document.getElementById(div),
+    data_input,
+    { title: title_text,
+      errorBars: true,
+      connectSeparatedPoints: false,
+      drawPoints: true,
+      pointSize: 3,
+      showRangeSelector: false,
+      sigFigs: 3,
+      ylabel: y_text,
+      xlabel: data_labels[0],
+      labels: data_labels,
+      strokeWidth: 0.0,
+      highlightCircleSize: 5,
+      plotter: [
+        singleErrorPlotter,
+        Dygraph.Plotters.linePlotter
+        ],
+      axes: {
+        y: {
+              //reserveSpaceLeft: 2,
+              axisLabelFormatter: function(x) {
+                                          var shift = Math.pow(10, 5);
+                                          return Math.round(x * shift) / shift;
+                                        }
+           },
+      }
+    }
+  );
+}
+
 function add_data_string(data,location) {
  data_string_map.set(location,data);
 }
@@ -916,7 +1043,7 @@ function get_co2_data(url,location,timezone,time,div,range) {
      data_input = process_adc_csv(data,"CO2",timezone);
      var labels = [];
      labels.push("CO2 (ppm)");
-     plot_data(location,data_input,"CO2 (ppm)",timezone,labels,time,div,range);    
+     plot_data(location,data_input,"CO2 (ppm)",timezone,labels,time,div,range);
   },dataType='text');
 }
 
