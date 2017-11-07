@@ -9,10 +9,38 @@
 }
 #graph_div {
   position: absolute;
-	  left: 5px;
+  left: 5px;
   right: 5px;
   top: 5px;
   bottom: 5px;
+}
+#only_small_graph_div {
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	top: 2px;
+	bottom: 2px;
+}
+#only_spectra_div {
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	bottom: 1px;
+	top: 2px;
+}
+#small_graph_div {
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	top: 2px;
+	bottom: 140px;
+}
+#spectra_div {
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	bottom: 1px;
+	top: 140px;
 }
 #main-area {
     background-image: none;
@@ -29,6 +57,9 @@
 	padding: 0.5em;
 	margin-left: 1em;
 	width: 100%;
+}
+#plotoptions_dropdown {
+  margin-left: 3em;
 }
 .div {
 	vertical-align: middle;
@@ -48,6 +79,19 @@
 		border-style: solid;
 	margin-bottom: 1em;
 	}
+#plotoptions_label {
+	display: inline;
+	padding: .2em .6em .3em;
+	font-size: 75%;
+	font-weight: bold;
+	line-height: 1;
+	color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: .25em;
+	background-color: #5bc0de;
+}
 .jh5 {
 	padding: 0.5em 0 0 0;
 	font-size: 2em;
