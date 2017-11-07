@@ -71,6 +71,7 @@ function getTZ(val){
 }
 
 function updateInfowindowContent(val){
+	//updates the marker pop up info window
 	var time = getTimeframe();
 	console.log(time);
 	var dose = getDoseUnit();
@@ -87,7 +88,7 @@ function updateInfowindowContent(val){
 	var content_string = '<div id="graph_wrapper_div"><div id="graph_div"></div></div>';
 	if( sensor == "d3s" ) {
 		console.log("d3s");
-		//if statement to change based on selected plot option from the drop down
+		//change graphs based on selected plot option from the drop down selector
     if( plotoptions == "Dose Plot") {
       content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
   		get_d3s_data(url.toString(),name.toString(),timezone,
@@ -130,9 +131,9 @@ function getSensor(){
 
 // Options for which plots shown, called in updateInfowindowContent
 function getPlotOptions() {
-	infowindow.close();
-	var sel_time = document.getElementById('plotoptions_dropdown');
-	return sel_time.options[sel_time.selectedIndex].value;
+  infowindow.close();
+	var sel_option = document.getElementById('plotoptions_dropdown');
+	return sel_option.options[sel_option.selectedIndex].value;
 }
 
 function clearMarkers() {
@@ -175,9 +176,35 @@ function repopulateMarkers(sensor_type){
 	});
 }
 
+function defaultPlotOptions() {
+  //plot options should not be visible when the page is loaded
+	//called with window.onload in the <head> of dosenet_map.html
+	//may need to change to hidden attribute to not appear while page is loading
+  var plot_option = document.getElementById('plotoptions_dropdown');
+  var plot_label = document.getElementById('plotoptions_label');
+  plot_option.style.visibility = "hidden";
+  plot_label.style.visibility = "hidden";
+}
+
+function hidePlotOptions() {
+	//hide plot option drop down selector when pocket geiger is selected
+  var sel_option = document.getElementById('sensor_list');
+	var plot_option = document.getElementById('plotoptions_dropdown');
+  var plot_label = document.getElementById('plotoptions_label');
+  sensor_val = sel_option.options[sel_option.selectedIndex].value;
+  if (sensor_val == "pocket") {
+    plot_option.style.visibility = "hidden";
+    plot_label.style.visibility = "hidden";
+  } else if (sensor_val == "d3s") {
+    plot_option.style.visibility = "visible";
+    plot_label.style.visibility = "visible";
+  }
+}
+
 function changeSensor(){
 	var sensor_type = getSensor();
 	repopulateMarkers(sensor_type);
+  hidePlotOptions();
 }
 
 function changeDoseUnits(){
@@ -214,6 +241,7 @@ function goToDosimeter(){
 }
 
 function initMap(){
+	//initiate map using google maps api
 	map = new google.maps.Map(document.getElementById('map-canvas'), {
 		center: new google.maps.LatLng(0, 0),
 		zoom: 1,
@@ -265,6 +293,7 @@ function addMarkerEventListeners(val, marker){
 }
 
 function addTimeDropdownListener(){
+	//listens for selection in time dropdown selector
 	$("#time_dropdown").change(function(){
 		//infowindow.close();
 		goToDosimeter();
@@ -283,6 +312,7 @@ function addUnitDropdownListener(){
 }
 
 function addPlotOptionsDropdownListener(){
+	//listens for selection in plot options dropdown selector
   $("#plotoptions_dropdown").change(function(){
     // infowindow.close();
     goToDosimeter();

@@ -29,7 +29,6 @@ calibMap.set('air travel/hr',[0.420168067*0.036,0.420168067*0.0000427]);
 calibMap.set('cigarettes/hr',[0.00833333335*0.036,0.00833333335*0.0000427]);
 calibMap.set('X-rays/hr',[0.2*0.036,0.2*0.0000427]);
 
-
 function componentToHex(c) {
    var hex = c.toString(16);
    return hex.length == 1 ? "0" + hex : hex;
@@ -764,6 +763,7 @@ function get_d3s_data(url,location,timezone,dose,time,div) {
      var data_label = [];
      if ( dose=="&microSv/hr" ) { data_label.push("ÂµSv/hr"); }
      else data_label.push(dose);
+     console.log(data_input);
      plot_d3s_data(location,data_input,dose,timezone,data_label,time,div);
  },dataType='text');
 }

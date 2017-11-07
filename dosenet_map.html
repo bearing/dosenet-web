@@ -12,18 +12,18 @@
 	<meta http-equiv="last-modified" content="2015-11-06 14:30 GMT" />
 	<meta name="copyright" content="© 2015 Navrit Bal, Tigran Ter-Stepanyan and Luke Sheard" />
 	<meta name="author" content="Navrit Bal, Tigran Ter-Stepanyan, Luke Sheard" />
-	<meta http-equiv="refresh" content="300;url=/dosenet/map-test">
+	<meta http-equiv="refresh" content="300;url=/dosenet/map">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSaBOz47zWi5eWz12SYzSl6GMSpl8l1c8"></script>
 	<script type="text/javascript"
 		src="/sites/default/files/js-marker-clusterer/src/markerclusterer.js">
 	</script>
-	<script src="/sites/default/files/dosenet_test/test_data_processing.js"></script>
+	<script src="/sites/default/files/dosenet/data_processing.js"></script>
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
-	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet_test/test_dosenet_map_style.css">
+	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_map_style.css">
 
-	<script src="/sites/default/files/dosenet_test/test_mapping.js"></script>
-	<script type="text/javascript" src="/sites/default/files/dosenet_test/dosenet_text.js"></script>
+	<script src="/sites/default/files/dosenet/mapping.js"></script>
+	<script type="text/javascript" src="/sites/default/files/dosenet/dosenet_text.js"></script>
 	<script>
 		// url for geoJSON file
 		var url = '/sites/default/files/output.geojson?'
@@ -61,7 +61,6 @@
 				addTimeDropdownListener();
 				addUnitDropdownListener();
 				addPlotOptionsDropdownListener();
-				// addPlotOptionsDropdownListener();
 				var mcOptions = {gridSize: 40, maxZoom: 15};
 				markerCluster = new MarkerClusterer(map, markers, mcOptions);
 			});
@@ -69,7 +68,7 @@
 	</script>
 </head>
 
-<body>
+<body onload="defaultPlotOptions()">
 	<div id="my_banner">
 	    This map shows background radiation measured throughout our network of sensors maintained and
 	    operated by students around the Bay Area, the UC Berkeley team and our international collaborators.
@@ -129,7 +128,7 @@
 					</select>
 				</td>
 				<td>
-				  <div class="label label-info">
+				  <div id="plotoptions_label">
 				    Graph Options
 				  </div>
 				  <select id="plotoptions_dropdown" class="dropdown" onChange='getPlotOptions()'>
