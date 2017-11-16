@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="/sites/default/files/dosenet/data_processing.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+	<style>
+	.dygraph-axis-label-x {
+	-webkit-transform: rotate(45deg); 
+	-moz-transform: rotate(45deg);
+	    float: middle;
+	    margin: 15px 0 15px 5px;
+	      font-size: 9px;
+	}
+	</style>
+</head>
+
+<body>
+<div style="font-size:20px">
+Check out all data together!
+</div>
+<br>
+<table id="legend" style="width:100%; border:10px;"></table>
+
+<script type="text/javascript"> 
+	var url = '/sites/default/files/output.geojson'+'?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
+	var table_index = 0;
+	var table = document.getElementById("legend");
+	$(document).ready(function(){
+		// Fetch geoJSON file - runs function on complete, 'data' is extracted from JSON
+		$.getJSON(url, function(data){
+			// For each item in "features" array inside data runs function
+			// key: position of item in the array Features
+			// val: value of item
+			$.each(data.features, function(key, val){
+				//create div for each data-set for static labeling
+				var csv = val.properties["csv_location"];
+				var csv_url = '/sites/default/files/dosenet/' + csv + '.csv?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
+				var plot_url = '/sites/default/files/dosenet/' + csv + '_year.csv?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
+				row = table.insertRow(table_index);
+				cell = row.insertCell(0);
+				cell.innerHTML = '<a href="'+csv_url+'">'+val.properties["Name"]+'</a>';
+				table_index += 1;
+				row = table.insertRow(table_index);
+				cell = row.insertCell(0);
+				cell.innerHTML = '<div id="'+val.properties["Name"]+'_div" style="width:80%"></div>';
+				table_index += 1;
+				get_data(plot_url,val.properties["Name"],val.properties["timezone"],'CPM','year',val.properties["Name"]+'_div');
+		    });
+		});
+	});
+</script>
+<br><br>
+</body>
+</html>
