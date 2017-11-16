@@ -73,11 +73,8 @@ function getTZ(val){
 function updateInfowindowContent(val){
 	//updates the marker pop up info window
 	var time = getTimeframe();
-	console.log(time);
 	var dose = getDoseUnit();
-	console.log(dose);
 	var plotoptions = getPlotOptions();
-	console.log(plotoptions);
 	var sensor = getSensor();
 	var url = getURL(val,time,sensor);
 	var name = getName(val);
@@ -87,7 +84,6 @@ function updateInfowindowContent(val){
 	//var content_string = '<div id="' + node_name + '"" style="max-width:500px; max-height=400px"><div id="graph_div"></div></div>';
 	var content_string = '<div id="graph_wrapper_div"><div id="graph_div"></div></div>';
 	if( sensor == "d3s" ) {
-		console.log("d3s");
 		//change graphs based on selected plot option from the drop down selector
     if( plotoptions == "Dose Plot") {
       content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
@@ -104,7 +100,6 @@ function updateInfowindowContent(val){
     }
 	}
 	else
-		console.log("pocket geiger");
 		get_data(url.toString(),name.toString(),timezone,
 				 dose,time,"graph_div");
 	return content_string;

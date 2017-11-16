@@ -107,7 +107,6 @@ function hsvToRGB(hue, saturation, value) {
 
 function set_colors(locations){
  ncolors = locations.length;
- console.log('First time setting colors for '+ncolors+' stations');
  var sat = 1.0;
  var val = 0.5;
  var half = Math.ceil(ncolors / 2);
@@ -206,8 +205,6 @@ function get_time_range(text,time,timezone) {
  var oldest_data = lines[lines.length-2].split(",");
  var newest_data = lines[1].split(",");
  var time_index = 1;
- console.log(oldest_data);
- console.log(newest_data);
  if ( timezone=="UTC" ) time_index = 0;
  var newest_date = new Date(parse_date(newest_data[time_index]));
  var oldest_date = new Date(parse_date(oldest_data[time_index]));
@@ -230,7 +227,6 @@ function process_time_csv(text,dose,timezone) {
  var data_input = [];
  var lines = text.split("\n");
  var scale = calibMap.get(dose)[0];
- console.log(scale);
 
  for( var i = 0; i < nentries+1; ++i ) {
    if( i < 1 ) { continue; } // skip first line(s) with meta-data
@@ -261,7 +257,6 @@ function process_d3s_csv(text,dose,timezone) {
  var data_input = [];
  var lines = text.split("\n");
  var scale = calibMap.get(dose)[1];
- console.log(scale);
 
  for( var i = 1; i < nentries+1; ++i ) {
    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
@@ -406,7 +401,6 @@ function fill_binned_data(data_map,time_bins,bin_size) {
      // each date should then be either half a bin before or after the bin center
      var this_bin = find_nearest_date(time_bins,this_date,bin_size/2);
      if( this_bin < 0 ) {
-       //console.log('WARNING: no valid time bin for data at '+this_date);
        continue;
      }
      var this_data = data[i][1]; // this is [cmp,error]
@@ -432,7 +426,6 @@ function fill_data_input(time_bins,time_map,locations) {
  for ( var bin=0; bin<time_bins.length; bin++ ) {
    //There might not be data for every time bin...
    if( !time_map.has(bin) ) {
-     console.log("WARNING: no data for this time bin!");
      continue;
    }
 
@@ -763,7 +756,6 @@ function get_d3s_data(url,location,timezone,dose,time,div) {
      var data_label = [];
      if ( dose=="&microSv/hr" ) { data_label.push("ÂµSv/hr"); }
      else data_label.push(dose);
-     console.log(data_input);
      plot_d3s_data(location,data_input,dose,timezone,data_label,time,div);
  },dataType='text');
 }
