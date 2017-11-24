@@ -7,7 +7,8 @@ var marks = [];
 var infowindow = new google.maps.InfoWindow();
 // url for geoJSON file
 var url = '/sites/default/files/output.geojson?'
-	+ Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
+	+ Math.random().toString(36).replace(/[^a-z]+/g, '');
+	// - to solve browser caching issue
 var json = $($.parseJSON(JSON.stringify($.getJSON(url))));
 var parsed_json = '';
 var time = '';
@@ -29,13 +30,13 @@ var allowedBounds = new google.maps.LatLngBounds(
   );
 
 function setMapBounds(){
-	var k = 5.0; 
-	var n = allowedBounds.getNorthEast().lat() - k; 
-	var e = allowedBounds.getNorthEast().lng() - k; 
-	var s = allowedBounds.getSouthWest().lat() + k; 
-	var w = allowedBounds.getSouthWest().lng() + k; 
-	var neNew = new google.maps.LatLng( n, e ); 
-	var swNew = new google.maps.LatLng( s, w ); 
+	var k = 5.0;
+	var n = allowedBounds.getNorthEast().lat() - k;
+	var e = allowedBounds.getNorthEast().lng() - k;
+	var s = allowedBounds.getSouthWest().lat() + k;
+	var w = allowedBounds.getSouthWest().lng() + k;
+	var neNew = new google.maps.LatLng( n, e );
+	var swNew = new google.maps.LatLng( s, w );
 	boundsNew = new google.maps.LatLngBounds( swNew, neNew );
 	map.fitBounds(boundsNew);
 }
@@ -46,10 +47,15 @@ function centerMap(center){
 }
 
 // These two functions should be temporary until this can be done in makeGeoJSON as we phase out plot.ly
-function getURL(val){
+function getURL(val,time,sensor_type){
 	var csv = val.properties["csv_location"];
+	var sensor_text = "";
+	if( sensor_type=="pocket")
+		sensor_text = time;
+	else
+		sensor_text = sensor_type + '_' + time;
 	var url;
-	url = '/sites/default/files/dosenet/' + csv + '?'
+	url = '/sites/default/files/dosenet/' + csv + '_' + sensor_text + '.csv?'
 	  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 	return url;
 }
@@ -65,17 +71,42 @@ function getTZ(val){
 }
 
 function updateInfowindowContent(val){
+	//updates the marker pop up info window
 	var time = getTimeframe();
 	console.log(time);
 	var dose = getDoseUnit();
-	var url = getURL(val);
+	console.log(dose);
+	var plotoptions = getPlotOptions();
+	console.log(plotoptions);
+	var sensor = getSensor();
+	var url = getURL(val,time,sensor);
 	var name = getName(val);
 	var timezone = getTZ(val);
 
 	var node_name = dose + '_' + time + '_' + name;
 	//var content_string = '<div id="' + node_name + '"" style="max-width:500px; max-height=400px"><div id="graph_div"></div></div>';
 	var content_string = '<div id="graph_wrapper_div"><div id="graph_div"></div></div>';
-	get_data(url.toString(),name.toString(),timezone,dose,time,"graph_div");
+	if( sensor == "d3s" ) {
+		console.log("d3s");
+		//change graphs based on selected plot option from the drop down selector
+    if( plotoptions == "Dose Plot") {
+      content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
+  		get_d3s_data(url.toString(),name.toString(),timezone,
+  					 dose,time,"only_small_graph_div");
+    } else if( plotoptions == "Integrated Spectrum") {
+      content_string = '<div id="graph_wrapper_div"><div id="only_spectra_div"></div></div>';
+  		get_d3s_spectra(url.toString(),name.toString(),time,"only_spectra_div");
+    } else {
+      content_string = '<div id="graph_wrapper_div"><div id="small_graph_div"></div><div id="spectra_div"></div></div>';
+  		get_d3s_data(url.toString(),name.toString(),timezone,
+  					 dose,time,"small_graph_div");
+  		get_d3s_spectra(url.toString(),name.toString(),time,"spectra_div");
+    }
+	}
+	else
+		console.log("pocket geiger");
+		get_data(url.toString(),name.toString(),timezone,
+				 dose,time,"graph_div");
 	return content_string;
 }
 
@@ -92,12 +123,26 @@ function getDoseUnit(){
 	return sel.options[sel.selectedIndex].value;
 }
 
+// Sensor type for plot, called in updateInfowindowContent
+function getSensor(){
+	var sel = document.getElementById('sensor_list');
+	return sel.options[sel.selectedIndex].value;
+}
+
+// Options for which plots shown, called in updateInfowindowContent
+function getPlotOptions() {
+  infowindow.close();
+	var sel_option = document.getElementById('plotoptions_dropdown');
+	return sel_option.options[sel_option.selectedIndex].value;
+}
+
 function clearMarkers() {
-  markerCluster.clearMarkers();
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
-  markers = [];
+	markerCluster.clearMarkers();
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(null);
+	}
+	markers = [];
+	json_vals = []
 }
 
 function setMarkerIcon(marker){
@@ -105,9 +150,12 @@ function setMarkerIcon(marker){
     marker.setIcon('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
 }
 
-function repopulateMarkers(){
+function repopulateMarkers(sensor_type){
+	clearMarkers();
 	$.getJSON(url, function(data){
 		$.each(data.features, function(key, val){
+			if( sensor_type=="d3s" && !val.properties["has_d3s"])
+				return true;
 			var lon = getCoords(val).lon;
 			var lat = getCoords(val).lat;
 	        var marker = new MarkerWithLabel({
@@ -119,11 +167,72 @@ function repopulateMarkers(){
 	            labelClass: "labels",
 	        });
 	        markers.push(marker);
+	        json_vals.push(val);
 	        setMarkerIcon(marker);
 			addMarkerEventListeners(val, marker);
       	});
-		markerCluster.addMarkers(markers);
+      	var mcOptions = {gridSize: 40, maxZoom: 15};
+		markerCluster = new MarkerClusterer(map, markers, mcOptions);
 	});
+}
+
+function defaultPlotOptions() {
+  //plot options should not be visible when the page is loaded
+	//called with window.onload in the <head> of dosenet_map.html
+	//may need to change to hidden attribute to not appear while page is loading
+  var plot_option = document.getElementById('plotoptions_dropdown');
+  var plot_label = document.getElementById('plotoptions_label');
+  plot_option.style.visibility = "hidden";
+  plot_label.style.visibility = "hidden";
+}
+
+function hidePlotOptions() {
+	//hide plot option drop down selector when certain sensors are selected
+  var sel_option = document.getElementById('sensor_list');
+	var plot_option = document.getElementById('plotoptions_dropdown');
+  var plot_label = document.getElementById('plotoptions_label');
+  sensor_val = sel_option.options[sel_option.selectedIndex].value;
+	console.log(sensor_val);
+  if (sensor_val == "pocket") {
+    plot_option.style.visibility = "hidden";
+    plot_label.style.visibility = "hidden";
+  } else if (sensor_val == "A") {
+    plot_option.style.visibility = "visible";
+    plot_label.style.visibility = "visible";
+  } else if (sensor_val == "B") {
+    plot_option.style.visibility = "visible";
+    plot_label.style.visibility = "visible";
+  } else if (sensor_val == "Co2") {
+    plot_option.style.visibility = "hidden";
+    plot_label.style.visibility = "hidden";
+	} else if (sensor_val == "C") {
+		plot_option.style.visibility = "visible";
+		plot_label.style.visibility = "visible";
+	}
+}
+
+function changePlotOptions(value) {
+	//changes plot options based on which sensor is selected
+	console.log("changePlotOptions triggered");
+	console.log(value);
+	var PlotOptions = {
+		A: ["Dose Plot","Integrated Spectrum","Both Plots"],
+		B: ["1.0 PM","2.5 PM","10 PM","All Plots"],
+		C: ["Temperature","Pressure","Humidity","All Plots"],
+	}
+	console.log(PlotOptions[value]);
+	            var catOptions = "";
+	            for (categoryId in PlotOptions[value]) {
+	                catOptions += "<option>" + PlotOptions[value][categoryId] + "</option>";
+	            }
+							console.log(catOptions);
+	            document.getElementById("plotoptions_dropdown").innerHTML = catOptions;
+}
+
+function changeSensor(){
+	var sensor_type = getSensor();
+	repopulateMarkers(sensor_type);
+  hidePlotOptions();
 }
 
 function changeDoseUnits(){
@@ -160,6 +269,7 @@ function goToDosimeter(){
 }
 
 function initMap(){
+	//initiate map using google maps api
 	map = new google.maps.Map(document.getElementById('map-canvas'), {
 		center: new google.maps.LatLng(0, 0),
 		zoom: 1,
@@ -211,6 +321,7 @@ function addMarkerEventListeners(val, marker){
 }
 
 function addTimeDropdownListener(){
+	//listens for selection in time dropdown selector
 	$("#time_dropdown").change(function(){
 		//infowindow.close();
 		goToDosimeter();
@@ -226,6 +337,16 @@ function addUnitDropdownListener(){
 		infowindow.setContent(updateInfowindowContent(selected_val));
 		infowindow.open(map, selected_marker);
 	});
+}
+
+function addPlotOptionsDropdownListener(){
+	//listens for selection in plot options dropdown selector
+  $("#plotoptions_dropdown").change(function(){
+    // infowindow.close();
+    goToDosimeter();
+    infowindow.setContent(updateInfowindowContent(selected_val));
+    infowindow.open(map, selected_marker);
+  });
 }
 
 // This is the compressed code for making our marker labels
