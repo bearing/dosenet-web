@@ -75,6 +75,7 @@ function updateInfowindowContent(val){
 	var time = getTimeframe();
 	var dose = getDoseUnit();
 	var plotoptions = getPlotOptions();
+	console.log(plotoptions);
 	var sensor = getSensor();
 	var url = getURL(val,time,sensor);
 	var name = getName(val);
@@ -182,18 +183,46 @@ function defaultPlotOptions() {
 }
 
 function hidePlotOptions() {
-	//hide plot option drop down selector when pocket geiger is selected
+	//hide plot option drop down selector when certain sensors are selected
   var sel_option = document.getElementById('sensor_list');
 	var plot_option = document.getElementById('plotoptions_dropdown');
   var plot_label = document.getElementById('plotoptions_label');
   sensor_val = sel_option.options[sel_option.selectedIndex].value;
+	console.log(sensor_val);
   if (sensor_val == "pocket") {
     plot_option.style.visibility = "hidden";
     plot_label.style.visibility = "hidden";
-  } else if (sensor_val == "d3s") {
+  } else if (sensor_val == "A") {
     plot_option.style.visibility = "visible";
     plot_label.style.visibility = "visible";
-  }
+  } else if (sensor_val == "B") {
+    plot_option.style.visibility = "visible";
+    plot_label.style.visibility = "visible";
+  } else if (sensor_val == "Co2") {
+    plot_option.style.visibility = "hidden";
+    plot_label.style.visibility = "hidden";
+	} else if (sensor_val == "C") {
+		plot_option.style.visibility = "visible";
+		plot_label.style.visibility = "visible";
+	}
+}
+
+function changePlotOptions(value) {
+	//changes plot options based on which sensor is selected
+	console.log("changePlotOptions triggered");
+	console.log(value);
+	var PlotOptions = {
+		A: ["Dose Plot","Integrated Spectrum","Both Plots"],
+		B: ["1.0 PM","2.5 PM","10 PM","All Plots"],
+		C: ["Temperature","Pressure","Humidity","All Plots"],
+	}
+	console.log(PlotOptions[value]);
+	            var catOptions = "";
+	            for (categoryId in PlotOptions[value]) {
+	                catOptions += "<option>" + PlotOptions[value][categoryId] + "</option>";
+	            }
+							console.log(catOptions);
+	            document.getElementById("plotoptions_dropdown").innerHTML = catOptions;
 }
 
 function changeSensor(){

@@ -19,7 +19,7 @@
 	</script>
 	<script src="/sites/default/files/dosenet/data_processing.js"></script>
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
-	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_map_style.css">
+	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet_test/dosenet_map_style.css">
 
 	<script src="/sites/default/files/dosenet/mapping.js"></script>
 	<script type="text/javascript" src="/sites/default/files/dosenet/dosenet_text.js"></script>
@@ -113,9 +113,12 @@
 					<div class="label label-info">
 						Sensor list
 					</div>
-					<select id="sensor_list" class="dropdown" onChange='changeSensor()'>
+					<select id="sensor_list" class="dropdown" onChange="changeSensor();changePlotOptions(this.value);">
 						<option value="pocket"> Pocket Geiger </option>
-						<option value="d3s"> CsI </option>
+						<option value="A"> CsI </option>
+						<option value="B"> Air Quality </option>
+						<option value="Co2"> Co2 </option>
+						<option value="C"> Temperature/Pressure/Humidity </option>
 					</select>
 				</td>
 				<td>
@@ -131,9 +134,7 @@
 				    Graph Options
 				  </div>
 				  <select id="plotoptions_dropdown" class="dropdown" onChange='getPlotOptions()'>
-				    <option value = "Dose Plot"> Dose Plot </option>
-				    <option value = "Integrated Spectrum"> Integrated Spectrum </option>
-				    <option value = "Both Plots"> Both Plots</option>
+						<option value="" disabled selected>Select</option>
 				  </select>
 				</td>
 			</tr>
