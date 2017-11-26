@@ -306,6 +306,137 @@ function process_d3s_spectrum(text) {
  return channel_count_data;
 }
 
+function process_weather_csv(text,type,timezone) {
+ var data_input = [];
+ var lines = text.split("\n");
+
+ for( var i = 0; i < nentries+1; ++i ) {
+   if( i < 1 ) { continue; } // skip first line(s) with meta-data
+   if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+   var line = lines[i];
+   time_index = 1;
+   if ( timezone=="UTC" ) time_index = 0;
+   if (typeof line != 'undefined') {
+     if(line.length>3) {
+       var data = line.split(",");
+       var x = new Date(parse_date(data[time_index]));
+       var y = parseFloat(data[3]);
+       var y_err = 0.1;
+       if( type=="Pressure" ) {
+        y = parseFloat(data[4]);
+        y_err = 0.2;
+       }
+       if( type=="Humidity" ) {
+        y = parseFloat(data[5]);
+        y_err = 0.5;
+       }
+       data_input.push([x,[y,y_err]]);
+     }
+   }
+ }
+ data_input.sort((function(index){
+   return function(a,b){
+     return a[index].getTime() - b[index].getTime();
+   };
+ })(0));
+
+ return data_input;
+}
+
+function process_adc_csv(text,type,timezone) {
+ var data_input = [];
+ var lines = text.split("\n");
+
+ for( var i = 0; i < nentries+1; ++i ) {
+   if( i < 1 ) { continue; } // skip first line(s) with meta-data
+   if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+   var line = lines[i];
+   time_index = 1;
+   if ( timezone=="UTC" ) time_index = 0;
+   if (typeof line != 'undefined') {
+     if(line.length>3) {
+       var data = line.split(",");
+       var x = new Date(parse_date(data[time_index]));
+       var y = parseFloat(data[3]);
+       var y_err = parseFloat(data[4]);
+       if( type!="CO2" ) {
+        console.log('Error: currently only have CO2 data...')
+       }
+       data_input.push([x,[y,y_err]]);
+     }
+   }
+ }
+ data_input.sort((function(index){
+   return function(a,b){
+     return a[index].getTime() - b[index].getTime();
+   };
+ })(0));
+
+ return data_input;
+}
+
+function process_aq_csv(text,pm,timezone) {
+ var data_input = [];
+ var lines = text.split("\n");
+
+ for( var i = 0; i < nentries+1; ++i ) {
+   if( i < 1 ) { continue; } // skip first line(s) with meta-data
+   if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+   var line = lines[i];
+   time_index = 1;
+   if ( timezone=="UTC" ) time_index = 0;
+   if (typeof line != 'undefined') {
+     if(line.length>3) {
+       var data = line.split(",");
+       var x = new Date(parse_date(data[time_index]));
+       var y = parseFloat(data[3]);
+       if( pm=="2.5 PM" ) y = parseFloat(data[4]);
+       if( pm=="10 PM" ) y = parseFloat(data[5]);
+       var y_err = 0.5;
+       data_input.push([x,[y,y_err]]);
+     }
+   }
+ }
+ data_input.sort((function(index){
+   return function(a,b){
+     return a[index].getTime() - b[index].getTime();
+   };
+ })(0));
+
+ return data_input;
+}
+
+function process_all_aq_csv(text,timezone) {
+ var data_input = [];
+ var lines = text.split("\n");
+
+ for( var i = 0; i < nentries+1; ++i ) {
+   if( i < 1 ) { continue; } // skip first line(s) with meta-data
+   if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+   var line = lines[i];
+   time_index = 1;
+   if ( timezone=="UTC" ) time_index = 0;
+   if (typeof line != 'undefined') {
+     if(line.length>3) {
+       var data = line.split(",");
+       var x = new Date(parse_date(data[time_index]));
+       var y1 = parseFloat(data[3]);
+       var y2 = parseFloat(data[4]);
+       var y3 = parseFloat(data[5]);
+       var y_err = 0.5;
+       data_input.push([x,[y1,y_err],[y2,y_err],[y3,y_err]]);
+     }
+   }
+ }
+ data_input.sort((function(index){
+   return function(a,b){
+     return a[index].getTime() - b[index].getTime();
+   };
+ })(0));
+
+ return data_input;
+}
+
 function process_csv(text,dose,time,timezone) {
  var raw_data = [];
  var data_input = [];
@@ -593,12 +724,15 @@ function plot_spectra(location,spectra_input,time,div) {
  );
 }
 
-function plot_data(location,data_input,dose,timezone,data_labels,time,div) {
+function plot_data(location,data_input,unit,timezone,d_labels,time,
+                   div,range,show_title = true,show_x = true) {
  var title_text = location;
- var y_text = dose;
+ if( !show_title ) title_text = null;
+ var y_text = unit;
  // add x-label to beginning of data label array
  time_label = 'Time ('+timezone+')';
- data_labels.unshift(time_label);
+ d_labels.unshift(time_label);
+ if( !show_x ) time_label = null;
  if( time=="All" ) { title_text = 'All data for ' + title_text; }
 
  g = new Dygraph(
@@ -610,11 +744,11 @@ function plot_data(location,data_input,dose,timezone,data_labels,time,div) {
      connectSeparatedPoints: false,
      drawPoints: true,
      pointSize: 3,
-     showRangeSelector: true,
+     showRangeSelector: range,
      sigFigs: 3,
      ylabel: y_text,
-     xlabel: data_labels[0],
-     labels: data_labels,
+     xlabel: time_label,
+     labels: d_labels,
      strokeWidth: 0.0,
      highlightCircleSize: 5,
      plotter: [
@@ -734,20 +868,72 @@ function data_reset(){
  nentries = 0;
 }
 
-function get_data(url,location,timezone,dose,time,div) {
+function get_aq_data(url,location,timezone,pm,time,div,range) {
+  $.get(url, function (data) {
+     var data_input = [];
+     data_reset();
+     get_time_range(data,time,timezone);
+     var data_label = [];
+     var y_label = "";
+     if( pm=="All Plots") {
+       data_input = process_all_aq_csv(data,timezone);
+       data_label.push("1.0 PM");
+       data_label.push("2.5 PM");
+       data_label.push("10 PM");
+       y_label = "All PM concentrations";
+     }
+     else {
+       data_input = process_aq_csv(data,pm,timezone);
+       data_label.push(pm);
+       y_label = pm + " conentration";
+     }
+     plot_data(location,data_input,y_label,timezone,data_label,time,div,range);
+  },dataType='text');
+}
+
+function get_weather_data(url,location,timezone,type,time,div,range,
+                          show_title,show_x) {
+  $.get(url, function (data) {
+     var data_input = [];
+     data_reset();
+     get_time_range(data,time,timezone);
+     data_input = process_weather_csv(data,type,timezone);
+     var labels = [];
+     if( type == "Temperature" ) type += " (C)";
+     if( type == "Pressure" ) type += " (hPa)";
+     if( type == "Humidity" ) type += " (%)";
+     labels.push(type);
+     plot_data(location,data_input,type,timezone,labels,time,div,range,
+               show_title,show_x);
+  },dataType='text');
+}
+
+function get_co2_data(url,location,timezone,time,div,range) {
+  $.get(url, function (data) {
+     var data_input = [];
+     data_reset();
+     get_time_range(data,time,timezone);
+     data_input = process_adc_csv(data,"CO2",timezone);
+     var labels = [];
+     labels.push("CO2 (ppm)");
+     plot_data(location,data_input,"CO2 (ppm)",timezone,labels,time,div,range);    
+  },dataType='text');
+}
+
+function get_data(url,location,timezone,dose,time,div,range) {
  $.get(url, function (data) {
      var data_input = []; // Clear any old data out before filling!
      data_reset();
      get_time_range(data,time,timezone);
      data_input = process_time_csv(data,dose);
      var data_label = [];
-     if ( dose=="&microSv/hr" ) { data_label.push("ÂµSv/hr"); }
+     if ( dose=="&microSv/hr" ) { data_label.push("µSv/hr"); }
      else data_label.push(dose);
-     plot_data(location,data_input,dose,timezone,data_label,time,div);
+     plot_data(location,data_input,dose,timezone,data_label,time,div,range);
  },dataType='text');
 }
 
-function get_d3s_data(url,location,timezone,dose,time,div) {
+function get_d3s_data(url,location,timezone,dose,time,div,range) {
  $.get(url, function (data) {
      var data_input = []; // Clear any old data out before filling!
      data_reset();
@@ -756,7 +942,7 @@ function get_d3s_data(url,location,timezone,dose,time,div) {
      var data_label = [];
      if ( dose=="&microSv/hr" ) { data_label.push("ÂµSv/hr"); }
      else data_label.push(dose);
-     plot_d3s_data(location,data_input,dose,timezone,data_label,time,div);
+     plot_data(location,data_input,dose,timezone,data_label,time,div,range);
  },dataType='text');
 }
 

@@ -42,6 +42,27 @@
 	bottom: 1px;
 	top: 140px;
 }
+#temp_graph_div {
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	top: 2px;
+	bottom: 190px;
+}
+#hum_graph_div {
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	top: 95px;
+	bottom: 95px;
+}
+#press_graph_div {
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	top: 190px;
+	bottom: 1px;
+}
 #main-area {
     background-image: none;
     background: gray;

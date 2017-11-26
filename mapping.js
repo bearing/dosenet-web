@@ -74,10 +74,12 @@ function updateInfowindowContent(val){
 	//updates the marker pop up info window
 	var time = getTimeframe();
 	var dose = getDoseUnit();
-	var plotoptions = getPlotOptions();
-	console.log(plotoptions);
 	var sensor = getSensor();
+	var plotoptions = "";
+	if( sensor != "pocket" && sensor != "adc" )
+		plotoptions = getPlotOptions();
 	var url = getURL(val,time,sensor);
+	console.log(url);
 	var name = getName(val);
 	var timezone = getTZ(val);
 
@@ -86,21 +88,36 @@ function updateInfowindowContent(val){
 	var content_string = '<div id="graph_wrapper_div"><div id="graph_div"></div></div>';
 	if( sensor == "d3s" ) {
 		//change graphs based on selected plot option from the drop down selector
-    if( plotoptions == "Dose Plot") {
-      content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
-  		get_d3s_data(url.toString(),name.toString(),timezone,
-  					 dose,time,"only_small_graph_div");
-    } else if( plotoptions == "Integrated Spectrum") {
-      content_string = '<div id="graph_wrapper_div"><div id="only_spectra_div"></div></div>';
-  		get_d3s_spectra(url.toString(),name.toString(),time,"only_spectra_div");
-    } else {
-      content_string = '<div id="graph_wrapper_div"><div id="small_graph_div"></div><div id="spectra_div"></div></div>';
-  		get_d3s_data(url.toString(),name.toString(),timezone,
-  					 dose,time,"small_graph_div");
-  		get_d3s_spectra(url.toString(),name.toString(),time,"spectra_div");
-    }
-	}
-	else
+	    if( plotoptions == "Dose Plot") {
+    		content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
+  			get_d3s_data(url.toString(),name.toString(),timezone,
+  						 dose,time,"only_small_graph_div",false);
+    	} else if( plotoptions == "Integrated Spectrum") {
+      		content_string = '<div id="graph_wrapper_div"><div id="only_spectra_div"></div></div>';
+  			get_d3s_spectra(url.toString(),name.toString(),time,"only_spectra_div");
+    	} else {
+      		content_string = '<div id="graph_wrapper_div"><div id="small_graph_div"></div><div id="spectra_div"></div></div>';
+  			get_d3s_data(url.toString(),name.toString(),timezone,
+  					 	 dose,time,"small_graph_div",false);
+  			get_d3s_spectra(url.toString(),name.toString(),time,"spectra_div");
+    	}
+	} else if( sensor == "aq" ) {
+		content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
+		get_aq_data(url.toString(),name.toString(),timezone,plotoptions,time,"only_small_graph_div",true);
+	} else if( sensor == "weather" ) {
+		if( plotoptions == "All Plots" ) {
+			content_string = '<div id="graph_wrapper_div"><div id="temp_graph_div"></div><div id="hum_graph_div"></div><div id="press_graph_div"></div></div>';
+			get_weather_data(url.toString(),name.toString(),timezone,"Temperature",time,"temp_graph_div",false,true,false);
+			get_weather_data(url.toString(),name.toString(),timezone,"Humidity",time,"hum_graph_div",false,false,false);
+			get_weather_data(url.toString(),name.toString(),timezone,"Pressure",time,"press_graph_div",false,false,true);
+		} else {
+			content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
+			get_weather_data(url.toString(),name.toString(),timezone,plotoptions,time,"only_small_graph_div",true);
+		}
+	} else if( sensor == "adc") {
+		content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
+		get_co2_data(url.toString(),name.toString(),timezone,time,"only_small_graph_div",true);		
+	} else
 		get_data(url.toString(),name.toString(),timezone,
 				 dose,time,"graph_div");
 	return content_string;
@@ -122,7 +139,16 @@ function getDoseUnit(){
 // Sensor type for plot, called in updateInfowindowContent
 function getSensor(){
 	var sel = document.getElementById('sensor_list');
-	return sel.options[sel.selectedIndex].value;
+	var sensor = sel.options[sel.selectedIndex].value;
+	if ( sensor == "A")
+		sensor = "d3s";
+	else if ( sensor == "B" )
+		sensor = "aq";
+	else if ( sensor == "C" )
+		sensor = "weather";
+	else if ( sensor == "Co2" )
+		sensor = "adc";
+	return sensor;
 }
 
 // Options for which plots shown, called in updateInfowindowContent
@@ -151,6 +177,12 @@ function repopulateMarkers(sensor_type){
 	$.getJSON(url, function(data){
 		$.each(data.features, function(key, val){
 			if( sensor_type=="d3s" && !val.properties["has_d3s"])
+				return true;
+			if( sensor_type=="aq" && !val.properties["has_aq"])
+				return true;
+			if( sensor_type=="adc" && !val.properties["has_co2"])
+				return true;
+			if( sensor_type=="weather" && !val.properties["has_w"])
 				return true;
 			var lon = getCoords(val).lon;
 			var lat = getCoords(val).lat;
@@ -215,14 +247,16 @@ function changePlotOptions(value) {
 		A: ["Dose Plot","Integrated Spectrum","Both Plots"],
 		B: ["1.0 PM","2.5 PM","10 PM","All Plots"],
 		C: ["Temperature","Pressure","Humidity","All Plots"],
+		pocket: [],
+		Co2: [],
 	}
 	console.log(PlotOptions[value]);
-	            var catOptions = "";
-	            for (categoryId in PlotOptions[value]) {
-	                catOptions += "<option>" + PlotOptions[value][categoryId] + "</option>";
-	            }
-							console.log(catOptions);
-	            document.getElementById("plotoptions_dropdown").innerHTML = catOptions;
+	var catOptions = "";
+    for (categoryId in PlotOptions[value]) {
+        catOptions += "<option>"+PlotOptions[value][categoryId]+"</option>";
+    }
+	console.log(catOptions);
+    document.getElementById("plotoptions_dropdown").innerHTML = catOptions;
 }
 
 function changeSensor(){
