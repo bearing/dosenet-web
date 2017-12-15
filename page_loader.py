@@ -1,4 +1,5 @@
 import selenium.webdriver as webdriver
+from selenium.webdriver.common.keys import Keys
 from time import sleep
 from os import listdir
 from os.path import isfile, join
@@ -26,8 +27,10 @@ profile.set_preference("hidenavbar.hideonstart", 1)
 profile.set_preference("extensions.hidtb.auto_hide_one_tab", True)
 
 b = webdriver.Firefox(firefox_profile=profile)
-b.set_window_position(0,0)
-b.set_window_size(1024, 768)
+b.get('http://localhost')
+b.find_element_by_xpath('/html/body').send_keys(Keys.F11)
+#b.set_window_position(0,0)
+#b.set_window_size(1024, 768)
 
 while True:
     for idx, url in enumerate(urls):
