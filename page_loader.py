@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import selenium.webdriver as webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
