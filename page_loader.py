@@ -18,6 +18,7 @@ if __name__ == "__main__":
             'file:///home/pi/dosenet-web/display-monitors/FindMore.html']
     sleeps = [10,30,10,10,30,30,30,20,15]
 
+sleep(30)
 profile = webdriver.FirefoxProfile()
 extensions = [join(firefox_extension_path, f) for f in listdir(firefox_extension_path) if isfile(join(firefox_extension_path, f))]
 for f in extensions:
