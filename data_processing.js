@@ -437,91 +437,6 @@ function process_all_aq_csv(text,timezone) {
  return data_input;
 }
 
-function process_time_csv(text,dose,timezone) {
-  var data_input = [];
-  var lines = text.split("\n");
-  var scale = calibMap.get(dose)[0];
-  console.log(scale);
-
-  for( var i = 0; i < nentries+1; ++i ) {
-    if( i < 1 ) { continue; } // skip first line(s) with meta-data
-    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
-    var line = lines[i];
-    time_index = 1;
-    if ( timezone=="UTC" ) time_index = 0;
-    if (typeof line != 'undefined') {
-      if(line.length>3) {
-        var data = line.split(",");
-        var x = new Date(parse_date(data[time_index]));
-        var y = parseFloat(data[3]);
-        var y_err = parseFloat(data[4]);
-        data_input.push([x,[y*scale,y_err*scale]]);
-      }
-    }
-  }
-  data_input.sort((function(index){
-    return function(a,b){
-      return a[index].getTime() - b[index].getTime();
-    };
-  })(0));
-
-  return data_input;
-}
-
-function process_d3s_csv(text,dose,timezone) {
-  var data_input = [];
-  var lines = text.split("\n");
-  var scale = calibMap.get(dose)[1];
-  console.log(scale);
-
-  for( var i = 1; i < nentries+1; ++i ) {
-    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
-    var line = lines[i];
-    time_index = 1;
-    if ( timezone=="UTC" ) time_index = 0;
-    if (typeof line != 'undefined') {
-      if(line.length>3) {
-        var data = line.split(",");
-        var x = new Date(parse_date(data[time_index]));
-        var y = parseFloat(data[3]);
-        var y_err = parseFloat(data[4]);
-        data_input.push([x,[y*scale,y_err*scale]]);
-      }
-    }
-  }
-  data_input.sort((function(index){
-    return function(a,b){
-      return a[index].getTime() - b[index].getTime();
-    };
-  })(0));
-
-  return data_input;
-}
-
-function process_d3s_spectrum(text) {
-  var channel_sums = [];
-  var lines = text.split("\n");
-
-  for(var i = 1; i < nentries+1; ++i ) {
-    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
-    var line = lines[i];
-    if(typeof line != 'undefined') {
-      var data = line.split(",");
-      for( var j = 5; j < data.length; ++j) {
-        if( i==1 ) channel_sums.push(parseFloat(data[j]));
-        else channel_sums[j-5] += parseFloat(data[j]);
-      }
-    }
-  }
-
-  channel_count_data = [];
-  for( var i = 0; i < channel_sums.length; ++i) {
-    channel_count_data.push([i,[channel_sums[i],Math.sqrt(channel_sums[i])]]);
-  }
-
-  return channel_count_data;
-}
-
 function process_csv(text,dose,time,timezone) {
  var raw_data = [];
  var data_input = [];
@@ -855,44 +770,44 @@ function plot_data(location,data_input,unit,timezone,d_labels,time,
 
 function plot_d3s_data(location,data_input,dose,timezone,data_labels,time,div)
 {
- var title_text = location;
- var y_text = dose;
- // add x-label to beginning of data label array
- time_label = 'Time ('+timezone+')';
- data_labels.unshift(time_label);
- if( time=="All" ) { title_text = 'All data for ' + title_text; }
+  var title_text = location;
+  var y_text = dose;
+  // add x-label to beginning of data label array
+  time_label = 'Time ('+timezone+')';
+  data_labels.unshift(time_label);
+  if( time=="All" ) { title_text = 'All data for ' + title_text; }
 
- g = new Dygraph(
-   // containing div
-   document.getElementById(div),
-   data_input,
-   { title: title_text,
-     errorBars: true,
-     connectSeparatedPoints: false,
-     drawPoints: true,
-     pointSize: 3,
-     showRangeSelector: false,
-     sigFigs: 3,
-     ylabel: y_text,
-     xlabel: data_labels[0],
-     labels: data_labels,
-     strokeWidth: 0.0,
-     highlightCircleSize: 5,
-     plotter: [
-       singleErrorPlotter,
-       Dygraph.Plotters.linePlotter
-       ],
-     axes: {
-       y: {
-             //reserveSpaceLeft: 2,
-             axisLabelFormatter: function(x) {
-                                         var shift = Math.pow(10, 5);
-                                         return Math.round(x * shift) / shift;
-                                       }
-          },
-     }
-   }
- );
+  g = new Dygraph(
+    // containing div
+    document.getElementById(div),
+    data_input,
+    { title: title_text,
+      errorBars: true,
+      connectSeparatedPoints: false,
+      drawPoints: true,
+      pointSize: 3,
+      showRangeSelector: false,
+      sigFigs: 3,
+      ylabel: y_text,
+      xlabel: data_labels[0],
+      labels: data_labels,
+      strokeWidth: 0.0,
+      highlightCircleSize: 5,
+      plotter: [
+        singleErrorPlotter,
+        Dygraph.Plotters.linePlotter
+        ],
+      axes: {
+        y: {
+              //reserveSpaceLeft: 2,
+              axisLabelFormatter: function(x) {
+                                          var shift = Math.pow(10, 5);
+                                          return Math.round(x * shift) / shift;
+                                        }
+           },
+      }
+    }
+  );
 }
 
 function plot_d3s_data(location,data_input,dose,timezone,data_labels,time,div)

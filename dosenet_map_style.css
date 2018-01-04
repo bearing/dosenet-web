@@ -14,7 +14,6 @@
   top: 5px;
   bottom: 5px;
 }
-<<<<<<< cd06b20f6c5e81e38506086fde472f5188e04dfb
 #only_small_graph_div {
 	position: absolute;
 	left: 5px;
@@ -29,8 +28,6 @@
 	bottom: 1px;
 	top: 2px;
 }
-=======
->>>>>>> updated for d3s files and data format
 #small_graph_div {
 	position: absolute;
 	left: 5px;
@@ -45,7 +42,6 @@
 	bottom: 1px;
 	top: 140px;
 }
-<<<<<<< cd06b20f6c5e81e38506086fde472f5188e04dfb
 #temp_graph_div {
 	position: absolute;
 	left: 5px;
@@ -67,8 +63,6 @@
 	top: 190px;
 	bottom: 1px;
 }
-=======
->>>>>>> updated for d3s files and data format
 #main-area {
     background-image: none;
     background: gray;
