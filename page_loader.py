@@ -14,8 +14,8 @@ if __name__ == "__main__":
     		'https://radwatch.berkeley.edu/dosenet/map#dosenet_rad_banner',
     		'https://radwatch.berkeley.edu/dosenet/data#chartdata',
     		'https://radwatch.berkeley.edu/dosenet/data#alldata',
-            'https://radwatch.berkeley.edu/dosenet/schools/etcheverry#d3s_data',
-            'https://radwatch.berkeley.edu/dosenet/schools/etcheverry#weather_data',
+            'https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_1',
+            'https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_2',
     		'file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',
             'file:///home/pi/dosenet-web/display-monitors/FindMore.html']
     sleeps = [10,30,10,10,30,30,20,20,20,20,15]
