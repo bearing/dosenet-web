@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+  jQuery(document).ready(function($) {
+    $(".tab-content").hide().first().show();
+    $(".tabs-nav li:first").addClass("active");
+
+    $(".inner-nav a").on('click', function (e) {
+        e.preventDefault();
+        $(this).closest('li').addClass("active").siblings().removeClass("active");
+        $($(this).attr('href')).show().siblings('.tab-content').hide();
+    });
+
+    var hash = $.trim( window.location.hash );
+
+    if (hash) $('.tabs-nav a[href$="'+hash+'"]').trigger('click');
+  } );
+  </script>
+<style>
+p.wrapping{
+    margin: 0px 40px 0px 0px;
+}
+h4.line{
+ line-height: 150%;
+
+    margin: 0px 20px 0px 0px;
+}
+div.img_wrapper_block{
+	float:left; /* important */
+	position:relative; /* important(so we can absolutely position the description div */
+        padding-top: 5px;
+        padding-bottom: 10px;
+
+    margin: 0px 40px 0px 0px;
+}
+div.description_block{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	bottom:0px; /* position will be on bottom */
+	left:0px;
+	width:100%;
+	/* styling bellow */
+	background-color:black;
+	font-family: 'tahoma';
+	font-size:12px;
+	color:white;
+	opacity:0.6; /* transparency */
+	filter:alpha(opacity=60); /* IE transparency */
+}
+p.description_content_block{
+	padding:20px;
+        padding-right:20px;
+	margin:0px;
+}
+</style>
+</head>
+<body>
+<div class="sixteen columns clearfix" >
+<a href="#banner">
+<div class="air_banner" id="banner"> Natural radioactivity has been a part of the Earth since it formed. Learn about where radiation comes from, and the main ways we are exposed to radioactivity. The RadWatch team takes environmental measurements to support research projects and to help inform the public about radiation in our environment.
+</div></a>
+
+<br>
+
+<!-- Tabs Navigation -->
+  <ul class="tabs-nav">
+    <li class="active"><a href="#tabs-1">Radiation Sources</i></a></li>
+    <li><a href="#tabs-2">Airborne</a></li>
+    <li><a href="#tabs-3">Cosmic</a></li>
+    <li><a href="#tabs-4">Terrestrial</a></li>
+    <li><a href="#tabs-5">Food</a></li>
+    <li><a href="#tabs-6">Medicine</a></li>
+    <li><a href="#tabs-7">Our Project</a></li>
+    <li><a href="#tabs-8">Case Study</a></li>
+  </ul><!-- Tabs Content -->
+
+<div class="tabs-container" id="tabs">
+
+<div class="tab-content" id="tabs-1">
+  <div class="container">
+    <div style="padding-left:10px; padding-bottom:15px;"><p class="wrapping"><h2>What radiation sources am I exposed to?</h2></p></div>
+    <div class="four columns" ><p class="wrapping"><h4 class="line">Radiation exposure/dose per year depends on life choices—however the average, healthy US citizen receives about 360millirem of dose per year.</h4><br> Airborne/radon, cosmic, terrestrial, and internal/food dose exposures are all due to naturally occurring radioactive materials and sources. 82% of the average US citizen's exposure is from natural sources!</p></div>
+    <div class="eleven columns">
+      <div class="img_wrapper_block">
+      <p ><img style="width:100%;" src="/sites/default/files/pictures/media/dose_pi.png"></p>
+      <div class="description_block">
+        <p class="description_content_block">NRCP93 (1987) data. For non-'healthy' individuals who get CT scans or other nuclear medicine diagnostics performed the total dose on average is almost double.</p>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tabs-2">
+  <div class="container">
+<div style="padding-left:10px; padding-bottom:15px;"><p class="wrapping"><h2>Airborne Radiation: Radon</h2></p></div>
+    <div class="four columns"><p class="wrapping"><h4 class="line">Radon delivers over half the dose that healthy US citizens receive on an annual basis.</h4><br>As a colorless gas and a natural product of radioisotopes found in the Earth, radon emanates from the ground and can collect in poorly ventilated indoor or low lying areas. In these poorly maintained environments, radon can pose a health risk. Zone 1 on the map above finds the geological and life style factors that would be most susceptible to radon build up, however radon is naturally found in the air at varying concentrations.</p></div>
+    <div class="eleven columns">
+      <div class="img_wrapper_block">
+        <p ><img style="width:100%;" src="/sites/default/files/pictures/media/epa_zone_map.png"></p>
+        <div class="description_block"><p class="description_content_block"><a href="http://www.epa.gov/radon/zonemap.html">EPA's</a> map of elevated indoor radon risk. This map takes into account geological and lifestyle habbits that make radon more or less important in certain regions.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tabs-3">
+  <div class="container">
+<div style="padding-left:10px; padding-bottom:15px;"><p class="wrapping"><h2>Cosmic Radiation</h2></p></div>
+    <div class="four columns"><p class="wrapping"><h4 class="line">Cosmic rays are another form of naturally occurring radiation that is generated in the upper atmosphere.</h4><br> High energy particle collisions produce particle cascades that have increasing intensity with higher altitude in the biosphere. Plane flights, for example, increase the amount of cosmic ray exposure a person receives because of the higher cosmic ray intensity.</p></div>
+    <div class="eleven columns">
+      <div class="img_wrapper_block">
+        <p ><img style="width:100%;" src="/sites/default/files/pictures/media/cosmic_nasa.jpg"></p>
+        <div class="description_block"><p class="description_content_block">Cosmic shower images from <a href="http://apod.nasa.gov/apod/ap060814.html">NASA</a>. These interactions are generated in the upper atmosphere by high energy cosmic particles. Graphic by Simon Swordy.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tabs-4">
+  <div class="container">
+<div style="padding-left:10px; padding-bottom:15px;"><p class="wrapping"><h2>Terrestrial Radiation</h2></p></div>
+    <div class="four columns"><p class="wrapping"><h4 class="line">The Earth’s crust contains several naturally occurring primordial radioisotopes.</h4><br>These radioisotopes include 238U, 232Th and 40K. These contribute to our natural exposure through the upper 20-80cm of the earth’s surface.</p></div>
+    <div class="eleven columns">
+      <div class="img_wrapper_block">
+        <p ><img style="width:100%;" src="/sites/default/files/pictures/media/terrestrial_usgs.gif"></p>
+        <div class="description_block"><p class="description_content_block"><a href="http://pubs.usgs.gov/of/2005/1413/">USGS</a> graph of the computed terrestrial gamma ray flux at 1m from the ground. Duval, Joseph S., Carson, John M. et al.</p> </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tabs-5">
+  <div class="container">
+<div style="padding-left:10px; padding-bottom:15px;"><p class="wrapping"><h2>Radiation in the Body: Food</h2></p></div>
+    <div class="four columns"><p class="wrapping"><h4 class="line">Radioactive materials can be found in our food chain.</h4><br>Naturally occurring radioactive materials have the same chemistry as their stable analogues. As such, naturally occurring radioactive materials are part of our environment and are found in many elements of our food chains.</p></div>
+    <div class="eleven columns">
+      <div class="img_wrapper_block">
+        <p ><img style="width:100%;" src="/sites/default/files/pictures/media/fish_market.jpg"></p>
+      <div class="description_block"><p class="description_content_block">Fish from a local Berkeley market. This is part of our "Current Sampling".</p>
+      </div>
+      </div>
+      </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tabs-6">
+  <div class="container">
+<div style="padding-left:10px; padding-bottom:15px;"><p class="wrapping"><h2>Nuclear Medicine and Medical Procedures</h2></p></div>
+    <div class="four columns"><p class="wrapping"><h4 class="line">Medical imaging and nuclear medicine are widely used for diagnostics and treatments.</h4><br> These methods typically rely on x-rays or nuclear radiation physics to generate 2&3D images of biological systems. <br>Medical CT imaging contributes a large fraction of the total average dose to humans. (If one includes this factor the total average dose a person receives is almost doubled.)
+</p></div>
+    <div class="eleven columns">
+      <div class="img_wrapper_block">
+        <p ><img style="width:100%;" src="/sites/default/files/pictures/media/ct_angiogram.png"></p>
+        <div class="description_block"><p class="description_content_block">Medical CT and angiograms are both sources of dose to individuals getting medical treatments. Over the last 20yrs CT has become very popular and now accounts for half the average dose to US citizens.</p> </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="tab-content" id="tabs-7">
+  <div class="container">
+<div style="padding-left:10px; padding-bottom:15px;"><p class="wrapping"><h2>RadWatch Project: What We Test</h2><h4 class="line">The RadWatch team takes air, food, and water samples to measure and study radiation in our environment.</h4><br></p></div>
+    <div class="four columns"><p class="wrapping">These samples correspond to the transport methods that radioisotopes from Fukushima could reach the West Coast. Food and water samples are from the immediate Bay Area. Our sister project KelpWatch samples Kelp from the majority of the California coast. Air sampling is performed by the RadWatch Air Monitor. This is a system that can identify radioisotopes in the air. There are no longer any definitive signs of Fukushima in these measurements. Testing these samples provides a band of variance that natural radiation falls into and can serve as a database for radionuclides in the environment.
+</p></div>
+    <div class="eleven columns"><p ><img style="width:100%;" src="/sites/default/files/pictures/what-we-test.png"></p></div>
+  </div>
+</div>
+
+<div class="tab-content" id="tabs-8">
+  <div class="container">
+<div style="padding-left:10px; padding-bottom:15px;"><p class="wrapping"><h2>RadWatch Case Study: Half Moon Bay</h2></p></div>
+    <div class="four columns"><p class="wrapping"><h4 class="line">Community concerns led researchers to test the beach at Half Moon Bay, investigating possible contamination from Fukushima radiation.</h4><br>RadWatch team member Ryan Pavlovsky explains that this plot on Google Earth shows the approximate Geiger count rate on the beach approach. Misidentified as Fukushima radiation, the count rate increase is simply due to naturally occurring radioactive materials in the beach geology. This demonstrates the band of variation seen in the natural, radioactive world. </p></div>
+
+    <div class="eleven columns"><p ><img style="float:left;height=275px;max-height:275px;" src="/sites/default/files/pictures/media/hmb.png"><img style="float:left;height:275px;max-height:275px" src="/sites/default/files/pictures/media/ryan_beach.png"></p></div>
+<br>
+    <div class="fifteen columns"><p class="wrapping"><h5>How does this system differ from a Geiger counter?</h5>
+This is a very good question. The detectors used for RadWatch activities can distinguish Fukushima radioisotopes from background radiation. They can address the question "Are there definitive indicators of Fukushima radiation in my environment?" Geiger counters cannot do this. Additionally our detectors are, in general, much more specific and sensitive.</p></div>
+  </div>
+</div>
+
+
+</div>
+</div>
+</body>
+</html>

@@ -9,8 +9,8 @@ firefox_extension_path = '/home/pi/.mozilla/firefox/4dtxxbqk.default/extensions/
 
 if __name__ == "__main__":
     urls = ['file:///home/pi/dosenet-web/display-monitors/Front.html', 'https://radwatch.berkeley.edu',
-            'https://radwatch.berkeley.edu/rad101#tab2',
-            'https://radwatch.berkeley.edu/rad101#tab3',
+            'https://radwatch.berkeley.edu/rad101#tabs-1',
+            'https://radwatch.berkeley.edu/rad101#tabs-2',
     		'https://radwatch.berkeley.edu/dosenet/map#dosenet_rad_banner',
     		'https://radwatch.berkeley.edu/dosenet/data#chartdata',
     		'https://radwatch.berkeley.edu/dosenet/data#alldata',
