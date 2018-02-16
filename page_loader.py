@@ -14,11 +14,13 @@ if __name__ == "__main__":
     		'https://radwatch.berkeley.edu/dosenet/map#dosenet_rad_banner',
     		'https://radwatch.berkeley.edu/dosenet/data#chartdata',
     		'https://radwatch.berkeley.edu/dosenet/data#alldata',
+            'https://radwatch.berkeley.edu/dosenet/schools/etcheverry#d3s_data',
+            'https://radwatch.berkeley.edu/dosenet/schools/etcheverry#weather_data',
     		'file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',
             'file:///home/pi/dosenet-web/display-monitors/FindMore.html']
     sleeps = [10,30,10,10,30,30,30,20,15]
 
-sleep(30)
+sleep(45)
 profile = webdriver.FirefoxProfile()
 extensions = [join(firefox_extension_path, f) for f in listdir(firefox_extension_path) if isfile(join(firefox_extension_path, f))]
 for f in extensions:
