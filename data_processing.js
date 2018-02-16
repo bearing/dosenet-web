@@ -198,29 +198,31 @@ function find_nearest_date(alist, date, delta) {
 }
 
 function get_time_range(text,time,timezone) {
- var lines = text.split("\n");
- oldest_index = 2;
- if( lines.length-2 > 0 )
-   oldest_index = lines.length-2;
- var oldest_data = lines[lines.length-2].split(",");
- var newest_data = lines[1].split(",");
- var time_index = 1;
- if ( timezone=="UTC" ) time_index = 0;
- var newest_date = new Date(parse_date(newest_data[time_index]));
- var oldest_date = new Date(parse_date(oldest_data[time_index]));
+  var lines = text.split("\n");
+  oldest_index = 2;
+  if( lines.length-2 > 0 )
+    oldest_index = lines.length-2;
+  var oldest_data = lines[lines.length-2].split(",");
+  var newest_data = lines[1].split(",");
+  console.log(oldest_data);
+  console.log(newest_data);
+  var time_index = 1;
+  if ( timezone=="UTC" ) time_index = 0;
+  var newest_date = new Date(parse_date(newest_data[time_index]));
+  var oldest_date = new Date(parse_date(oldest_data[time_index]));
 
- var time_pars = get_time_pars(time,newest_date,lines.length);
- oldest_date = time_pars[0];
+  var time_pars = get_time_pars(time,newest_date,lines.length);
+  oldest_date = time_pars[0];
 
- // Get data for maximum number of entries from all data inputs
- nentries = Math.max(nentries,time_pars[1]);
- // Reset sample_size based on new maximum number of data points
- sample_size = get_sample_size(nentries);
- if( time== "All" ) sample_size = 1;
- // Go back as far as we can based on current range of available data
- if( oldest_date < start_date ) start_date = oldest_date;
- // Go to the most current date for all input data
- if( newest_date > end_date ) end_date = newest_date;
+  // Get data for maximum number of entries from all data inputs
+  nentries = Math.max(nentries,time_pars[1]);
+  // Reset sample_size based on new maximum number of data points
+  sample_size = get_sample_size(nentries);
+  if( time== "All" ) sample_size = 1;
+  // Go back as far as we can based on current range of available data
+  if( oldest_date < start_date ) start_date = oldest_date;
+  // Go to the most current date for all input data
+  if( newest_date > end_date ) end_date = newest_date;
 }
 
 function process_time_csv(text,dose,timezone) {

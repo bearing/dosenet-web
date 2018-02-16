@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
 	<style>
 	.dygraph-axis-label-x {
-	-webkit-transform: rotate(45deg); 
+	-webkit-transform: rotate(45deg);
 	-moz-transform: rotate(45deg);
 	    float: middle;
 	    margin: 15px 0 15px 5px;
@@ -27,9 +27,10 @@ Check out all data together!
 <br><br>
 <table id="legend" style="width:100%; border:10px;"></table>
 
-<script type="text/javascript"> 
-	var url = '/sites/default/files/output.geojson'+'?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
-	location_array = [];
+<script type="text/javascript">
+	var url = '/sites/default/files/output.geojson'+'?'
+						+Math.random().toString(36).replace(/[^a-z]+/g, '');
+	loc_array = [];
 	url_array = [];
 	div_id_array = [];
 	var table_index = 0;
@@ -42,21 +43,29 @@ Check out all data together!
 			// key: position of item in the array Features
 			// val: value of item
 			done = $.each(data.features, function(key, val){
-				location_array.push(val.properties["Name"]);
+				loc_array.push(val.properties["Name"]);
 				var csv = val.properties["csv_location"];
 				csv = csv + '_month.csv'
-				var csv_url = '/sites/default/files/dosenet/' + csv + '?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
+				var csv_url = '/sites/default/files/dosenet/'+csv+'?'
+											+Math.random().toString(36).replace(/[^a-z]+/g, '');
 				url_array.push(csv_url);
 				//create div for each data-set for static labeling
-				if( table_index%ncolumns === 0 ) row = table.insertRow(table_index/ncolumns);
+				if( table_index%ncolumns === 0 )
+					row = table.insertRow(table_index/ncolumns);
 				cell = row.insertCell(table_index%ncolumns);
-				cell.innerHTML = '<div class="inline-field" id="'+val.properties["Name"]+'_div">'+'<label class="label_text"><input type="checkbox" onchange="reset_data()" id="'+val.properties["Name"]+'">'+val.properties["Name"]+'</label></div>';
+				cell.innerHTML = '<div class="inline-field" id="'
+													+val.properties["Name"]
+													+'_div">'
+													+'<label class="label_text">'
+													+'<input type="checkbox" onchange="reset_data()" id="'
+													+val.properties["Name"]+'">'
+													+val.properties["Name"]+'</label></div>';
 				cell.style.textAlign = "left";
 				table_index += 1;
 		    });
 		    $.when.apply($, done).then( function() {
-		    	get_bar_chart(url_array,location_array,'&microSv/hr','chartdata');
-				get_all_data(url_array,location_array,'&microSv/hr','month','alldata');
+		    	get_bar_chart(url_array,loc_array,'&microSv/hr','chartdata');
+					get_all_data(url_array,loc_array,'&microSv/hr','month','alldata');
 		    });
 		});
 	});

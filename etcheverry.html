@@ -18,28 +18,70 @@
     <br>
 
     <div id="graph_wrapper_div"><div id="graph_div"></div></div>
-    <table id="legend" style="width:80%; border:10px;"></table>
-    <script type="text/javascript"> 
+    <table id="legend" style="width:90%; border:10px;"></table>
+    &nbsp;
+    <div id="graph_wrapper_div"><div id="d3s_graph_div"></div></div>
+    &nbsp;
+    &nbsp;
+    <div id="graph_wrapper_div"><div id="spectra_div"></div></div>
+    &nbsp;
+    &nbsp;
+    <div id="graph_wrapper_div"><div id="small_graph_div"></div></div>
+    &nbsp;
+    &nbsp;
+    <div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>
+    &nbsp;
+    &nbsp;
+    <div id="graph_wrapper_div"><div id="temp_graph_div"></div></div>
+    &nbsp;
+    &nbsp;
+    <div id="graph_wrapper_div"><div id="hum_graph_div"></div></div>
+    &nbsp;
+    &nbsp;
+    <div id="graph_wrapper_div"><div id="press_graph_div"></div></div>
+    &nbsp;
+    <script type="text/javascript">
       var table = document.getElementById("legend");
       row = table.insertRow(0);
       cell = row.insertCell(0);
       url_array = [];
-      var url = '/sites/default/files/dosenet/etch.csv?'
+      var url = '/sites/default/files/dosenet/etch_day.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
       url_array.push(url);
       cell = row.insertCell(1);
-      cell.innerHTML = '<div class="inline-field" id="Etcheverry_div">'+'<label class="label_text"><input type="checkbox" onchange="resetData()" id="Etcheverry">Etcheverry</label></div>';
+      cell.innerHTML = '<div class="inline-field" id="Etcheverry_div">'
+                      +'<label class="label_text">'
+                      +'<input type="checkbox" onchange="resetData()" id="Etcheverry">'
+                      +'Etcheverry</label></div>';
       cell.style.textAlign = "left";
 
-      url = '/sites/default/files/dosenet/etch_roof.csv?'
+      url = '/sites/default/files/dosenet/etch_roof_day.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, '');
       url_array.push(url);
       cell = row.insertCell(2);
-      cell.innerHTML = '<div class="inline-field" id="Etcheverry Roof_div">'+'<label class="label_text"><input type="checkbox" onchange="resetData()" id="Etcheverry Roof">Etcheverry Roof</label></div>';
+      cell.innerHTML = '<div class="inline-field" id="Etcheverry Roof_div">'
+                      +'<label class="label_text">'
+                      +'<input type="checkbox" onchange="resetData()" id="Etcheverry Roof">'
+                      +'Etcheverry Roof</label></div>';
       cell.style.textAlign = "left";
       var location_array = ['Etcheverry','Etcheverry Roof'];
-      get_all_data(url_array,location_array,'&microSv/hr','Day','graph_div');
+      get_all_data(url_array,location_array,'&microSv/hr','day','graph_div');
       cell = row.insertCell(3);
+      url = '/sites/default/files/dosenet/etch_roof_d3s_day.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      get_d3s_data(url,'Etcheverry Roof','local','&microSv/hr','day','d3s_graph_div',true);
+      get_d3s_spectra(url,'Etcheverry Roof','day','spectra_div');
+      url = '/sites/default/files/dosenet/etch_roof_aq_day.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      get_aq_data(url,'Air quality vs time','local','All Plots','day','small_graph_div',true)
+      url = '/sites/default/files/dosenet/etch_roof_adc_day.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      get_co2_data(url,'CO2 ppm vs time','local','day','only_small_graph_div',true)
+      url = '/sites/default/files/dosenet/etch_roof_weather_day.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      get_weather_data(url,'Temperature vs time','local',"Temperature",'day',"temp_graph_div",true);
+      get_weather_data(url,'Humidity vs time','local',"Humidity",'day',"hum_graph_div",true);
+      get_weather_data(url,'Pressure vs time','local',"Pressure",'day',"press_graph_div",true);
     </script>
 
     &nbsp;
