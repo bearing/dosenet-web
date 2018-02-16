@@ -116,8 +116,14 @@ function updateInfowindowContent(val){
 		}
 	} else if( sensor == "adc") {
 		content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
-		get_co2_data(url.toString(),name.toString(),timezone,time,"only_small_graph_div",true);		
+		get_co2_data(url.toString(),name.toString(),timezone,time,"only_small_graph_div",true);
 	} else
+		content_string = '<div id="graph_wrapper_div"><div id="small_graph_div"></div><div id="spectra_div"></div></div>';
+		get_d3s_data(url.toString(),name.toString(),timezone,
+					 dose,time,"small_graph_div");
+		get_d3s_spectra(url.toString(),name.toString(),time,"spectra_div");
+	}
+	else
 		get_data(url.toString(),name.toString(),timezone,
 				 dose,time,"graph_div");
 	return content_string;

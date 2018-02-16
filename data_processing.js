@@ -40,28 +40,28 @@ function rgbToHex(r, g, b) {
 
 // Set sample size based on number of entries available rather than time window
 function get_sample_size(nentries) {
- // sample such that there are roughly 150 entries max
- var sample = Math.floor(nentries/150);
- if( sample === 0 ) sample = 1;
- return sample;
+  // sample such that there are roughly 150 entries max
+  var sample = Math.floor(nentries/150);
+  if( sample === 0 ) sample = 1;
+  return sample;
 }
 
 //var url = '<main-page>/sites/default/files/dosenet/pinewood.csv?'
 //+ Math.random().toString(36).replace(/[^a-z]+/g, '');
 // - to solve browser caching issue
 function parse_date(input) {
- var parts = input.replace('-',' ')
-                  .replace('-',' ')
-                  .replace(':',' ')
-                  .replace(':',' ')
-                  .replace('+',' ')
-                  .replace('-',' ')
-                  .split(' ');
- // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
- // Note: months are 0-based
- //tz_date = this_date.toLocaleString('UTC', { timeZone: timezone });
- this_date =  new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
- return this_date;
+  var parts = input.replace('-',' ')
+                   .replace('-',' ')
+                   .replace(':',' ')
+                   .replace(':',' ')
+                   .replace('+',' ')
+                   .replace('-',' ')
+                   .split(' ');
+  // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+  // Note: months are 0-based
+  //tz_date = this_date.toLocaleString('UTC', { timeZone: timezone });
+  this_date =  new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
+  return this_date;
 }
 
 /**
@@ -198,29 +198,31 @@ function find_nearest_date(alist, date, delta) {
 }
 
 function get_time_range(text,time,timezone) {
- var lines = text.split("\n");
- oldest_index = 2;
- if( lines.length-2 > 0 )
-   oldest_index = lines.length-2;
- var oldest_data = lines[lines.length-2].split(",");
- var newest_data = lines[1].split(",");
- var time_index = 1;
- if ( timezone=="UTC" ) time_index = 0;
- var newest_date = new Date(parse_date(newest_data[time_index]));
- var oldest_date = new Date(parse_date(oldest_data[time_index]));
+  var lines = text.split("\n");
+  oldest_index = 2;
+  if( lines.length-2 > 0 )
+    oldest_index = lines.length-2;
+  var oldest_data = lines[lines.length-2].split(",");
+  var newest_data = lines[1].split(",");
+  console.log(oldest_data);
+  console.log(newest_data);
+  var time_index = 1;
+  if ( timezone=="UTC" ) time_index = 0;
+  var newest_date = new Date(parse_date(newest_data[time_index]));
+  var oldest_date = new Date(parse_date(oldest_data[time_index]));
 
- var time_pars = get_time_pars(time,newest_date,lines.length);
- oldest_date = time_pars[0];
+  var time_pars = get_time_pars(time,newest_date,lines.length);
+  oldest_date = time_pars[0];
 
- // Get data for maximum number of entries from all data inputs
- nentries = Math.max(nentries,time_pars[1]);
- // Reset sample_size based on new maximum number of data points
- sample_size = get_sample_size(nentries);
- if( time== "All" ) sample_size = 1;
- // Go back as far as we can based on current range of available data
- if( oldest_date < start_date ) start_date = oldest_date;
- // Go to the most current date for all input data
- if( newest_date > end_date ) end_date = newest_date;
+  // Get data for maximum number of entries from all data inputs
+  nentries = Math.max(nentries,time_pars[1]);
+  // Reset sample_size based on new maximum number of data points
+  sample_size = get_sample_size(nentries);
+  if( time== "All" ) sample_size = 1;
+  // Go back as far as we can based on current range of available data
+  if( oldest_date < start_date ) start_date = oldest_date;
+  // Go to the most current date for all input data
+  if( newest_date > end_date ) end_date = newest_date;
 }
 
 function process_time_csv(text,dose,timezone) {
@@ -770,44 +772,86 @@ function plot_data(location,data_input,unit,timezone,d_labels,time,
 
 function plot_d3s_data(location,data_input,dose,timezone,data_labels,time,div)
 {
- var title_text = location;
- var y_text = dose;
- // add x-label to beginning of data label array
- time_label = 'Time ('+timezone+')';
- data_labels.unshift(time_label);
- if( time=="All" ) { title_text = 'All data for ' + title_text; }
+  var title_text = location;
+  var y_text = dose;
+  // add x-label to beginning of data label array
+  time_label = 'Time ('+timezone+')';
+  data_labels.unshift(time_label);
+  if( time=="All" ) { title_text = 'All data for ' + title_text; }
 
- g = new Dygraph(
-   // containing div
-   document.getElementById(div),
-   data_input,
-   { title: title_text,
-     errorBars: true,
-     connectSeparatedPoints: false,
-     drawPoints: true,
-     pointSize: 3,
-     showRangeSelector: false,
-     sigFigs: 3,
-     ylabel: y_text,
-     xlabel: data_labels[0],
-     labels: data_labels,
-     strokeWidth: 0.0,
-     highlightCircleSize: 5,
-     plotter: [
-       singleErrorPlotter,
-       Dygraph.Plotters.linePlotter
-       ],
-     axes: {
-       y: {
-             //reserveSpaceLeft: 2,
-             axisLabelFormatter: function(x) {
-                                         var shift = Math.pow(10, 5);
-                                         return Math.round(x * shift) / shift;
-                                       }
-          },
-     }
-   }
- );
+  g = new Dygraph(
+    // containing div
+    document.getElementById(div),
+    data_input,
+    { title: title_text,
+      errorBars: true,
+      connectSeparatedPoints: false,
+      drawPoints: true,
+      pointSize: 3,
+      showRangeSelector: false,
+      sigFigs: 3,
+      ylabel: y_text,
+      xlabel: data_labels[0],
+      labels: data_labels,
+      strokeWidth: 0.0,
+      highlightCircleSize: 5,
+      plotter: [
+        singleErrorPlotter,
+        Dygraph.Plotters.linePlotter
+        ],
+      axes: {
+        y: {
+              //reserveSpaceLeft: 2,
+              axisLabelFormatter: function(x) {
+                                          var shift = Math.pow(10, 5);
+                                          return Math.round(x * shift) / shift;
+                                        }
+           },
+      }
+    }
+  );
+}
+
+function plot_d3s_data(location,data_input,dose,timezone,data_labels,time,div)
+{
+  var title_text = location;
+  var y_text = dose;
+  // add x-label to beginning of data label array
+  time_label = 'Time ('+timezone+')';
+  data_labels.unshift(time_label);
+  if( time=="All" ) { title_text = 'All data for ' + title_text; }
+
+  g = new Dygraph(
+    // containing div
+    document.getElementById(div),
+    data_input,
+    { title: title_text,
+      errorBars: true,
+      connectSeparatedPoints: false,
+      drawPoints: true,
+      pointSize: 3,
+      showRangeSelector: false,
+      sigFigs: 3,
+      ylabel: y_text,
+      xlabel: data_labels[0],
+      labels: data_labels,
+      strokeWidth: 0.0,
+      highlightCircleSize: 5,
+      plotter: [
+        singleErrorPlotter,
+        Dygraph.Plotters.linePlotter
+        ],
+      axes: {
+        y: {
+              //reserveSpaceLeft: 2,
+              axisLabelFormatter: function(x) {
+                                          var shift = Math.pow(10, 5);
+                                          return Math.round(x * shift) / shift;
+                                        }
+           },
+      }
+    }
+  );
 }
 
 function add_data_string(data,location) {
@@ -916,7 +960,7 @@ function get_co2_data(url,location,timezone,time,div,range) {
      data_input = process_adc_csv(data,"CO2",timezone);
      var labels = [];
      labels.push("CO2 (ppm)");
-     plot_data(location,data_input,"CO2 (ppm)",timezone,labels,time,div,range);    
+     plot_data(location,data_input,"CO2 (ppm)",timezone,labels,time,div,range);
   },dataType='text');
 }
 
