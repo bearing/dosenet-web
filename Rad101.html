@@ -15,6 +15,7 @@
     var hash = $.trim( window.location.hash );
 
     if (hash) $('.tabs-nav a[href$="'+hash+'"]').trigger('click');
+    window.location.hash = #banner;
   } );
   </script>
 <style>
@@ -29,14 +30,14 @@ h4.line{
 div.img_wrapper_block{
 	float:left; /* important */
 	position:relative; /* important(so we can absolutely position the description div */
-        padding-top: 5px;
-        padding-bottom: 10px;
+        padding-top: 0px;
+        padding-bottom: 35px;
 
     margin: 0px 40px 0px 0px;
 }
 div.description_block{
 	position:absolute; /* absolute position (so we can position it where we want)*/
-	bottom:0px; /* position will be on bottom */
+	bottom:-20px; /* position will be on bottom */
 	left:0px;
 	width:100%;
 	/* styling bellow */
@@ -44,11 +45,11 @@ div.description_block{
 	font-family: 'tahoma';
 	font-size:12px;
 	color:white;
-	opacity:0.6; /* transparency */
-	filter:alpha(opacity=60); /* IE transparency */
+	opacity:0.8; /* transparency */
+	filter:alpha(opacity=80); /* IE transparency */
 }
 p.description_content_block{
-	padding:20px;
+	padding:10px;
         padding-right:20px;
 	margin:0px;
 }
@@ -137,7 +138,7 @@ p.description_content_block{
     <div class="eleven columns">
       <div class="img_wrapper_block">
         <p ><img style="width:100%;" src="/sites/default/files/pictures/media/fish_market.jpg"></p>
-      <div class="description_block"><p class="description_content_block">Fish from a local Berkeley market. This is part of our "Current Sampling".</p>
+      <div class="description_block"><p class="description_content_block">Fish from a local Berkeley market. This is part of our "Current Sampling". <br></p>
       </div>
       </div>
       </div>
