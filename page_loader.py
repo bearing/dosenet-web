@@ -19,7 +19,6 @@ if __name__ == "__main__":
     		#['file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',20],
             #['file:///home/pi/dosenet-web/display-monitors/FindMore.html',15]
             ]
-#    sleeps = [10,30,10,10,30,30,20,20,20,20,15]
 
 profile = webdriver.FirefoxProfile()
 extensions = []
