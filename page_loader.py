@@ -13,7 +13,7 @@ if __name__ == "__main__":
             ['https://radwatch.berkeley.edu/rad101#tabs-1',10],
             ['https://radwatch.berkeley.edu/rad101#tabs-2',10],
     		['https://radwatch.berkeley.edu/dosenet/map#dosenet_rad_banner',30],
-    		['https://radwatch.berkeley.edu/dosenet/data#chartdata',30],
+    		['https://radwatch.berkeley.edu/dosenet/data#data_1',30],
             ['https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_1',20],
             ['https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_2',20]
     		#['file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',20],
