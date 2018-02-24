@@ -5,68 +5,76 @@
   <script src="/sites/default/files/dosenet/data_processing.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
   <link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
-  <style>
-    #local_table_wrapper_div {
-      position: relative;
-      margin-left: -80px;
-    }
-    th, td {
-      padding: 5px;
-      text-align: center;
-
-    }
-    #local_graph_wrapper_div {
-       position:relative;
-       height:350px;
-       width:80%;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/location_style.css">
 </head>
 
 <body>
     <div id="my_banner">
-        The dosimeter network has added both indoor and outdoor locations at Berkeley!
+        The dosimeter network has added both indoor and outdoor locations at UC Berkeley!
     </div>
     <br>
     <div style="font-size:20px;">
-      Our highly sensitive air monitor data tells us that there are significant variations in radiation levels due to changes in weather. To see these effects with our dosimeter devices, we need devices installed outdoors. However, the relatively low sensitivity of our dosimeters may make them insensitive to such variations. To find out if these devices are sensitive enough to see significant weather-related variations, we have installed two devices at Etcheverry Hall at UC Berkeley: one inside the building and one on the roof next to our air monitor.
+      Our highly sensitive air monitor data tells us that there are significant variations in
+      radiation levels due to changes in weather. To see these effects with our dosimeters,
+      we need devices installed outdoors. We have installed a station on the roof of Etcheverry
+      Hall, next to our high precision air monitor. To make comparisons between indoor and
+      outdoor levels, and to control for potential non-weather related variations, we have
+      installed a second device inside, in Prof. Vetter's office in Etcheverry Hall.
+      <br><br>
+      Our outdoor station now also includes a higher sensitivity CsI detector able to
+      provide information about the energy of gamma radiation measured, along with several
+      environmental sensors that provide contextual data for any variations in radiation
+      levels seen with our dosimeters.
     </div>
     <br>
-
-    <div id="graph_wrapper_div"><div id="graph_div"></div></div>
-    <table id="legend" style="width:90%; border:10px;"></table>
-    &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
     <div id="spacer_1">
       <table style="border:100px">
         <tr>
         </tr>
       </table>
     </div>
-    <div id="local_table_wrapper_div">
-      <table id="d3s_data" style="width:90%; border:20px;">
-        <tr>
-          <td>
-            <div id="local_graph_wrapper_div"><div id="d3s_graph_div"></div></div>
-          </td>
-          <td>
-            <div id="local_graph_wrapper_div"><div id="spectra_div"></div></div>
-          </td>
-        </tr>
-      </table>
+    <div class="roundedwrapper">
+      <div id="local_table_wrapper_div">
+        <table id="pocket_data" style="width:100%; border=0px;">
+          <tr>
+            <td>
+              <div id="dose_graph_wrapper_div"><div class="data_graph_wrapper" id="graph_div"></div></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <table id="legend" class="legend_table"></table>
+      <div style="font-size:15px;text-align:center;font-weight:bold;">
+        <p> Data from our basic silicon sensor with indoor and outdoor locations. </p>
+      </div>
     </div>
-    <div id="local_table_wrapper_div">
-      <table id="air_data" style="width:90%; border:20px;">
-        <tr>
-          <td>
-            <div id="local_graph_wrapper_div"><div id="small_graph_div"></div></div>
-          </td>
-          <td>
-            <div id="local_graph_wrapper_div"><div id="only_small_graph_div"></div></div>
-          </td>
-        </tr>
-      </table>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <div class="roundedwrapper">
+      <div id="local_table_wrapper_div">
+        <table id="d3s_data" style="width:100%; border:0px;">
+          <tr>
+            <td>
+              <div class="data_graph_wrapper" id="d3s_graph_div"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="spectra_graph_wrapper" id="spectra_div"></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="font-size:15px;text-align:center;font-weight:bold;">
+        <p> Data from our cesium-iodide crystal giving precise counting statistics
+          and energy information that allows for source identification. </p>
+      </div>
     </div>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
     <div id="spacer_2">
       <table style="border:100px">
@@ -74,24 +82,48 @@
         </tr>
       </table>
     </div>
-    <div id="local_table_wrapper_div">
-      <table id="weather_data" style="width:100%; border:20px;">
-        <tr>
-          <td>
-            <div id="local_graph_wrapper_div"><div id="temp_graph_div"></div></div>
-          </td>
-          <td>
-            <div id="local_graph_wrapper_div"><div id="hum_graph_div"></div></div>
-          </td>
-        </tr>
-        &nbsp; &nbsp;
-        <tr>
-          <td colspan="2" style="text-align:center;">
-            <div id="local_graph_wrapper_div"><div id="press_graph_div"></div></div>
-          </td>
-        </tr>
-      </table>
+    <div class="roundedwrapper">
+      <div id="local_table_wrapper_div">
+        <table id="air_data" style="width:100%; border:10px;">
+          <tr>
+            <td>
+              <div class="data_graph_wrapper" id="small_graph_div"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="data_graph_wrapper" id="only_small_graph_div"></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="font-size:15px;text-align:center;font-weight:bold;">
+        <p> Data from our air quality sensors. The top graph shows particulate concentrations,
+          which can be used to determine the air quality index, and the lower shows the CO2
+          concentration in parts-per-million. </p>
+      </div>
     </div>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <div class="roundedwrapper">
+      <div id="local_table_wrapper_div">
+        <table id="d3s_data" style="width:100%; border:10px;">
+          <tr>
+            <td>
+              <div id="local_graph_wrapper_div">
+                <div class="squashed_graph_wrapper" id="temp_graph_div"></div>
+                <div class="squashed_graph_wrapper" id="hum_graph_div"></div>
+                <div class="squashed_graph_wrapper" id="press_graph_div"></div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="font-size:15px;text-align:center;font-weight:bold;">
+        <p> Basic weather data (temperature, pressure, and humidity) which may influence
+          air quality and radiation data. </p>
+      </div>
+    </div>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
     <div id="spacer_3">
       <table style="border:100px">
@@ -131,19 +163,19 @@
       cell = row.insertCell(3);
       url = '/sites/default/files/dosenet/etch_roof_d3s_day.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, '');
-      get_d3s_data(url,'Etcheverry Roof','local','&microSv/hr','day','d3s_graph_div');
+      get_d3s_data(url,'Etcheverry Roof CsI','local','&microSv/hr','day','d3s_graph_div');
       get_d3s_spectra(url,'Etcheverry Roof','day','spectra_div');
       url = '/sites/default/files/dosenet/etch_roof_aq_day.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, '');
-      get_aq_data(url,'Etcheverry Roof Air Quality (1, 2.5, 10 PM)','local','All Plots','day','small_graph_div')
+      get_aq_data(url,'Etcheverry Roof Air Quality (1, 2.5, 10 PM)','local','All Plots','day','small_graph_div');
       url = '/sites/default/files/dosenet/etch_roof_adc_day.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, '');
       get_co2_data(url,'Etcheverry Roof CO2 (ppm)','local','day','only_small_graph_div')
       url = '/sites/default/files/dosenet/etch_roof_weather_day.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, '');
-      get_weather_data(url,'Etcheverry Roof Temperature','local',"Temperature",'day',"temp_graph_div");
-      get_weather_data(url,'Etcheverry Roof Humidity','local',"Humidity",'day',"hum_graph_div");
-      get_weather_data(url,'Etcheverry Roof Pressure','local',"Pressure",'day',"press_graph_div");
+      get_weather_data(url,'Etcheverry Roof T/H/P','local',"Temperature",'day',"temp_graph_div",false,true,false);
+      get_weather_data(url,'Etcheverry Roof Humidity','local',"Humidity",'day',"hum_graph_div",false,false,false);
+      get_weather_data(url,'Etcheverry Roof Pressure','local',"Pressure",'day',"press_graph_div",false,false,true);
     </script>
 
     &nbsp;
