@@ -18,6 +18,7 @@ var graph_url = '';
 var selected_marker = '';
 var selected_val = '';
 var unitMap = new Map();
+var d3sMap = new Map();
 var mapOptions = {
    center: new google.maps.LatLng(-34.397, 150.644),
    zoom: 1,
@@ -73,8 +74,8 @@ function getTZ(val){
 function updateInfowindowContent(val){
 	//updates the marker pop up info window
 	var time = getTimeframe();
-	var dose = getDoseUnit();
 	var sensor = getSensor();
+	var dose = getDoseUnit();
 	var plotoptions = "";
 	if( sensor != "pocket" && sensor != "adc" )
 		plotoptions = getPlotOptions();
@@ -117,15 +118,10 @@ function updateInfowindowContent(val){
 	} else if( sensor == "adc") {
 		content_string = '<div id="graph_wrapper_div"><div id="only_small_graph_div"></div></div>';
 		get_co2_data(url.toString(),name.toString(),timezone,time,"only_small_graph_div",true);
-	} else
-		content_string = '<div id="graph_wrapper_div"><div id="small_graph_div"></div><div id="spectra_div"></div></div>';
-		get_d3s_data(url.toString(),name.toString(),timezone,
-					 dose,time,"small_graph_div");
-		get_d3s_spectra(url.toString(),name.toString(),time,"spectra_div");
-	}
-	else
+	} else {
 		get_data(url.toString(),name.toString(),timezone,
 				 dose,time,"graph_div");
+	}
 	return content_string;
 }
 
@@ -196,7 +192,7 @@ function repopulateMarkers(sensor_type){
 	            map: map,
 	            title: name,
 	            position: new google.maps.LatLng(lat, lon),
-	            labelContent: getLabelContent(val),
+	            labelContent: getLabelContent(val,sensor_type),
 	            labelAnchor: new google.maps.Point(20, 0),
 	            labelClass: "labels",
 	        });
@@ -204,8 +200,8 @@ function repopulateMarkers(sensor_type){
 	        json_vals.push(val);
 	        setMarkerIcon(marker);
 			addMarkerEventListeners(val, marker);
-      	});
-      	var mcOptions = {gridSize: 40, maxZoom: 15};
+    });
+		var mcOptions = {gridSize: 40, maxZoom: 15, imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'};
 		markerCluster = new MarkerClusterer(map, markers, mcOptions);
 	});
 }
@@ -274,7 +270,7 @@ function changeSensor(){
 function changeDoseUnits(){
 	setHTML_units();
 	for (var i = 0; i < markers.length; i++) {
-		var label_text = getLabelContent(json_vals[i]);
+		var label_text = getLabelContent(json_vals[i],"pocket");
 		markers[i].labelVisible = false;
 		markers[i].setOptions({ labelContent: label_text });
 		//markers[i].labelContent = label_text;
@@ -330,16 +326,43 @@ function getCoords(val){
 
 function SetUnitMap(){
 	unitMap.set("CPM",["CPM",1.0,1]);
-	unitMap.set("mrem/hr",["mREM/hr",1.0,4]);
-	unitMap.set("&microSv/hr",["&microSv/hr",1.0,3]);
-	unitMap.set("air travel/hr",["&microSv/hr",0.420168067,4]);
-	unitMap.set("cigarettes/hr",["&microSv/hr",0.00833333335,4]);
-	unitMap.set("X-rays/hr",["&microSv/hr",0.2,4]);
+	unitMap.set("mrem/hr",["CPM",0.0036,4]);
+	unitMap.set("&microSv/hr",["CPM",0.036,3]);
+	unitMap.set("air travel/hr",["CPM",0.036*0.420168067,4]);
+	unitMap.set("cigarettes/hr",["CPM",0.036*0.00833333335,4]);
+	unitMap.set("X-rays/hr",["CPM",0.036*0.2,4]);
 }
 
-function getLabelContent(val){
+function SetD3SUnitMap(){
+	d3sMap.set("CPM",["counts",1.0/5.0,4]);
+	d3sMap.set("mrem/hr",["counts",0.00000427/5.0,4]);
+	d3sMap.set("&microSv/hr",["counts",0.0000427/5.0,4]);
+	d3sMap.set("air travel/hr",["counts",0.420168067*0.0000427,4]);
+	d3sMap.set("cigarettes/hr",["counts",0.00833333335*0.0000427,4]);
+	d3sMap.set("X-rays/hr",["counts",0.2*0.0000427,4]);
+}
+
+function getLabelContent(val,sensor_type){
+	console.log(sensor_type);
 	selected_unit = getDoseUnit();
-	latest_val = (val.properties[unitMap.get(selected_unit)[0]]*unitMap.get(selected_unit)[1]).toFixed(unitMap.get(selected_unit)[2]);
+	latest_val = 0;
+	if( sensor_type=="aq" ) {
+		latest_val = val.properties["PM25"];
+		selected_unit = "PM 2.5";
+	}
+	if( sensor_type=="adc" ) {
+		latest_val = val.properties["co2_ppm"];
+		selected_unit = "ppm";
+	}
+	if( sensor_type=="weather" ) {
+		latest_val = val.properties["temperature"];
+		selected_unit = "C";
+	}
+	if( sensor_type=="d3s" ) {
+		latest_val = (val.properties[d3sMap.get(selected_unit)[0]]*d3sMap.get(selected_unit)[1]).toFixed(d3sMap.get(selected_unit)[2]);
+	}
+	if( sensor_type=="pocket")
+		latest_val = (val.properties[unitMap.get(selected_unit)[0]]*unitMap.get(selected_unit)[1]).toFixed(unitMap.get(selected_unit)[2]);
 	return ("&nbsp" + latest_val + "&nbsp" + selected_unit + "&nbsp");
 }
 
