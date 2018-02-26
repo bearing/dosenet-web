@@ -34,11 +34,11 @@ profile.set_preference("hidenavbar.hidden", True)
 profile.set_preference("hidenavbar.hideonstart", 1)
 profile.set_preference("extensions.hidtb.auto_hide_one_tab", True)
 
-#b = webdriver.Firefox(firefox_profile=profile)
+b = webdriver.Firefox(firefox_profile=profile)
 b = webdriver.Firefox()
-#b.get('http://localhost')
-#b.get('file:///Users/alihanks/dosenet-web/Rad101.html')
-#b.find_element_by_xpath('/html/body').send_keys(Keys.F11)
+b.get('http://localhost')
+b.get('file:///Users/alihanks/dosenet-web/Rad101.html')
+b.find_element_by_xpath('/html/body').send_keys(Keys.F11)
 
 while True:
     for idx,url in enumerate(urls):
