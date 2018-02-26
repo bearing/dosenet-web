@@ -16,10 +16,9 @@ if __name__ == "__main__":
     		['https://radwatch.berkeley.edu/dosenet/data#data_1',30],
             ['https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_1',20],
             ['https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_2',20]
-    		#['file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',20],
-            #['file:///home/pi/dosenet-web/display-monitors/FindMore.html',15]
-            ]
-#    sleeps = [10,30,10,10,30,30,20,20,20,20,15]
+    		['file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',20],
+            ['file:///home/pi/dosenet-web/display-monitors/FindMore.html',15]
+           ]
 
 profile = webdriver.FirefoxProfile()
 extensions = []
