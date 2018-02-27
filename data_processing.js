@@ -46,6 +46,10 @@ function rgbToHex(r, g, b) {
 //  return sample;
 //}
 
+function getSum(total, num) {
+    return total + num;
+}
+
 function get_sample_size(time) {
   if( time=='hour' )
     return 1;
@@ -301,22 +305,32 @@ function process_d3s_csv(text,dose,timezone) {
 function process_d3s_spectrum(text) {
   var channel_sums = [];
   var lines = text.split("\n");
+  var calibs = [];
+  var calib_total = 0;
 
   for(var i = 1; i < nentries+1; ++i ) {
-    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
+    // move on if there are fewer than nentries in input files
+    if( lines.length < i-1 ) continue;
     var line = lines[i];
-    if(typeof line != 'undefined') {
-      var data = line.split(",");
-      for( var j = 5; j < data.length; ++j) {
-        if( i==1 ) channel_sums.push(parseFloat(data[j]));
-        else channel_sums[j-5] += parseFloat(data[j]);
-      }
+
+    if(typeof line == 'undefined') continue;
+    var data = line.split(",");
+    if( parseFloat(data[5]) !== parseFloat(data[5]) ) continue;
+
+    calibs.push(parseFloat(data[5]));
+    calib_total = calib_total + parseFloat(data[5]);
+
+    for( var j = 6; j < data.length; ++j) {
+      if( i==1 ) channel_sums.push(parseFloat(data[j]));
+      else channel_sums[j-6] += parseFloat(data[j]);
     }
   }
 
+  var calib_ave = calib_total/calibs.length;
+
   channel_count_data = [];
   for( var i = 0; i < channel_sums.length; ++i) {
-    channel_count_data.push([i,[channel_sums[i],Math.sqrt(channel_sums[i])]]);
+    channel_count_data.push([i*calib_ave,[channel_sums[i],Math.sqrt(channel_sums[i])]]);
   }
 
   return channel_count_data;
@@ -741,7 +755,7 @@ function plot_spectra(location,spectra_input,time,div) {
       showRangeSelector: false,
       sigFigs: 4,
       ylabel: 'counts',
-      xlabel: 'channels',
+      xlabel: 'Energy (keV)',
       labels: ['channel','counts'],
       strokeWidth: 0.0,
       highlightCircleSize: 3,
