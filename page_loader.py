@@ -8,14 +8,14 @@ from os.path import isfile, join
 firefox_extension_path = '/home/pi/.mozilla/firefox/4dtxxbqk.default/extensions/'
 
 if __name__ == "__main__":
-    urls = [#['file:///home/pi/dosenet-web/display-monitors/Front.html',10],
+    urls = [['file:///home/pi/dosenet-web/display-monitors/Front.html',10],
             ['https://radwatch.berkeley.edu',30],
             ['https://radwatch.berkeley.edu/rad101#tabs-1',10],
             ['https://radwatch.berkeley.edu/rad101#tabs-2',10],
     		    ['https://radwatch.berkeley.edu/dosenet/map#dosenet_rad_banner',30],
     		    ['https://radwatch.berkeley.edu/dosenet/data#data_1',30],
             ['https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_1',20],
-            ['https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_2',20]
+            ['https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_2',20],
     		    ['file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',20],
             ['file:///home/pi/dosenet-web/display-monitors/FindMore.html',15]
            ]
@@ -34,9 +34,6 @@ profile.set_preference("hidenavbar.hideonstart", 1)
 profile.set_preference("extensions.hidtb.auto_hide_one_tab", True)
 
 b = webdriver.Firefox(firefox_profile=profile)
-b = webdriver.Firefox()
-b.get('http://localhost')
-b.get('file:///Users/alihanks/dosenet-web/Rad101.html')
 b.find_element_by_xpath('/html/body').send_keys(Keys.F11)
 
 while True:
