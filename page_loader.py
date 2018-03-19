@@ -12,11 +12,11 @@ if __name__ == "__main__":
             ['https://radwatch.berkeley.edu',30],
             ['https://radwatch.berkeley.edu/rad101#tabs-1',10],
             ['https://radwatch.berkeley.edu/rad101#tabs-2',10],
-    		    ['https://radwatch.berkeley.edu/dosenet/map#dosenet_rad_banner',30],
-    		    ['https://radwatch.berkeley.edu/dosenet/data#data_1',30],
+    		['https://radwatch.berkeley.edu/dosenet/map#dosenet_rad_banner',30],
+    		['https://radwatch.berkeley.edu/dosenet/data#data_1',30],
             ['https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_1',20],
             ['https://radwatch.berkeley.edu/dosenet/schools/etcheverry#spacer_2',20],
-    		    ['file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',20],
+    		['file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',20],
             ['file:///home/pi/dosenet-web/display-monitors/FindMore.html',15]
            ]
 
@@ -38,8 +38,11 @@ b.find_element_by_xpath('/html/body').send_keys(Keys.F11)
 
 while True:
     for idx,url in enumerate(urls):
-        b.get(url[0])
-        if idx>=1 and idx <=2:
-            b.refresh()
-        b.get(url[0])
+        try:
+            b.get(url[0])
+            if idx>=1 and idx <3:
+                b.refresh()
+                b.get(url[0])
+        except:
+            pass
         sleep(url[1])
