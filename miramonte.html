@@ -5,6 +5,7 @@
   <script src="/sites/default/files/dosenet/data_processing.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
   <link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+  <link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/location_style.css">
 </head>
 
 <body>
@@ -17,11 +18,150 @@
     </div>
     <br>
 
-    <div id="graph_wrapper_div"><div id="graph_div"></div></div>
-    <script type="text/javascript"> 
-      var url = '/sites/default/files/dosenet/miramonte.csv?'
+    <div id="spacer_1">
+      <table style="border:100px">
+        <tr>
+        </tr>
+      </table>
+    </div>
+    <div class="roundedwrapper">
+      <div id="local_table_wrapper_div">
+        <table id="pocket_data" style="width:100%; border=0px;">
+          <tr>
+            <td>
+              <div id="dose_graph_wrapper_div"><div class="data_graph_wrapper" id="graph_div"></div></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <table id="legend" class="legend_table"></table>
+      <div style="font-size:15px;text-align:center;font-weight:bold;">
+        <p> Data from our basic silicon sensor with indoor and outdoor locations. </p>
+      </div>
+    </div>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <div class="roundedwrapper">
+      <div id="local_table_wrapper_div">
+        <table id="d3s_data" style="width:100%; border:0px;">
+          <tr>
+            <td>
+              <div class="data_graph_wrapper" id="d3s_graph_div"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="spectra_graph_wrapper" id="spectra_div"></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="font-size:15px;text-align:center;font-weight:bold;">
+        <p> Data from our cesium-iodide crystal giving precise counting statistics
+          and energy information that allows for source identification. </p>
+      </div>
+    </div>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <div id="spacer_2">
+      <table style="border:100px">
+        <tr>
+        </tr>
+      </table>
+    </div>
+    <div class="roundedwrapper">
+      <div id="local_table_wrapper_div">
+        <table id="air_data" style="width:100%; border:10px;">
+          <tr>
+            <td>
+              <div class="data_graph_wrapper" id="small_graph_div"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="data_graph_wrapper" id="only_small_graph_div"></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="font-size:15px;text-align:center;font-weight:bold;">
+        <p> Data from our air quality sensors. The top graph shows particulate concentrations,
+          which can be used to determine the air quality index, and the lower shows the CO2
+          concentration in parts-per-million. </p>
+      </div>
+    </div>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <div class="roundedwrapper">
+      <div id="local_table_wrapper_div">
+        <table id="d3s_data" style="width:100%; border:10px;">
+          <tr>
+            <td>
+              <div id="local_graph_wrapper_div">
+                <div class="squashed_graph_wrapper" id="temp_graph_div"></div>
+                <div class="squashed_graph_wrapper" id="hum_graph_div"></div>
+                <div class="squashed_graph_wrapper" id="press_graph_div"></div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="font-size:15px;text-align:center;font-weight:bold;">
+        <p> Basic weather data (temperature, pressure, and humidity) which may influence
+          air quality and radiation data. </p>
+      </div>
+    </div>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+    <div id="spacer_3">
+      <table style="border:100px">
+        <tr>
+        </tr>
+      </table>
+    </div>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+    <script type="text/javascript">
+      var table = document.getElementById("legend");
+      row = table.insertRow(0);
+      cell = row.insertCell(0);
+      url_array = [];
+      var url = '/sites/default/files/dosenet/miramonte_day.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-      get_data(url,'Miramonte High School','America/Los_Angeles','&microSv/hr','Day','graph_div');
+      url_array.push(url);
+      cell = row.insertCell(1);
+      cell.innerHTML = '<div class="inline-field" id="Miramonte Classroom_div">'
+                      +'<label class="label_text">'
+                      +'<input type="checkbox" onchange="resetData()" id="Miramonte Classroom">'
+                      +'Miramonte Classroom</label></div>';
+      cell.style.textAlign = "left";
+
+      url = '/sites/default/files/dosenet/miramonte_os_day.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      url_array.push(url);
+      cell = row.insertCell(2);
+      cell.innerHTML = '<div class="inline-field" id="Miramonte Outside_div">'
+                      +'<label class="label_text">'
+                      +'<input type="checkbox" onchange="resetData()" id="Miramonte Outside">'
+                      +'Miramonte Outside</label></div>';
+      cell.style.textAlign = "left";
+      var location_array = ['Miramonte Classroom','Miramonte Outside'];
+      get_all_data(url_array,location_array,'&microSv/hr','day','graph_div');
+      cell = row.insertCell(3);
+      url = '/sites/default/files/dosenet/miramonte_os_d3s_day.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      get_d3s_data(url,'Pinewood CsI','local','&microSv/hr','day','d3s_graph_div');
+      get_d3s_spectra(url,'Pinewood','day','spectra_div');
+      url = '/sites/default/files/dosenet/miramonte_os_aq_day.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      get_aq_data(url,'Pinewood Air Quality (1, 2.5, 10 PM)','local','All Plots','day','small_graph_div');
+      url = '/sites/default/files/dosenet/miramonte_os_adc_day.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      get_co2_data(url,'Pinewood CO2 (ppm)','local','day','only_small_graph_div')
+      url = '/sites/default/files/dosenet/miramonte_os_weather_day.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      get_weather_data(url,'Miramonte T/H/P','local',"Temperature",'day',"temp_graph_div",false,true,false);
+      get_weather_data(url,'Miramonte Humidity','local',"Humidity",'day',"hum_graph_div",false,false,false);
+      get_weather_data(url,'Miramonte Pressure','local',"Pressure",'day',"press_graph_div",false,false,true);
     </script>
 
     &nbsp;
