@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+    <head>
+        <!-- Plotly.js -->
+        <script src="plotly-latest.min.js"></script>
+        <script type="text/javascript" src="output.geojson"></script>
+    </head>
+    <body>
+        <div id="divstart">Check out all data together!</div>
+        <style>
+            #divstart {
+                color: black;
+                font-family: 'Arial', 'cursive';
+                font-size: 20px;
+                padding: 30px 0 0 70px;/*top right bottom left*/
+            }
+            
+            #main_wrapper {
+                margin: 30px;
+            }
+            
+            #space {
+                background: white;
+                padding: 30px 0 0 0;
+            }
+            
+            #div1, #div2, #div3 {
+                background: #c7c7c7;
+                padding: 5px;
+                border-radius: 5px;
+            }
+        </style>
+        <!-- Plotly chart will be drawn inside this DIV -->
+        <div id="main_wrapper">
+            <div id="div1"></div>
+            <div id="space"></div>
+            <div id="div2"></div>
+            <div id="space"></div>
+            <div id="div3"></div>
+        </div>
+        <script>
+            Plotly.d3.csv("etch_roof_year.csv", function(err, rows){
+                function unpack(rows, key) {
+                    return rows.map(function(rows) { return rows[key]; });
+                    /*fix with web server local host 8000 by running python -m http.server on git bash*/
+                }
+                var trace1 = {
+                    type: "scatter",
+                    mode: "markers",
+                    x: unpack(rows, 'deviceTime_local'),
+                    y: unpack(rows, "cpm"),
+                    error_y: {
+                        type: 'data',
+                        array: unpack(rows, "cpmError"),
+                    },
+                }
+                var layout1 = {
+                    title: 'Etcheverry Roof', 
+                    xaxis: {
+                        autorange: true,
+                        range: ['2018-04-15 20:01:06', '2019-04-13 23:51:00'],
+                        title: 'Time (America/Los Angeles)',
+                        rangeselector: {
+                            buttons: [{
+                                count: 1,
+                                label: '1d',
+                                step: 'day',
+                                stepmode: 'backward',
+                            }, {
+                                count: 7,
+                                label: '1w',
+                                step: 'day',
+                                stepmode: 'backward',
+                            }, {
+                                count: 1,
+                                label: '1m',
+                                step: 'month',
+                                stepmode: 'backward',
+                            }, {
+                                count: 6,
+                                label: '6m',
+                                step: 'month',
+                                stepmode: 'backward',
+                            }, {step: 'all'},
+                        ]},
+                        type: 'date',
+                    },
+                    automargin: true,
+                    autosize: false,
+                    width: 1140,
+                    height: 500,
+                    margin: {
+                        l: 110,
+                        r: 50,
+                        b: 90,
+                        t: 80,
+                        pad: 2
+                    },
+                    yaxis: {
+                        autorange: true,
+                        range: [2, 3],
+                        title: 'CPM',
+                    }
+                };
+            
+                Plotly.newPlot('div1', [trace1], layout1, {showSendToCloud: true});
+            })
+        </script>
+        <script>
+            Plotly.d3.csv("average_cpm.csv", function(err, rows){
+                function unpack(rows, key) {
+                    return rows.map(function(rows) { return rows[key]; });
+                    /*fix with web server local host 8000 by running python -m http.server on git bash*/
+                }
+                var trace2 = {
+                    x: unpack(rows, "Location"),
+                    y: unpack(rows, "Average cpm"),
+                    type: 'bar'
+                }
+                var layout2 = {
+                    automargin: true,
+                    title: 'Average dose rate over last month',
+                    autosize: false,
+                    width: 1140,
+                    height: 600,
+                    margin: {
+                        l: 110,
+                        r: 50,
+                        b: 225,
+                        t: 65,
+                        pad: 10
+                    },
+                    yaxis: {
+                        /*title: 'µSv/hr',*/
+                        title: 'Average CPM',
+                    }
+                };
+                Plotly.newPlot('div2', [trace2], layout2, {showSendToCloud: true});
+            })
+        </script>
+        <script>
+            Plotly.d3.csv("my_files.csv", function(err, files){
+                function unpack(files, key) {
+                    return files.map(function(files) { return files[key]; });
+                }
+                var start = unpack(files, 'one month back')[0]
+                var end = unpack(files, 'overall most recent')[0]
+                var list_of_csv_files = unpack(files, 'csv file')
+                var remaining = list_of_csv_files.length;
+                var tracename = [];
+                
+                var time = {};
+                var time_array = []
+                
+                var cpm = {};
+                var cpm_array = []
+
+                var error = {};
+                var error_array = []
+                
+                var trace = [];
+
+                for (var csvfiles = 0; csvfiles < list_of_csv_files.length; csvfiles++) {
+                    Plotly.d3.csv(list_of_csv_files[csvfiles], function(err, rows) {
+                        function unpack(rows, key) {
+                            return rows.map(function(rows) { return rows[key]; });
+                        }
+                        
+                        // this tracename makes the label match up with the plot, the legend is sorted according to order of file loading - the colors markers are correct but the text labels are wrong, and the color of the graph is also wrong. correct the legend text by sorting the tracename alphabetically ---> tracename.sort()
+
+                        tracename.push(unpack(rows, 'tracename')[0]);
+                        
+                        time_array.push(unpack(rows, 'deviceTime_local'));
+                        
+                        cpm_array.push(unpack(rows, 'cpm'));
+                        
+                        error_array.push(unpack(rows, 'cpmError'));
+                        if(!--remaining) plotData();
+                    });
+                }
+                
+                // creates a version of tracename that is sorted alphabetically but doesn't replace the original tracename
+                var traces = [];
+                function plotData() {
+                    
+                    var sorted
+                    sorted = tracename.slice(0).sort();
+                    for (official_name = 0; official_name < list_of_csv_files.length; official_name++) {
+                        time[tracename[official_name]] = time_array[official_name]
+                        cpm[tracename[official_name]] = cpm_array[official_name]
+                        error[tracename[official_name]] = error_array[official_name]
+                    }
+                    
+                    Plotly.d3.csv("average_cpm.csv", function(err, cpms) {
+                        function unpack(cpms, key) {
+                            return cpms.map(function(cpms) { return cpms[key]; });
+                        }
+                        var color = {};
+                        var color_array = unpack(cpms, 'hex color codes')
+
+                        var cpms_list = unpack(cpms, 'Average cpm')
+                        var sorted_cpms_list = unpack(cpms, 'All average cpms (sorted)')
+
+                        // delete any empty values
+                        let index2 = cpms_list.indexOf("")
+                        if (index2 != -1) {
+                            cpms_list.splice(index2)
+                        }
+                        
+                        // round all values to 6 decimal places
+                        for (element = 0; element < cpms_list.length; element ++) {
+                            cpms_list[element] = parseFloat(cpms_list[element]).toFixed(6);
+                        }
+                        for (element2 = 0; element2 < sorted_cpms_list.length; element2 ++) {
+                            sorted_cpms_list[element2] = parseFloat(sorted_cpms_list[element2]).toFixed(6);
+                        }
+
+                        for (var array = 0; array < cpms_list.length; array ++) {
+                            for (var array2 = 0; array2 < sorted_cpms_list.length; array2 ++) {
+                                if (sorted_cpms_list[array2] == cpms_list[array]) {
+                                    color[tracename[array]] = color_array[array2]
+                                    break; // stop searching for matches once one match is already found
+                                }
+                            }
+                        }
+                        
+                        //make the actual graph
+                        for (var location = 0; location < Object.keys(time).length; location++) {
+                            trace[location] = {
+                                type: "scatter",
+                                name: sorted[location],
+                                mode: "markers",
+                                x: time[sorted[location]],
+                                y: cpm[sorted[location]],
+                                error_y: {
+                                    type: 'data',
+                                    array: error[sorted[location]],
+                                },
+                                marker: {
+                                    color: color[tracename[location]],
+                                }
+                            }
+                            traces.push(trace[location])
+                        }
+                        
+                        var layout = {
+                            title: "All locations",
+                            legend: {
+                                orientation: "h",
+                            },
+                            xaxis: {
+                                title: "Time (local time zone)",
+                                range: [start, end],
+                                rangeselector: {
+                                    buttons: [{
+                                        count: 1,
+                                        label: '1d',
+                                        step: 'day',
+                                        stepmode: 'backward',
+                                    }, {
+                                        count: 7,
+                                        label: '1w',
+                                        step: 'day',
+                                        stepmode: 'backward',
+                                    }, {
+                                        count: 1,
+                                        label: '1m',
+                                        step: 'month',
+                                        stepmode: 'backward',
+                                    }, {
+                                        count: 6,
+                                        label: '6m',
+                                        step: 'month',
+                                        stepmode: 'backward',
+                                    }, {step: 'all'},
+                                ]},
+                                type: 'date',
+                            },
+                            automargin: true,
+                            autosize: false,
+                            width: 1140,
+                            height: 1000,
+                            margin: {
+                                l: 110,
+                                r: 50,
+                                b: 90,
+                                t: 80,
+                                pad: 2
+                            },
+                            yaxis: {
+                                title: "CPM",
+                                autorange: true
+                            }
+                        }
+                        Plotly.newPlot('div3', traces, layout, {showSendToCloud: true});
+                    })
+                }
+            });
+        </script>
+    </body>
+</html>
