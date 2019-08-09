@@ -100,7 +100,7 @@ def create_all_cpms():
     set_dir()
     all_cpm_data = []
     list_of_files = ['list of files']
-    global path_name
+    path_name
     file_name = path_name + '/'+'json_based_with_both_names.csv'
     name_data = pandas.read_csv(file_name)
     abbrev_names = (name_data["csv Location (abbrev)"] + "_month.csv").tolist()
@@ -152,7 +152,7 @@ def replace_abbrev_filename_with_official_name():
             return False
         return True
     #remove blank (even) rows (keep only odd rows)
-    global path_name
+    path_name
     file_name = path_name + '/'+'json_based_with_both_names.csv'
     json_based_no_spaces = pandas.read_csv(file_name, skiprows=lambda x: blanklines(x))
     #update json_based_with_both_names.csv
@@ -168,7 +168,7 @@ def create_final_average_csv_file():
     set_dir()
     #make the final csv file which we will use to graph
     average_cpm_dataframe = pandas.DataFrame(average_cpms_list, columns=['Location', 'Average cpm'])
-    global path_name
+    path_name
     file_name = path_name + '/'+'average_cpm.csv'
     average_cpm_dataframe.to_csv(file_name, index=False)
     create_time_range_and_append_to_my_files_with_average_cpm()
@@ -253,7 +253,7 @@ def create_colormap():
         all_locations_and_cpms_list[entry][0] = all_locations[entry]
         all_locations_and_cpms_list[entry][1] = all_average_cpms_unsorted[entry]
     all_locations_and_cpms = pandas.DataFrame(all_locations_and_cpms_list, columns=['All locations', 'All average cpms'])
-    global path_name
+    path_name
     file_name = path_name + '/'+'all_locations_and_cpms.csv'
     all_locations_and_cpms.to_csv(file_name, index=False)
     with open('all_locations_and_cpms.csv', 'r') as f:
@@ -302,7 +302,7 @@ def create_colormap():
         new_average_cpms_list[slot].insert(0, abbrev_names[slot])
 
     average_cpm_dataframe = pandas.DataFrame(new_average_cpms_list, columns=columns_list)
-    global path_name
+    path_name
     file_name = path_name + '/'+'average_cpm.csv'
     average_cpm_dataframe.to_csv(file_name, index=False)
 
