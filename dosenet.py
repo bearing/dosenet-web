@@ -35,7 +35,7 @@ def create_my_files():
                 else:
                     # drop the data points in each file where a single data point does not exist or equals 0
                     data.drop(data[data.cpm == 0].index, axis=0, inplace=True)
-                    data.drop(data[data.cpm == ""].index, axis=0, inplace=True)
+                    #data.drop(data[data.cpm == ""].index, axis=0, inplace=True)
                     data.to_csv(file, index=False)
     remove_files.extend(broken_files)
     global my_files
