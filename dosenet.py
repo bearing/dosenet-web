@@ -62,7 +62,7 @@ def read_json_file():
     # Directory structure on surver is not flat
     if not os.path.isfile(json_file_name):
       json_file_name = "../output.geojson"
-    with open("output.geojson") as json_file:
+    with open(json_file_name) as json_file:
         data = json.load(json_file)
         for i in range(0, len(data["features"])): #for all the lists in the json file:
             if data["features"][i]["properties"]["csv_location"] in location: #if the name in the list in the json file does NOT have bad data (all 0s)
