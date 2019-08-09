@@ -78,8 +78,10 @@ def read_json_file():
 
 def create_json_based_csv():
     set_dir()
+    global path_name
+    file_name = path_name + '/'+'json_based_with_both_names.csv'
     json_based_dataframe = pandas.DataFrame(json_csv_list, columns=['Official Name', 'csv Location (abbrev)'])
-    json_based_dataframe.to_csv(r'json_based_with_both_names.csv', index=False)
+    json_based_dataframe.to_csv(file_name, index=False)
     sort_official_names_alpha()
 
 def sort_official_names_alpha():
@@ -98,7 +100,9 @@ def create_all_cpms():
     set_dir()
     all_cpm_data = []
     list_of_files = ['list of files']
-    name_data = pandas.read_csv('json_based_with_both_names.csv')
+    global path_name
+    file_name = path_name + '/'+'json_based_with_both_names.csv'
+    name_data = pandas.read_csv(file_name)
     abbrev_names = (name_data["csv Location (abbrev)"] + "_month.csv").tolist()
     for file in abbrev_names:
         list_of_files.append(file)
@@ -148,9 +152,11 @@ def replace_abbrev_filename_with_official_name():
             return False
         return True
     #remove blank (even) rows (keep only odd rows)
-    json_based_no_spaces = pandas.read_csv('json_based_with_both_names.csv', skiprows=lambda x: blanklines(x))
+    global path_name
+    file_name = path_name + '/'+'json_based_with_both_names.csv'
+    json_based_no_spaces = pandas.read_csv(file_name, skiprows=lambda x: blanklines(x))
     #update json_based_with_both_names.csv
-    json_based_no_spaces.to_csv(r'json_based_with_both_names.csv', index=False)
+    json_based_no_spaces.to_csv(file_name, index=False)
     #make a list to retrieve official_name values from
     json_based_no_spaces_list = json_based_no_spaces.values.tolist()
     for filetoreplace in range(0, len(my_files)):
@@ -162,7 +168,9 @@ def create_final_average_csv_file():
     set_dir()
     #make the final csv file which we will use to graph
     average_cpm_dataframe = pandas.DataFrame(average_cpms_list, columns=['Location', 'Average cpm'])
-    average_cpm_dataframe.to_csv(r'average_cpm.csv', index=False)
+    global path_name
+    file_name = path_name + '/'+'average_cpm.csv'
+    average_cpm_dataframe.to_csv(file_name, index=False)
     create_time_range_and_append_to_my_files_with_average_cpm()
 
 def create_time_range_and_append_to_my_files_with_average_cpm():
@@ -196,7 +204,9 @@ def create_time_range_and_append_to_my_files_with_average_cpm():
         all_files_and_start_and_end_ranges.append([file, list(names_dict.keys())[list(names_dict.values()).index(simplefilename)], start_of_month_or_180_entries_from_most_recent_time_of_each_file, end_of_month_or_most_recent_time_of_each_file, cpms_dict.get(officialfilename), "", ""])
         #update csv
         my_files_csv = pandas.DataFrame(all_files_and_start_and_end_ranges, columns=['csv file', 'Name', 'start of range', 'end of range/most recent time', 'Average cpms', 'overall most recent', 'one month back'])
-        my_files_csv.to_csv(r'my_files.csv', index=False)
+        global path_name
+        file_name = path_name + '/'+'my_files.csv'
+        my_files_csv.to_csv(file_name, index=False)
     sort_my_files_by_recent_date()
 
 def sort_my_files_by_recent_date():
@@ -243,7 +253,9 @@ def create_colormap():
         all_locations_and_cpms_list[entry][0] = all_locations[entry]
         all_locations_and_cpms_list[entry][1] = all_average_cpms_unsorted[entry]
     all_locations_and_cpms = pandas.DataFrame(all_locations_and_cpms_list, columns=['All locations', 'All average cpms'])
-    all_locations_and_cpms.to_csv(r'all_locations_and_cpms.csv', index=False)
+    global path_name
+    file_name = path_name + '/'+'all_locations_and_cpms.csv'
+    all_locations_and_cpms.to_csv(file_name, index=False)
     with open('all_locations_and_cpms.csv', 'r') as f:
         data = [line for line in csv.reader(f)]
         data = sorted(data[1:], key=lambda x: x[1], reverse=True) #sort by column index 1 (second column) - all average cpms
@@ -290,7 +302,9 @@ def create_colormap():
         new_average_cpms_list[slot].insert(0, abbrev_names[slot])
 
     average_cpm_dataframe = pandas.DataFrame(new_average_cpms_list, columns=columns_list)
-    average_cpm_dataframe.to_csv(r'average_cpm.csv', index=False)
+    global path_name
+    file_name = path_name + '/'+'average_cpm.csv'
+    average_cpm_dataframe.to_csv(file_name, index=False)
 
     #################################################################################
     ##### update my_files.csv so the first two columns are in the correct order #####
@@ -418,6 +432,8 @@ def main():
                                   help="Full path to files to run over")
     args = parser.parse_args()
     path_name = args.inpath
+    # Make path_name 'raw' incase user is providing dos-like paths
+    path_name.encode('unicode_escape')
     create_my_files()
 
 def set_dir():
