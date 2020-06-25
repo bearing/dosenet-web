@@ -1,0 +1,38 @@
+list of files,Location,Average msv,All locations (sorted by msv),All average msvs (sorted),hex color codes,error_flag
+ahs_os_month.csv,Alameda HS Outside,0.119631,Norra Real Gymnasium,0.266197,#840000
+alameda_hs_month.csv,Alameda High School,0.076556,KTH Stockholm,0.20725,#860f00
+asakahighschool_month.csv,Asaka High School,0.119471,Asaka High School Outside,0.186403,#871e00
+asaka_os_month.csv,Asaka High School Outside,0.186403,KAIST,0.158514,#892e00
+frankfurt_month.csv,Bergen-Enkheim,0.131982,University of Washington,0.149208,#8a3d00
+campolindo_month.csv,Campolindo High School,0.055511,Chernihiv University,0.13617,#8c4e00
+cnut_month.csv,Chernihiv University,0.13617,Slavutich branch of NTUU KPI,0.132852,#8d5e00
+ebia_month.csv,East Bay Innovation Academy,0.060575,Westend,0.132363,#8f6f00
+etch_month.csv,Etcheverry Hall,0.086945,Bergen-Enkheim,0.131982,#918100
+etch_roof_month.csv,Etcheverry Roof,0.095066,Sabacka Gimnazija,0.127236,#929200
+exploratorium_month.csv,Exploratorium,0.061694,Miramonte HS Outside,0.121074,#839400
+foothills_month.csv,Foothill College,0.062152,Alameda HS Outside,0.119631,#749500
+futabafutureschool_month.csv,Futaba Future School,0.11048,Asaka High School,0.119471,#659700
+ghs_month.csv,Gilroy High School,0.0571,Koriyama City Hall OS,0.1176,#559900
+harbor_bay_month.csv,Harbor Bay,0.055942,Sakata Site,0.113844,#459a00
+hb_os_month.csv,Harbor Bay Outside,0.058755,Futaba Future School,0.11048,#349c00
+JAEA_ms_month.csv,JAEA Minamisoma,0.092279,Koriyama City Hall,0.098859,#239d00
+kaist_month.csv,KAIST,0.158514,LBL,0.095573,#129f00
+kisr-1_month.csv,KISR-1,0.070841,Etcheverry Roof,0.095066,#00a000
+KTH_month.csv,KTH Stockholm,0.20725,LBL Outside,0.09361,#00a212
+koriyama_ch_month.csv,Koriyama City Hall,0.098859,JAEA Minamisoma,0.092279,#00a424
+koriyama_ch_multi_month.csv,Koriyama City Hall OS,0.1176,Etcheverry Hall,0.086945,#00a537
+lbl_month.csv,LBL,0.095573,Mission San Jose High School,0.083545,#00a74a
+lbl_outside_month.csv,LBL Outside,0.09361,Pinewood OS,0.077129,#00a85e
+life_academy_month.csv,Life Academy,0.054902,Alameda High School,0.076556,#00aa71
+miramonte_os_month.csv,Miramonte HS Outside,0.121074,KISR-1,0.070841,#00ac85
+miramonte_month.csv,Miramonte High School,0.056921,Mission San Jose HS Outside,0.0648,#00ad9a
+msjhs_os_month.csv,Mission San Jose HS Outside,0.0648,Foothill College,0.062152,#00afaf
+msjhs_month.csv,Mission San Jose High School,0.083545,Exploratorium,0.061694,#009db0
+norrareal_month.csv,Norra Real Gymnasium,0.266197,East Bay Innovation Academy,0.060575,#008ab2
+pinewood_os_month.csv,Pinewood OS,0.077129,Harbor Bay Outside,0.058755,#0078b3
+pinewood_month.csv,Pinewood School,0.0563,Gilroy High School,0.0571,#0065b5
+sabacka_month.csv,Sabacka Gimnazija,0.127236,Miramonte High School,0.056921,#0051b7
+sakata_month.csv,Sakata Site,0.113844,Pinewood School,0.0563,#003db8
+ntuu_kpi_month.csv,Slavutich branch of NTUU KPI,0.132852,Harbor Bay,0.055942,#0029ba
+uw_month.csv,University of Washington,0.149208,Campolindo High School,0.055511,#0015bb
+westend_month.csv,Westend,0.132363,Life Academy,0.054902,#0000bd
