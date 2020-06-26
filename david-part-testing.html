@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Testing Stuff</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+    function get_month_name(month) {
+      if (month == 1)
+        return "January";
+      else if (month == 2)
+        return "February";
+      else if (month == 3)
+        return "March";
+      else if (month == 4)
+        return "April";
+      else if (month == 5)
+        return "May";
+      else if (month == 6)
+        return "June";
+      else if (month == 7)
+        return "July";
+      else if (month == 8)
+        return "August";
+      else if (month == 9)
+        return "September";
+      else if (month == 10)
+        return "October";
+      else if (month == 11)
+        return "November";
+      else if (month == 12)
+        return "December";
+      else
+        return "[not a date]";
+    }
+    function get_date(num) {
+      return get_month_name((num % 4) * 3 + 1) + " " + (2016 + Math.floor(num / 4));
+    }
+      $( function() {
+        $( "#slider-range" ).slider({
+          range: true,
+          min: 0,
+          max: 18,
+          step: 1,
+          values: [ 4, 8 ],
+          slide: function( event, ui ) {
+            $( "#amount" ).val(get_date(ui.values[ 0 ]) + " - " + get_date(ui.values[ 1 ]) );
+          }
+        });
+        $( "#amount" ).val(get_date($( "#slider-range" ).slider( "values", 0 )) +
+          " - " + get_date($( "#slider-range" ).slider( "values", 1 )) );
+      });
+      // link to info: https://jqueryui.com/slider/#range
+  </script>
+    <style>
+      #amount {
+        width: 500px;
+      }
+      #slider-range {
+        width: 500px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <p>
+      <label for="amount">Price range:</label>
+      <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+    </p>
+
+    <div id="slider-range"></div>
+  </body>
+</html>
