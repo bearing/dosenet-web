@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>first graph</title>
+
+        <style>
+            h1 {
+                font-family: "Verdana";
+            }
+
+            .graph {
+                margin: 6vh;
+            }
+
+            #menu {
+                margin: 3vh auto;
+                padding: 0.25%;
+            }
+        </style>
+
+        <script>
+            function change_unit() {
+                // the unit that is currently selected
+                currentUnit = document.querySelector("#menu").value;
+
+                // the src of the iframe
+                source = `_plot_${currentUnit}.html`;
+
+                // create the iframe inside of the div
+                div = document.querySelector("#plot");
+                div.innerHTML = `<center><iframe src=${source} width="1200vw" height="600vw"></center>`;
+            }
+        </script>
+    </head>
+    <body onload="change_unit();">
+        <div class="graph">
+            <h1>Most recent average dose rates ordered by region</h1>
+
+            <center>
+                <!-- dropdown menu -->
+                <select id="menu" onchange="change_unit();">
+                    <option value="units" disabled><strong>Units</strong></option>
+                    <option value="cpm">CPM (counts per minute)</option>
+                    <option value="msv">μSv/hr (microsieverts per hour)</option>
+                </select>
+            </center>
+
+            <!-- this is where the plot will show up -->
+            <div id="plot"></div>
+        </div>
+    </body>
+</html>
