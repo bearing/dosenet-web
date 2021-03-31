@@ -1,0 +1,2 @@
+deviceTime_utc,deviceTime_local,deviceTime_unix,temperature,pressure,humidity
+2018-05-11 22:34:52+00:00,2018-05-11 15:34:52-07:00,1526078092,24.65,1002.47,39.76

@@ -1,0 +1,1175 @@
+{
+    "type":"FeatureCollection",
+    "features":[
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.252211,
+                    37.876886
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"LBL",
+                "CPM":3.2,
+                "counts":null,
+                "co2_ppm":null,
+                "PM25":null,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"lbl",
+                "has_d3s":false,
+                "has_aq":false,
+                "has_co2":false,
+                "has_w":false,
+                "Latest measurement":"2019-01-09 02:05:33-08:00",
+                "deviceTime_unix":"1547028333",
+                "deviceTime_utc":"2019-01-09 10:05:33+00:00",
+                "deviceTime_local":"2019-01-09 02:05:33-08:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.12608,
+                    37.8673
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Campolindo High School",
+                "CPM":1.8,
+                "counts":null,
+                "co2_ppm":null,
+                "PM25":null,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"campolindo",
+                "has_d3s":false,
+                "has_aq":false,
+                "has_co2":false,
+                "has_w":false,
+                "Latest measurement":"2019-06-16 14:00:13-07:00",
+                "deviceTime_unix":"1560718813",
+                "deviceTime_utc":"2019-06-16 21:00:13+00:00",
+                "deviceTime_local":"2019-06-16 14:00:13-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.142018,
+                    37.387837
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Pinewood School",
+                "CPM":1.8,
+                "counts":null,
+                "co2_ppm":null,
+                "PM25":null,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"pinewood",
+                "has_d3s":false,
+                "has_aq":false,
+                "has_co2":false,
+                "has_w":false,
+                "Latest measurement":"2019-06-16 14:00:12-07:00",
+                "deviceTime_unix":"1560718812",
+                "deviceTime_utc":"2019-06-16 21:00:12+00:00",
+                "deviceTime_local":"2019-06-16 14:00:12-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.259265,
+                    37.875644
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Etcheverry Hall",
+                "CPM":2.4,
+                "counts":null,
+                "co2_ppm":null,
+                "PM25":null,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"etch",
+                "has_d3s":false,
+                "has_aq":false,
+                "has_co2":false,
+                "has_w":false,
+                "Latest measurement":"2017-06-27 00:55:13-07:00",
+                "deviceTime_unix":"1498550113",
+                "deviceTime_utc":"2017-06-27 07:55:13+00:00",
+                "deviceTime_local":"2017-06-27 00:55:13-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.259201,
+                    37.875387
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Etcheverry Roof",
+                "CPM":3.0,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":17.21,
+                "humidity":37.49,
+                "pressure":998.93,
+                "csv_location":"etch_roof",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2019-04-14 23:55:42-07:00",
+                "deviceTime_unix":"1555311342",
+                "deviceTime_utc":"2019-04-15 06:55:42+00:00",
+                "deviceTime_local":"2019-04-14 23:55:42-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    140.36044,
+                    37.400491
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Koriyama City Hall",
+                "CPM":1.4,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"koriyama_ch",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-17 09:11:30+09:00",
+                "deviceTime_unix":"1560730290",
+                "deviceTime_utc":"2019-06-17 00:11:30+00:00",
+                "deviceTime_local":"2019-06-17 09:11:30+09:00",
+                "timezone":"Asia/Tokyo"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.131671,
+                    37.361281
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Foothill College",
+                "CPM":0.8,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"foothills",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2018-04-24 07:10:14-07:00",
+                "deviceTime_unix":"1524579014",
+                "deviceTime_utc":"2018-04-24 14:10:14+00:00",
+                "deviceTime_local":"2018-04-24 07:10:14-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.026841,
+                    37.589991
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"James Logan High School",
+                "CPM":0.0,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"jlhs",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-16 17:10:19-07:00",
+                "deviceTime_unix":"1560730219",
+                "deviceTime_utc":"2019-06-17 00:10:19+00:00",
+                "deviceTime_local":"2019-06-16 17:10:19-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.141381,
+                    37.746036
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"East Bay Innovation Academy",
+                "CPM":3.0,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"ebia",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2017-06-21 10:40:11-07:00",
+                "deviceTime_unix":"1498066811",
+                "deviceTime_utc":"2017-06-21 17:40:11+00:00",
+                "deviceTime_local":"2017-06-21 10:40:11-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    127.358417,
+                    36.372168
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"KAIST",
+                "CPM":5.6,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"kaist",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-17 09:10:17+09:00",
+                "deviceTime_unix":"1560730217",
+                "deviceTime_utc":"2019-06-17 00:10:17+00:00",
+                "deviceTime_local":"2019-06-17 09:10:17+09:00",
+                "timezone":"Asia/Seoul"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.247783,
+                    37.764416
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Alameda High School",
+                "CPM":2.6,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"alameda_hs",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2018-06-19 14:05:11-07:00",
+                "deviceTime_unix":"1529442311",
+                "deviceTime_utc":"2018-06-19 21:05:11+00:00",
+                "deviceTime_local":"2018-06-19 14:05:11-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.246035,
+                    37.746416
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Harbor Bay",
+                "CPM":1.4,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"harbor_bay",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-16 17:11:57-07:00",
+                "deviceTime_unix":"1560730317",
+                "deviceTime_utc":"2019-06-17 00:11:57+00:00",
+                "deviceTime_local":"2019-06-16 17:11:57-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.21656,
+                    37.78467
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Life Academy",
+                "CPM":1.0,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"life_academy",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2018-07-12 14:45:16-07:00",
+                "deviceTime_unix":"1531431916",
+                "deviceTime_utc":"2018-07-12 21:45:16+00:00",
+                "deviceTime_local":"2018-07-12 14:45:16-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    18.056465,
+                    59.353888
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"KTH Stockholm",
+                "CPM":3.6,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"KTH",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-04-15 08:55:21+02:00",
+                "deviceTime_unix":"1555311321",
+                "deviceTime_utc":"2019-04-15 06:55:21+00:00",
+                "deviceTime_local":"2019-04-15 08:55:21+02:00",
+                "timezone":"Europe/Stockholm"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    18.061385,
+                    59.343872
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Norra Real Gymnasium",
+                "CPM":8.2,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"norrareal",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-17 02:10:17+02:00",
+                "deviceTime_unix":"1560730217",
+                "deviceTime_utc":"2019-06-17 00:10:17+00:00",
+                "deviceTime_local":"2019-06-17 02:10:17+02:00",
+                "timezone":"Europe/Stockholm"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -121.575534,
+                    36.99537
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Gilroy High School",
+                "CPM":1.2,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"ghs",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-16 17:10:15-07:00",
+                "deviceTime_unix":"1560730215",
+                "deviceTime_utc":"2019-06-17 00:10:15+00:00",
+                "deviceTime_local":"2019-06-16 17:10:15-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.145693,
+                    37.841814
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Miramonte High School",
+                "CPM":0.8,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"miramonte",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-16 17:10:14-07:00",
+                "deviceTime_unix":"1560730214",
+                "deviceTime_utc":"2019-06-17 00:10:14+00:00",
+                "deviceTime_local":"2019-06-16 17:10:14-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    140.994933,
+                    37.633462
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"JAEA Minamisoma",
+                "CPM":1.0,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"JAEA_ms",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-17 09:10:18+09:00",
+                "deviceTime_unix":"1560730218",
+                "deviceTime_utc":"2019-06-17 00:10:18+00:00",
+                "deviceTime_local":"2019-06-17 09:10:18+09:00",
+                "timezone":"Asia/Tokyo"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    8.760545,
+                    50.153092
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Bergen-Enkheim",
+                "CPM":3.6,
+                "counts":null,
+                "co2_ppm":527.21,
+                "PM25":1.23,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"frankfurt",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-17 02:10:19+02:00",
+                "deviceTime_unix":"1560730219",
+                "deviceTime_utc":"2019-06-17 00:10:19+00:00",
+                "deviceTime_local":"2019-06-17 02:10:19+02:00",
+                "timezone":"Europe/Berlin"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.246088,
+                    37.746364
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Harbor Bay Outside",
+                "CPM":1.2,
+                "counts":null,
+                "co2_ppm":586.66,
+                "PM25":1.27,
+                "temperature":16.28,
+                "humidity":61.71,
+                "pressure":1024.45,
+                "csv_location":"hb_os",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2019-04-01 01:36:27-07:00",
+                "deviceTime_unix":"1554107787",
+                "deviceTime_utc":"2019-04-01 08:36:27+00:00",
+                "deviceTime_local":"2019-04-01 01:36:27-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    30.761421,
+                    51.52339
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Slavutich branch of NTUU KPI",
+                "CPM":3.4,
+                "counts":null,
+                "co2_ppm":586.66,
+                "PM25":1.27,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"ntuu_kpi",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-17 06:35:19+03:00",
+                "deviceTime_unix":"1560742519",
+                "deviceTime_utc":"2019-06-17 03:35:19+00:00",
+                "deviceTime_local":"2019-06-17 06:35:19+03:00",
+                "timezone":"Europe/Kiev"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    31.334388,
+                    51.504895
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Chernihiv University",
+                "CPM":4.6,
+                "counts":null,
+                "co2_ppm":586.66,
+                "PM25":1.27,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"cnut",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2017-05-10 07:22:42+03:00",
+                "deviceTime_unix":"1494390162",
+                "deviceTime_utc":"2017-05-10 04:22:42+00:00",
+                "deviceTime_local":"2017-05-10 07:22:42+03:00",
+                "timezone":"Europe/Kiev"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    19.692767,
+                    44.755076
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Sabacka Gimnazija",
+                "CPM":4.0,
+                "counts":null,
+                "co2_ppm":586.66,
+                "PM25":1.27,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"sabacka",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-06-17 05:35:19+02:00",
+                "deviceTime_unix":"1560742519",
+                "deviceTime_utc":"2019-06-17 03:35:19+00:00",
+                "deviceTime_local":"2019-06-17 05:35:19+02:00",
+                "timezone":"Europe/Berlin"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.252444,
+                    37.876922
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"LBL Outside",
+                "CPM":1.2,
+                "counts":null,
+                "co2_ppm":586.66,
+                "PM25":1.27,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"lbl_outside",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2017-06-20 09:11:06-07:00",
+                "deviceTime_unix":"1497975066",
+                "deviceTime_utc":"2017-06-20 16:11:06+00:00",
+                "deviceTime_local":"2017-06-20 09:11:06-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.144464,
+                    37.841526
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Miramonte HS Outside",
+                "CPM":2.4,
+                "counts":null,
+                "co2_ppm":462.69,
+                "PM25":7.2,
+                "temperature":18.55,
+                "humidity":63.39,
+                "pressure":992.41,
+                "csv_location":"miramonte_os",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2019-06-16 23:41:38-07:00",
+                "deviceTime_unix":"1560753698",
+                "deviceTime_utc":"2019-06-17 06:41:38+00:00",
+                "deviceTime_local":"2019-06-16 23:41:38-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.247583,
+                    37.764445
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Alameda HS Outside",
+                "CPM":2.2,
+                "counts":null,
+                "co2_ppm":null,
+                "PM25":null,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"ahs_os",
+                "has_d3s":false,
+                "has_aq":false,
+                "has_co2":false,
+                "has_w":false,
+                "Latest measurement":"2017-06-12 15:47:13-07:00",
+                "deviceTime_unix":"1497307633",
+                "deviceTime_utc":"2017-06-12 22:47:13+00:00",
+                "deviceTime_local":"2017-06-12 15:47:13-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    47.907812,
+                    29.339518
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"KISR-1",
+                "CPM":1.4,
+                "counts":null,
+                "co2_ppm":null,
+                "PM25":null,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"kisr-1",
+                "has_d3s":false,
+                "has_aq":false,
+                "has_co2":false,
+                "has_w":false,
+                "Latest measurement":"2018-03-20 08:33:32+03:00",
+                "deviceTime_unix":"1521524012",
+                "deviceTime_utc":"2018-03-20 05:33:32+00:00",
+                "deviceTime_local":"2018-03-20 08:33:32+03:00",
+                "timezone":"Asia/Riyadh"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    140.996091,
+                    37.212939
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Futaba Future School",
+                "CPM":0.0,
+                "counts":null,
+                "co2_ppm":null,
+                "PM25":null,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"futabafutureschool",
+                "has_d3s":false,
+                "has_aq":false,
+                "has_co2":false,
+                "has_w":false,
+                "Latest measurement":"2018-03-27 16:57:46+09:00",
+                "deviceTime_unix":"1522137466",
+                "deviceTime_utc":"2018-03-27 07:57:46+00:00",
+                "deviceTime_local":"2018-03-27 16:57:46+09:00",
+                "timezone":"Asia/Tokyo"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    140.349983,
+                    37.390778
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Asaka High School",
+                "CPM":3.6,
+                "counts":null,
+                "co2_ppm":null,
+                "PM25":null,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"asakahighschool",
+                "has_d3s":false,
+                "has_aq":false,
+                "has_co2":false,
+                "has_w":false,
+                "Latest measurement":"2017-11-09 00:16:03+09:00",
+                "deviceTime_unix":"1510154163",
+                "deviceTime_utc":"2017-11-08 15:16:03+00:00",
+                "deviceTime_local":"2017-11-09 00:16:03+09:00",
+                "timezone":"Asia/Tokyo"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    140.359702,
+                    37.400716
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Koriyama City Hall OS",
+                "CPM":3.2,
+                "counts":null,
+                "co2_ppm":965.53,
+                "PM25":0.0,
+                "temperature":22.31,
+                "humidity":27.27,
+                "pressure":990.85,
+                "csv_location":"koriyama_ch_multi",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2018-01-31 08:20:47+09:00",
+                "deviceTime_unix":"1517354447",
+                "deviceTime_utc":"2018-01-30 23:20:47+00:00",
+                "deviceTime_local":"2018-01-31 08:20:47+09:00",
+                "timezone":"Asia/Tokyo"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.141365,
+                    37.387986
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Pinewood OS",
+                "CPM":3.2,
+                "counts":null,
+                "co2_ppm":532.06,
+                "PM25":0.0,
+                "temperature":15.29,
+                "humidity":74.19,
+                "pressure":1003.67,
+                "csv_location":"pinewood_os",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2019-04-14 23:55:42-07:00",
+                "deviceTime_unix":"1555311342",
+                "deviceTime_utc":"2019-04-15 06:55:42+00:00",
+                "deviceTime_local":"2019-04-14 23:55:42-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.126862,
+                    37.867713
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Campolindo HS Outside",
+                "CPM":0.0,
+                "counts":null,
+                "co2_ppm":0.0,
+                "PM25":0.0,
+                "temperature":20.86,
+                "humidity":18.38,
+                "pressure":997.53,
+                "csv_location":"chs_os",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2019-05-23 13:31:30-07:00",
+                "deviceTime_unix":"1558643490",
+                "deviceTime_utc":"2019-05-23 20:31:30+00:00",
+                "deviceTime_local":"2019-05-23 13:31:30-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -121.933777,
+                    37.5454
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Mission San Jose High School",
+                "CPM":3.4,
+                "counts":null,
+                "co2_ppm":0.0,
+                "PM25":0.0,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"msjhs",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2018-05-29 14:05:36-07:00",
+                "deviceTime_unix":"1527627936",
+                "deviceTime_utc":"2018-05-29 21:05:36+00:00",
+                "deviceTime_local":"2018-05-29 14:05:36-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -121.93361,
+                    37.545255
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Mission San Jose HS Outside",
+                "CPM":1.8,
+                "counts":null,
+                "co2_ppm":557.93,
+                "PM25":2.59,
+                "temperature":24.77,
+                "humidity":39.54,
+                "pressure":1002.51,
+                "csv_location":"msjhs_os",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2018-05-11 15:40:02-07:00",
+                "deviceTime_unix":"1526078402",
+                "deviceTime_utc":"2018-05-11 22:40:02+00:00",
+                "deviceTime_local":"2018-05-11 15:40:02-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.397408,
+                    37.801645
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Exploratorium",
+                "CPM":1.2,
+                "counts":null,
+                "co2_ppm":241.2,
+                "PM25":10.95,
+                "temperature":14.19,
+                "humidity":100.0,
+                "pressure":1013.74,
+                "csv_location":"exploratorium",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2019-06-17 16:31:26-07:00",
+                "deviceTime_unix":"1560814286",
+                "deviceTime_utc":"2019-06-17 23:31:26+00:00",
+                "deviceTime_local":"2019-06-17 16:31:26-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    8.65874,
+                    50.11268
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Westend",
+                "CPM":3.4,
+                "counts":null,
+                "co2_ppm":417.64,
+                "PM25":18.83,
+                "temperature":22.21,
+                "humidity":40.28,
+                "pressure":994.55,
+                "csv_location":"westend",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2019-05-17 09:30:54+02:00",
+                "deviceTime_unix":"1558078254",
+                "deviceTime_utc":"2019-05-17 07:30:54+00:00",
+                "deviceTime_local":"2019-05-17 09:30:54+02:00",
+                "timezone":"Europe/Berlin"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    139.850245,
+                    38.931807
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Sakata Site",
+                "CPM":3.6,
+                "counts":null,
+                "co2_ppm":992.82,
+                "PM25":2.05,
+                "temperature":null,
+                "humidity":null,
+                "pressure":null,
+                "csv_location":"sakata",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":false,
+                "Latest measurement":"2019-04-28 07:13:39+09:00",
+                "deviceTime_unix":"1556403219",
+                "deviceTime_utc":"2019-04-27 22:13:39+00:00",
+                "deviceTime_local":"2019-04-28 07:13:39+09:00",
+                "timezone":"Asia/Tokyo"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    -122.309382,
+                    47.6539
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"University of Washington",
+                "CPM":0.0,
+                "counts":null,
+                "co2_ppm":653.14,
+                "PM25":0.0,
+                "temperature":26.74,
+                "humidity":43.62,
+                "pressure":1014.55,
+                "csv_location":"uw",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2019-06-17 23:15:43-07:00",
+                "deviceTime_unix":"1560838543",
+                "deviceTime_utc":"2019-06-18 06:15:43+00:00",
+                "deviceTime_local":"2019-06-17 23:15:43-07:00",
+                "timezone":"America/Los_Angeles"
+            }
+        },
+        {
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                    140.350283,
+                    37.39098
+                ]
+            },
+            "type":"Feature",
+            "properties":{
+                "Name":"Asaka High School Outside",
+                "CPM":3.0,
+                "counts":null,
+                "co2_ppm":479.49,
+                "PM25":0.0,
+                "temperature":20.01,
+                "humidity":62.81,
+                "pressure":978.56,
+                "csv_location":"asaka_os",
+                "has_d3s":false,
+                "has_aq":true,
+                "has_co2":true,
+                "has_w":true,
+                "Latest measurement":"2019-06-17 07:56:19+09:00",
+                "deviceTime_unix":"1560725779",
+                "deviceTime_utc":"2019-06-16 22:56:19+00:00",
+                "deviceTime_local":"2019-06-17 07:56:19+09:00",
+                "timezone":"Asia/Tokyo"
+            }
+        }
+    ]
+}
