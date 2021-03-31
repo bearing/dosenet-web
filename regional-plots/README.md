@@ -1,4 +1,4 @@
-# Most recent average dose rates organized by region
+# Most recent average dose rates ordered by region
 
 ### This is an updated version of the bar graph (first plot) on [the website](https://radwatch.berkeley.edu/partner-locations/).
 
