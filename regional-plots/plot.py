@@ -1,13 +1,9 @@
-import os
 from copy import deepcopy
 from colour import Color
 
-import numpy
 import pandas as pd
 import plotly.express as px
-import glob
-import json
-import csv
+import glob, json, csv
 
 
 # remove all the irrelevant files
@@ -180,11 +176,6 @@ def set_colors():
 
 
 def plot():
-    # string quoting must conform to json standards
-    def jformat(arg):
-        arg = arg.replace("'", "!").replace('"', "'").replace("!", '"')
-        return json.loads(arg)
-
     df_avg = pd.read_csv("average.csv")
 
     for unit in list(conversions.keys()):
