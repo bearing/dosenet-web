@@ -7,70 +7,224 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script>
-    function get_month_name(month) {
-      if (month == 1)
-        return "January";
-      else if (month == 2)
-        return "February";
-      else if (month == 3)
-        return "March";
-      else if (month == 4)
-        return "April";
-      else if (month == 5)
-        return "May";
-      else if (month == 6)
-        return "June";
-      else if (month == 7)
-        return "July";
-      else if (month == 8)
-        return "August";
-      else if (month == 9)
-        return "September";
-      else if (month == 10)
-        return "October";
-      else if (month == 11)
-        return "November";
-      else if (month == 12)
-        return "December";
-      else
-        return "[not a date]";
-    }
-    function get_date(num) {
-      return get_month_name((num % 4) * 3 + 1) + " " + (2016 + Math.floor(num / 4));
-    }
-      $( function() {
+        <!-- Plotly.js -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- <script>
+        $( function() {
         $( "#slider-range" ).slider({
-          range: true,
-          min: 0,
-          max: 18,
-          step: 1,
-          values: [ 4, 8 ],
-          slide: function( event, ui ) {
+            range: true,
+            min: 2000;
+            max: 2020,
+            step: 1,
+            values: [ 4, 18 ],
+            slide: function( event, ui ) {
             $( "#amount" ).val(get_date(ui.values[ 0 ]) + " - " + get_date(ui.values[ 1 ]) );
-          }
+                console.log(ui.values[0] + " " + ui.values[1]);
+                draw_first_graph(['2018-04-15 20:01:06', '2019-04-13 23:51:00']);
+            }
         });
         $( "#amount" ).val(get_date($( "#slider-range" ).slider( "values", 0 )) +
-          " - " + get_date($( "#slider-range" ).slider( "values", 1 )) );
-      });
-      // link to info: https://jqueryui.com/slider/#range
-  </script>
+            " - " + get_date($( "#slider-range" ).slider( "values", 1 )) );
+        });
+        // link to info: https://jqueryui.com/slider/#range
+    </script> -->
     <style>
-      #amount {
-        width: 500px;
-      }
-      #slider-range {
-        width: 500px;
-      }
+        #amount {
+            width: 500px;
+        }
+        #slider-range {
+            width: 500px;
+        }
     </style>
+    <style>
+        #divstart {
+            color: black;
+            font-family: 'Arial', 'cursive';
+            font-size: 20px;
+            padding: 30px 0 0 70px;/*top right bottom left*/
+        }
+
+        #main_wrapper {
+            margin: 30px;
+        }
+
+        #space {
+            background: white;
+            padding: 30px 0 0 0;
+        }
+
+        #div1, #div2, #div3 {
+            background: #c7c7c7;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+
+
   </head>
-  <body>
+    <body>
 
     <p>
-      <label for="amount">Price range:</label>
-      <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        <label for="amount">Price range:</label>
+        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
     </p>
 
     <div id="slider-range"></div>
-  </body>
+
+
+    <div id="main_wrapper">
+        <div id="div1"></div>
+        <div id="space"></div>
+        <div id="div2"></div>
+        <div id="space"></div>
+        <div id="div3"></div>
+    </div>
+    <script>
+
+        function customDateFactory(date="now",type="dataFormated") {
+            let customDate = {
+                _dateObj: new Date(date),
+                get dateObj() {
+                    return this._dateObj;
+                },
+                get displayDate() {
+                    return this._dateObj.toLocaleString(year="numeric", {month:"long", year:"numeric"});
+                },
+                get dataDate() {
+                    return this._dateObj.getFullYear() + "-" + zero_format(this._dateObj.getMonth() + 1) + "-" + this._dateObj.getDate() + " " + zero_format(this._dateObj.getHours()) + ":" + zero_format(this._dateObj.getMinutes()) + ":" + zero_format(this._dateObj.getSeconds());
+                },
+                get sliderDate() {
+                    return (this._dateObj.getFullYear() - 2000) * 12 + this._dateObj.getMonth()
+                },
+                toString()  {
+                    return this.displayDate;
+                },
+            };
+            if (date === "now") {
+                customDate._dateObj = new Date();
+            }
+            else if (type === "sliderFormatted") {
+                customDate._dateObj = new Date(Math.floor(date/12) + 2000, date%12, 1, 0, 0, 0, 0);
+            }
+            return customDate;
+        }
+        // adds a zero in front of date numbers when less than 10 (like 01 instead of 1)
+        function zero_format(n) {
+            if (n < 10)
+                return "0" + n;
+            else
+                return n;
+        }
+
+        function draw_first_graph(date_range) {
+            // console.log("first_graph_drawn");
+            // console.log(date_range);
+            Plotly.d3.csv("etch_roof_year.csv", function(err, rows){
+                function unpack(rows, key) {
+                    return rows.map(function(rows) { return rows[key]; });
+                    /*fix with web server local host 8000 by running python -m http.server on git bash*/
+                }
+                var trace1 = {
+                    type: "scatter",
+                    mode: "markers",
+                    x: unpack(rows, 'deviceTime_local'),
+                    y: unpack(rows, "cpm"),
+                    error_y: {
+                        type: 'data',
+                        array: unpack(rows, "cpmError"),
+                    },
+                }
+
+                console.log([date_range[0].dataDate, date_range[1].dataDate]);
+                var layout1 = {
+                    title: 'Etcheverry Roof',
+                    xaxis: {
+                        autorange: true,
+                        // range: [date_range[0].dataDate, date_range[1].dataDate],
+                        // range: ['2018-04-15 20:01:06', '2019-04-13 23:51:00'],
+                        range: ['2019-08-15 20:01:06', '2020-04-13 23:51:00'],
+                        title: 'Time (America/Los Angeles)',
+                        rangeselector: {
+                            buttons: [{
+                                count: 1,
+                                label: '1d',
+                                step: 'day',
+                                stepmode: 'backward',
+                            }, {
+                                count: 7,
+                                label: '1w',
+                                step: 'day',
+                                stepmode: 'backward',
+                            }, {
+                                count: 1,
+                                label: '1m',
+                                step: 'month',
+                                stepmode: 'backward',
+                            }, {
+                                count: 6,
+                                label: '6m',
+                                step: 'month',
+                                stepmode: 'backward',
+                            }, {step: 'all'},
+                        ]},
+                        type: 'date',
+                        rangeslider: {}
+                    },
+                    automargin: true,
+                    autosize: false,
+                    width: 1140,
+                    height: 500,
+                    margin: {
+                        l: 110,
+                        r: 50,
+                        b: 90,
+                        t: 80,
+                        pad: 2
+                    },
+                    yaxis: {
+                        autorange: true,
+                        range: [2, 3],
+                        title: 'CPM',
+                    }
+                };
+                $("#div1").html("");
+                Plotly.newPlot('div1', [trace1], layout1, {showSendToCloud: true});
+            });
+        }
+
+        var default_range = [customDateFactory(date='2019-09-15 20:01:06'), customDateFactory()];
+
+        draw_first_graph(default_range);
+
+        // formats a date object into the format that the csv files store dates in
+        // function format_date_str(date) {
+        //     return date.getFullYear() + "-" + zero_format(date.getMonth() + 1) + "-" + date.getDate() + " " + zero_format(date.getHours()) + ":" + zero_format(date.getMinutes()) + ":" + zero_format(date.getSeconds());
+        // }
+        //
+        // function get_slider_date(n) {
+        //     return new Date(Math.floor(n/12) + 2000, n%12, 1, 0, 0, 0, 0);
+        // }
+
+        // the slider counts months from 2000, where 0 is January 2000
+        $( function() {
+            $( "#slider-range" ).slider({
+            range: true,
+            min: 18 * 12,
+            max: (((new Date()).getFullYear() - 2000) * 12 + (new Date()).getMonth()),
+            step: 1,
+            // starting values
+            values: [ 4, (((new Date()).getFullYear() - 2000) * 12 + (new Date()).getMonth()) ],
+            // what happens when the
+            slide: function( event, ui ) {
+                $( "#amount" ).val(customDateFactory(ui.values[ 0 ], "sliderFormatted") + " - " + customDateFactory(ui.values[1], "sliderFormatted"));
+                // console.log(customDateFactory(ui.values[0], "sliderFormatted").displayDate + " " + customDateFactory(ui.values[1], "sliderFormatted").displayDate);
+                draw_first_graph([customDateFactory(ui.values[0], "sliderFormatted"), customDateFactory(ui.values[1], "sliderFormatted")]);
+            }
+            });
+            // DEFAULT, STARTING SET UP
+            $( "#amount" ).val(customDateFactory($( "#slider-range" ).slider( "values", 0 ), "sliderFormatted").displayDate + " - " + customDateFactory($( "#slider-range" ).slider( "values", 1 ), "sliderFormatted").displayDate);
+        });
+        // link to info: https://jqueryui.com/slider/#range
+    </script>
+    </body>
 </html>

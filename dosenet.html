@@ -12,16 +12,16 @@
                 font-size: 20px;
                 padding: 30px 0 0 70px;/*top right bottom left*/
             }
-            
+
             #main_wrapper {
                 margin: 30px;
             }
-            
+
             #space {
                 background: white;
                 padding: 30px 0 0 0;
             }
-            
+
             #div1, #div2, #div3 {
                 background: #c7c7c7;
                 padding: 5px;
@@ -38,8 +38,12 @@
         </div>
         <script>
             Plotly.d3.csv("etch_roof_year.csv", function(err, rows){
-                function unpack(rows, key) {
-                    return rows.map(function(rows) { return rows[key]; });
+                console.log("outside");
+                console.log(rows);
+                function unpack(rows1, key) {
+                    console.log("inside");
+                    console.log(rows1);
+                    return rows1.map((rows2) => rows2[key]);
                     /*fix with web server local host 8000 by running python -m http.server on git bash*/
                 }
                 var trace1 = {
@@ -53,7 +57,7 @@
                     },
                 }
                 var layout1 = {
-                    title: 'Etcheverry Roof', 
+                    title: 'Etcheverry Roof',
                     xaxis: {
                         autorange: true,
                         range: ['2018-04-15 20:01:06', '2019-04-13 23:51:00'],
@@ -100,12 +104,16 @@
                         title: 'CPM',
                     }
                 };
-            
+
                 Plotly.newPlot('div1', [trace1], layout1, {showSendToCloud: true});
             })
         </script>
         <script>
             Plotly.d3.csv("average_cpm.csv", function(err, rows){
+                console.log("look at this")
+                console.log(rows);
+                console.log(unpack(rows, "Location"));
+                console.log(unpack(rows, "Average cpm"));
                 function unpack(rows, key) {
                     return rows.map(function(rows) { return rows[key]; });
                     /*fix with web server local host 8000 by running python -m http.server on git bash*/
@@ -146,16 +154,16 @@
                 var list_of_csv_files = unpack(files, 'csv file')
                 var remaining = list_of_csv_files.length;
                 var tracename = [];
-                
+
                 var time = {};
                 var time_array = []
-                
+
                 var cpm = {};
                 var cpm_array = []
 
                 var error = {};
                 var error_array = []
-                
+
                 var trace = [];
 
                 for (var csvfiles = 0; csvfiles < list_of_csv_files.length; csvfiles++) {
@@ -163,24 +171,24 @@
                         function unpack(rows, key) {
                             return rows.map(function(rows) { return rows[key]; });
                         }
-                        
+
                         // this tracename makes the label match up with the plot, the legend is sorted according to order of file loading - the colors markers are correct but the text labels are wrong, and the color of the graph is also wrong. correct the legend text by sorting the tracename alphabetically ---> tracename.sort()
 
                         tracename.push(unpack(rows, 'tracename')[0]);
-                        
+
                         time_array.push(unpack(rows, 'deviceTime_local'));
-                        
+
                         cpm_array.push(unpack(rows, 'cpm'));
-                        
+
                         error_array.push(unpack(rows, 'cpmError'));
                         if(!--remaining) plotData();
                     });
                 }
-                
+
                 // creates a version of tracename that is sorted alphabetically but doesn't replace the original tracename
                 var traces = [];
                 function plotData() {
-                    
+
                     var sorted
                     sorted = tracename.slice(0).sort();
                     for (official_name = 0; official_name < list_of_csv_files.length; official_name++) {
@@ -188,7 +196,7 @@
                         cpm[tracename[official_name]] = cpm_array[official_name]
                         error[tracename[official_name]] = error_array[official_name]
                     }
-                    
+
                     Plotly.d3.csv("average_cpm.csv", function(err, cpms) {
                         function unpack(cpms, key) {
                             return cpms.map(function(cpms) { return cpms[key]; });
@@ -204,7 +212,7 @@
                         if (index2 != -1) {
                             cpms_list.splice(index2)
                         }
-                        
+
                         // round all values to 6 decimal places
                         for (element = 0; element < cpms_list.length; element ++) {
                             cpms_list[element] = parseFloat(cpms_list[element]).toFixed(6);
@@ -221,7 +229,7 @@
                                 }
                             }
                         }
-                        
+
                         //make the actual graph
                         for (var location = 0; location < Object.keys(time).length; location++) {
                             trace[location] = {
@@ -240,7 +248,7 @@
                             }
                             traces.push(trace[location])
                         }
-                        
+
                         var layout = {
                             title: "All locations",
                             legend: {

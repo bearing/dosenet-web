@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- jQuery slider -->
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+        <!-- Plotly.js -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+
+            <style>
+
+                #main_wrapper {
+                    margin: 30px;
+                }
+
+
+                .plotly-graphs {
+                    background: #c7c7c7;
+                    padding: 5px;
+                    border-radius: 5px;
+                }
+            </style>
+
+            <style>
+                #amount {
+                    width: 500px;
+                }
+                #slider-range {
+                    width: 500px;
+                }
+            </style>
+    </head>
+    <body>
+
+    <p>
+        <label for="amount">Date range:</label>
+        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+    </p>
+
+    <div id="slider-range"></div>
+
+        <!-- Plotly chart will be drawn inside this DIV -->
+        <div id="main_wrapper">
+            <div id="graph1" class="plotly-graphs"></div>
+        </div>
+
+        <!-- <script src="plot-functions/time-series.js"></script> -->
+        <script src="plot-functions/bar-graph.js"></script>
+        <!-- <script src="setup_sliding_graph.js"></script> -->
+        <script src="setup_sliding_graph_bar.js"></script>
+        <script>
+            // setupGraph(plotFunc=plotTimeSeries, "etch_roof_year/", "etch_roof_year")
+            setupGraph(plotFunc=plotBarGraph, "monthly_avgs/")
+            // setupGraph(plotFunc=plotBarGraph, "etch_roof_weather_year/")
+        </script>
+    </body>
+</html>

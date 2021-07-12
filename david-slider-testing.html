@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Testing Stuff</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <!-- Plotly.js -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        #amount {
+            width: 500px;
+        }
+        #slider-range {
+            width: 500px;
+        }
+    </style>
+
+
+  </head>
+    <body>
+
+    <p>
+        <label for="amount">Price range:</label>
+        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+    </p>
+
+    <div id="slider-range"></div>
+
+
+    <script>
+
+        function customDateFactory(date="now",type="dataFormated") {
+            let customDate = {
+                _dateObj: new Date(date),
+                get dateObj() {
+                    return this._dateObj;
+                },
+                get displayDate() {
+                    return this._dateObj.toLocaleString(year="numeric", {month:"long", year:"numeric"});
+                },
+                get dataDate() {
+                    return this._dateObj.getFullYear() + "-" + zero_format(this._dateObj.getMonth() + 1) + "-" + this._dateObj.getDate() + " " + zero_format(this._dateObj.getHours()) + ":" + zero_format(this._dateObj.getMinutes()) + ":" + zero_format(this._dateObj.getSeconds());
+                },
+                get sliderDate() {
+                    return (this._dateObj.getFullYear() - 2000) * 12 + this._dateObj.getMonth()
+                },
+                toString()  {
+                    return this.displayDate;
+                },
+            };
+            if (date === "now") {
+                customDate._dateObj = new Date();
+            }
+            else if (type === "sliderFormatted") {
+                customDate._dateObj = new Date(Math.floor(date/12) + 2000, date%12, 1, 0, 0, 0, 0);
+            }
+            return customDate;
+        }
+        // adds a zero in front of date numbers when less than 10 (like 01 instead of 1)
+        function zero_format(n) {
+            if (n < 10)
+                return "0" + n;
+            else
+                return n;
+        }
+
+        let sliderVals = [0, 0];
+
+        // the slider counts months from 2000, where 0 is January 2000
+        $( function() {
+            $( "#slider-range" ).slider({
+                range: true,
+                min: 18 * 12,
+                max: (((new Date()).getFullYear() - 2000) * 12 + (new Date()).getMonth()),
+                step: 1,
+                // starting values
+                values: [ 4, (((new Date()).getFullYear() - 2000) * 12 + (new Date()).getMonth()) ],
+                // what happens when the
+                slide: function( event, ui ) {
+                    sliderVals = ui.values;
+                    $( "#amount" ).val(customDateFactory(ui.values[ 0 ], "sliderFormatted") + " - " + customDateFactory(ui.values[1], "sliderFormatted"));
+                    // console.log(customDateFactory(ui.values[0], "sliderFormatted").displayDate + " " + customDateFactory(ui.values[1], "sliderFormatted").displayDate);
+                    // draw_first_graph([customDateFactory(ui.values[0], "sliderFormatted"), customDateFactory(ui.values[1], "sliderFormatted")]);
+                }
+            });
+            // DEFAULT, STARTING SET UP
+            sliderVals = $( "#slider-range" ).slider( "values");
+            $( "#amount" ).val(customDateFactory($( "#slider-range" ).slider( "values", 0 ), "sliderFormatted").displayDate + " - " + customDateFactory($( "#slider-range" ).slider( "values", 1 ), "sliderFormatted").displayDate);
+        });
+        // link to info: https://jqueryui.com/slider/#range
+
+        function sliderChanged() {
+            console.log(customDateFactory(sliderVals[0], "sliderFormatted").displayDate + " " + customDateFactory(sliderVals[1], "sliderFormatted").displayDate);
+        }
+
+        $(document).ready(function() {
+            $(document).click(function() {
+                sliderChanged();
+            });
+            $(".ui-slider-handle").click(function() {
+                sliderChanged();
+            });
+        });
+    </script>
+    </body>
+</html>
