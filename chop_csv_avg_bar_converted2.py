@@ -101,7 +101,7 @@ def rmdir(directory):
 # the meta function you call to do everything for you
 # ^^ old comment, now is just a part of the more meta function that uses this to chop up the files of
 # many sensors
-def chop_csv(file_name, date_range, month_gap=1, src_path=Path(""), end_path=Path("")):
+def chop_csv(file_name, date_range, interval, src_path=Path(""), end_path=Path("")):
 
     # get the data from the specified csv file
     data = pd.read_csv(src_path / file_name)
@@ -158,7 +158,7 @@ def chop_csv(file_name, date_range, month_gap=1, src_path=Path(""), end_path=Pat
 
 
 
-def create_avg(file_names, date_range, month_gap=1, src_path=Path(""), end_path=Path("")):
+def create_avg(file_names, date_range, interval, src_path=Path(""), end_path=Path("")):
     common_date_range = (dt(2016,10,1), dt(2018,3,1))
 
     # format file_names
@@ -231,7 +231,7 @@ def create_avg(file_names, date_range, month_gap=1, src_path=Path(""), end_path=
             "locations": location_names,
             "display_names": display_names,
             "start_date": format_str_to_year_month(str(date_range[0])),
-            "month_gap": month_gap
+            "interval": interval,
         }
 
         json.dump(metadata, file)
@@ -250,7 +250,8 @@ file_names = ["etch_roof_weather.csv", "miramonte_os_weather.csv", "pinewood_os_
 date_range = (dt(2016,10,1), dt(2018,3,1))
 date_range = (dt(2018,3,1), dt(2019,3,1))
 
-create_avg(file_names, date_range, end_path=Path("monthly_avgs"))
+create_avg(file_names, date_range, interval="month", end_path=Path("monthly_avgs"))
+# create_avg(file_names, date_range, interval={type:"day", length:1}, end_path=Path("daily_avgs"))
 
 
 
