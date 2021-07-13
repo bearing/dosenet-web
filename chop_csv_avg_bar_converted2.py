@@ -9,7 +9,8 @@ import time
 
 display_names = pd.read_csv("station.csv", index_col="nickname").get("Name")
 def display_name_of(file_name):
-    return display_names.loc[file_name]
+    # return display_names.loc[file_name]
+    return file_name
 
 
 
@@ -98,6 +99,8 @@ def rmdir(directory):
 
 
 # the meta function you call to do everything for you
+# ^^ old comment, now is just a part of the more meta function that uses this to chop up the files of
+# many sensors
 def chop_csv(file_name, date_range, month_gap=1, src_path=Path(""), end_path=Path("")):
 
     # get the data from the specified csv file
@@ -114,7 +117,7 @@ def chop_csv(file_name, date_range, month_gap=1, src_path=Path(""), end_path=Pat
 
         date_unix = series['deviceTime_unix']
         if date_range_unix[0] <= date_unix <= date_range_unix[1]:
-            cpm_count = series['cpm']
+            cpm_count = series['temperature'] ###########################cpm####################################
 
             year_month = format_str_to_year_month(series['deviceTime_local'])
             if year_month in monthly_sums:
@@ -129,6 +132,8 @@ def chop_csv(file_name, date_range, month_gap=1, src_path=Path(""), end_path=Pat
         monthly_avgs_dict[date] = monthly_sum / monthly_record_count[date]
 
     return monthly_avgs_dict
+
+    # code below commented out bc it pushed the chopped data to csv, but now it is just a helper func
 
 #     sorted_dates = merge_sort(list(monthly_avgs_dict))
 #     sorted_monthly_avgs = []
@@ -239,9 +244,11 @@ start_time = time.perf_counter()
 
 file_names = ["alameda_hs.csv", "campolindo.csv", "foothills.csv", "ghs.csv", "harbor_bay.csv"]
 file_names = ["alameda_hs.csv", "campolindo.csv", "foothills.csv", "ghs.csv", "harbor_bay.csv", "miramonte.csv", "lbl.csv", "koriyama_ch.csv", "kaist.csv", "jlhs.csv"]
+file_names = ["etch_roof_weather.csv", "miramonte_os_weather.csv", "pinewood_os_weather.csv", "chs_os_weather.csv"]
 
 # file_names = ["alameda_hs.csv", "campolindo.csv"]
 date_range = (dt(2016,10,1), dt(2018,3,1))
+date_range = (dt(2018,3,1), dt(2019,3,1))
 
 create_avg(file_names, date_range, end_path=Path("monthly_avgs"))
 
