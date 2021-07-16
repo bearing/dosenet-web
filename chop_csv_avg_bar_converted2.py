@@ -6,8 +6,11 @@ from pathlib import Path
 import time
 
 
-
+# things to load in once
 display_names = pd.read_csv("station.csv", index_col="nickname").get("Name")
+
+
+
 def display_name_of(file_name):
     # return display_names.loc[file_name]
     return file_name
@@ -101,7 +104,7 @@ def rmdir(directory):
 # the meta function you call to do everything for you
 # ^^ old comment, now is just a part of the more meta function that uses this to chop up the files of
 # many sensors
-def chop_csv(file_name, date_range, interval, src_path=Path(""), end_path=Path("")):
+def chop_csv(file_name, types, date_range, interval, src_path=Path(""), end_path=Path("")):
 
     # get the data from the specified csv file
     data = pd.read_csv(src_path / file_name)
@@ -113,24 +116,40 @@ def chop_csv(file_name, date_range, interval, src_path=Path(""), end_path=Path("
     date_range_str = [date_range[0].strftime("%Y-%m"), date_range[1].strftime("%Y-%m")]
 
     # figure out which indexes are the right gaps
-    for i, series in data.iterrows():
+    for i, row in data.iterrows():
 
-        date_unix = series['deviceTime_unix']
+        date_unix = row['deviceTime_unix']
         if date_range_unix[0] <= date_unix <= date_range_unix[1]:
-            cpm_count = series['temperature'] ###########################cpm####################################
+            # print(row)
+            # cpm_count = row['humidity'] ###########################cpm####################################
 
-            year_month = format_str_to_year_month(series['deviceTime_local'])
+            year_month = format_str_to_year_month(row['deviceTime_local'])
+
             if year_month in monthly_sums:
-                monthly_sums[year_month] += cpm_count
+                for type in types:
+                    monthly_sums[year_month][type] += row[type]
                 monthly_record_count[year_month] += 1
             else:
-                monthly_sums[year_month] = cpm_count
+                monthly_sums[year_month] = dict()
+                monthly_record_count[year_month] = dict()
+                for type in types:
+                    # print(row[type])
+                    monthly_sums[year_month][type] = row[type]
                 monthly_record_count[year_month] = 1
+
+    # print(monthly_sums)
+    # print()
+    # print(monthly_record_count)
+    # print("------")
 
     monthly_avgs_dict = dict()
     for date, monthly_sum in monthly_sums.items():
-        monthly_avgs_dict[date] = monthly_sum / monthly_record_count[date]
+        monthly_avgs_dict[date] = dict()
+        for type in types:
+            monthly_avgs_dict[date][type] = monthly_sum[type] / monthly_record_count[date]
 
+    # print(monthly_avgs_dict)
+    # print("=======\n")
     return monthly_avgs_dict
 
     # code below commented out bc it pushed the chopped data to csv, but now it is just a helper func
@@ -158,7 +177,10 @@ def chop_csv(file_name, date_range, interval, src_path=Path(""), end_path=Path("
 
 
 
-def create_avg(file_names, date_range, interval, src_path=Path(""), end_path=Path("")):
+def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_path=Path("")):
+
+    type = "cpm"
+
     common_date_range = (dt(2016,10,1), dt(2018,3,1))
 
     # format file_names
@@ -169,21 +191,25 @@ def create_avg(file_names, date_range, interval, src_path=Path(""), end_path=Pat
     avgs_by_location = dict()
 
     for file_name, location_name in zip(file_names, location_names):
-        avgs_by_location[location_name] = chop_csv(file_name, date_range, month_gap, src_path, end_path)
+        avgs_by_location[location_name] = chop_csv(file_name, ("temperature", "humidity"), date_range, interval, src_path, end_path)
 
     avgs_by_date = dict()
 
     for location, location_avgs in avgs_by_location.items():
-#         print(location_avgs)
-        for date, monthly_avg in location_avgs.items():
+        for date, interval_avg in location_avgs.items():
             if not date in avgs_by_date:
                 avgs_by_date[date] = dict()
-            avgs_by_date[date][location] = monthly_avg
+            for type in types:
+                if not type in avgs_by_date[date]:
+                    avgs_by_date[date][type] = dict()
+                # print(interval_avg)
+                # print(interval_avg[type])
+                avgs_by_date[date][type][location] = interval_avg[type]
 
-#     print(avgs_by_date)
-#     print()
-#     print("sorted")
-#     print()
+    # print(avgs_by_date)
+    # print()
+    # print("sorted")
+    # print()
 
     sorted_dates = merge_sort(list(avgs_by_date))
 #     print(sorted_dates)
@@ -191,34 +217,49 @@ def create_avg(file_names, date_range, interval, src_path=Path(""), end_path=Pat
     csv_exports = []
 
     for date in sorted_dates:
-        avg_cpms = []
+        avg_vals = dict()
 
 #         for key, val in avgs_by_date[date].items():
 #             locations.append(key)
 #             avg_cpms.append(val)
 
-        for location in location_names:
-            if location in list(avgs_by_date[date]):
-                avg_cpms.append(avgs_by_date[date][location])
-            else:
-                avg_cpms.append("NaN")
+        # print(list(avgs_by_date[date][types[0]]))
+        # print(avgs_by_date[date])
 
-        export_dict = {
-            'location': display_names,
-            'avg_cpm': avg_cpms
-        }
+        for location in location_names:
+            avg_vals[location] = dict()
+            for type in types:
+                if location in list(avgs_by_date[date][type]):
+                    avg_vals[location][type] = avgs_by_date[date][type][location]
+                    # avg_cpms.append(avgs_by_date[date][type][location])
+                else:
+                    avg_vals[location][type] = "NaN"
+                    # avg_cpms.append("NaN")
+
+        # print(avg_cpms)
+
+        export_dict = {'location': list(avg_vals)}
+        for type in types:
+            export_dict[f"avg_{type}"] = []
+            for location in list(avg_vals):
+                export_dict[f"avg_{type}"].append(avg_vals[location][type])
+        print(export_dict)
+
+        csv_exports.append(pd.DataFrame(export_dict, columns=list(export_dict)))
 #         print()
 #         print(export_dict)
 #         print()
-        csv_exports.append(pd.DataFrame(export_dict, columns=['location', 'avg_cpm']))
+        # csv_exports.append(pd.DataFrame(export_dict, columns=['location', 'avg_' + type]))
 
-
+    # print(csv_exports[5])
+    # type(csv_exports)
+    # type(csv_exports[5])
 
     emptydir(end_path)
     end_path.mkdir(parents=True, exist_ok=True)
 
     for i, df in enumerate(csv_exports):
-        df.to_csv(end_path / ("data_" + str(i) + ".csv"), index=False)
+        df.to_csv(end_path / (f"data_{i}.csv"), index=False)
 
 
 
@@ -250,8 +291,8 @@ file_names = ["etch_roof_weather.csv", "miramonte_os_weather.csv", "pinewood_os_
 date_range = (dt(2016,10,1), dt(2018,3,1))
 date_range = (dt(2018,3,1), dt(2019,3,1))
 
-create_avg(file_names, date_range, interval="month", end_path=Path("monthly_avgs"))
-# create_avg(file_names, date_range, interval={type:"day", length:1}, end_path=Path("daily_avgs"))
+create_avg(file_names, ("temperature", "humidity"), date_range, interval="month", end_path=Path("monthly_avgs"))
+# create_avg(file_names, ("temperature", "humidity"), date_range, interval="day", end_path=Path("daily_avgs"))
 
 
 
