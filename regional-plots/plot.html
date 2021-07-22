@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>first graph</title>
+        <title>radiation dose graphs</title>
 
         <style>
             h1 {
@@ -24,7 +24,7 @@
                 currentUnit = document.querySelector("#menu").value;
 
                 // the src of the iframe
-                source = `${currentUnit}_plot.html`;
+                source = `generated/${currentUnit}_plot.html`;
 
                 // create the iframe inside of the div
                 div = document.querySelector("#plot");

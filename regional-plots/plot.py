@@ -1,5 +1,4 @@
 from copy import deepcopy
-from colour import Color
 
 import pandas as pd
 import plotly.express as px
@@ -127,14 +126,14 @@ def all_avg_csvs():
 
     for _type in ["all", "average"]:
         # write df to csv file
-        with open(f"{_type}.csv", "w", newline="") as f:
+        with open(f"generated/{_type}.csv", "w", newline="") as f:
             df = df_all if _type == "all" else df_avg
             csv.writer(f).writerows(df)
 
 # first graph - averages
 # sort each sensor location by region based on timezone
 def set_colors():
-    fn = "average.csv"
+    fn = "generated/average.csv"
     f = open(fn)
     json_file = json.load(open("data/output.geojson"))
     name_zone = [[i["properties"]["Name"], i["properties"]["timezone"].split("/")[0]] for i in json_file["features"]]
@@ -143,7 +142,6 @@ def set_colors():
 
     # region is 'America', while region_color is the color code associated with 'America'
     data[0].append("region")
-    data[0].append("region_color")
 
     region_col = data[0].index("region")
 
@@ -153,37 +151,20 @@ def set_colors():
                 location.append(i[1])
                 break
 
-    # create colormap
-    continents = list(set([i[1].split("/")[0] for i in name_zone]))
-    num_regions = len(continents)
-
-    # creates a colormap from the visible spectrum divided into "num_regions" intervals from "start" to "end"
-    start = Color("red")
-    end = Color("blue")
-    color_map = list(start.range_to(end, num_regions))
-
-    # maps continents to colors
-    cont_color = {continents[i]: color_map[i] for i in range(num_regions)}
-
-    for location in data[1:]:
-        # hex_l is the 6-digit hex color code
-        color_code = cont_color[location[region_col]].hex_l
-        location.append(color_code)
-
     f.close()
     with open(fn, "w", newline='') as f:
         csv.writer(f).writerows(data)
 
 
 def plot():
-    df_avg = pd.read_csv("average.csv")
+    df_avg = pd.read_csv("generated/average.csv")
 
     for unit in list(conversions.keys()):
         funit = "CPM (counts per minute)" if unit == "cpm" else "μSv/hr (microsieverts per hour)"
 
         # generate graphs as html files
         fig = px.bar(data_frame=df_avg, x="Location", y=f"Average {unit}", color="region", labels={"region": "Region", f"Average {unit}": funit}, title="Average dose rates ordered by region")
-        fig.write_html(f"{unit}_plot.html")
+        fig.write_html(f"generated/{unit}_plot.html")
 
 
 # close all related files before running this program
