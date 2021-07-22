@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>air quality graphs</title>
+
+        <style>
+            h1 {
+                font-family: "Verdana";
+            }
+
+            .graph {
+                margin: 6vh;
+            }
+
+            #menu {
+                margin: 3vh auto;
+                padding: 0.25%;
+            }
+        </style>
+
+        <script>
+            function change_unit() {
+                // the unit that is currently selected
+                currentUnit = document.querySelector("#menu").value;
+
+                // the src of the iframe
+                sizes = ["25", "10"];
+                container = document.querySelector("#plots");
+                container.textContent = "";
+                for (size of sizes) {
+                    source = `generated/${currentUnit}${size}_plot.html`;
+
+                    // create the iframe inside of the div
+                    div = document.createElement("div");
+                    div.id = `plot${size}`;
+                    div.innerHTML = `<center><iframe src=${source} width="1200vw" height="600vw"></center>`;
+                    container.appendChild(div);
+                }
+            }
+        </script>
+    </head>
+    <body onload="change_unit();">
+        <div class="graph">
+            <h1>Most recent average air quality measurements ordered by region</h1>
+
+            <center>
+                <!-- dropdown menu -->
+                <select id="menu" onchange="change_unit();">
+                    <option value="units" disabled><strong>Unit</strong></option>
+                    <option value="PM">PM (Particulate Matter)</option>
+                    <option value="AQI">AQI (Air Quality Index)</option>
+                </select>
+            </center>
+
+            <!-- this is where the plots will show up -->
+            <div id="plots"></div>
+        </div>
+    </body>
+</html>
