@@ -78,7 +78,7 @@ class BarPlot(object):
 		* ['Average PM25', 'Average AQI25', 'AQI_Category25', 'Average PM10', 'Average AQI10', 'AQI_Category10']
 		* ["Average cpm", "Average msv"]
 	"""
-	def create_csv(self, measurement_headers=[], primary_sizes=[], get_custom_value=lambda:None, external_vars_needed=[]):
+	def create_csv(self, measurement_headers=[], primary_sizes=[], get_custom_value=None, external_vars_needed=[]):
 		json_data = json.load(open(os.path.join(self.data_dir, "output.geojson")))
 
 		col_headers = ["file_name", "Location", "Region"] + measurement_headers + ["Start", "Stop"]
@@ -107,8 +107,9 @@ class BarPlot(object):
 
 				to_pass_options = {"s": s, "m": primary_mes}
 
-				for additional_mes in get_custom_value(**{k:v for (k,v) in to_pass_options.items() if k in external_vars_needed}):
-					avg_measurements[row].append(additional_mes)
+				if get_custom_value:
+					for additional_mes in get_custom_value(**{k:v for (k,v) in to_pass_options.items() if k in external_vars_needed}):
+						avg_measurements[row].append(additional_mes)
 
 			utc_times = csv_data[time_col].tolist()
 			avg_measurements[row].append(utc_times[-1].replace("+00:00", " UTC"))
@@ -125,7 +126,7 @@ class BarPlot(object):
 		df_avg = pd.read_csv(os.path.join(self.generated_dir, self.avg_csv))
 
 		fig = px.bar(
-			df_avg,
+			data_frame=df_avg,
 			x="Location",
 			y=y_col,
 			title=title,
