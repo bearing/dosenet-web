@@ -1,0 +1,12 @@
+file_name,Location,Region,Average PM25,Average AQI25,AQI_Category25,Average PM10,Average AQI10,AQI_Category10,Start,Stop
+asaka_os,Asaka High School Outside,Asia,9.847241,41,Good,13.249451,12,Good,2019-06-03 01:02:09 UTC,2019-06-16 20:51:56 UTC
+chs_os,Campolindo HS Outside,America,0.258484,1,Good,0.411836,0,Good,2019-03-03 23:12:38 UTC,2019-04-02 13:16:40 UTC
+etch_roof,Etcheverry Roof,America,2.777828,11,Good,4.217146,4,Good,2019-03-16 08:56:10 UTC,2019-04-15 04:51:11 UTC
+exploratorium,Exploratorium,America,7.295482,30,Good,9.791687,8,Good,2019-05-20 18:07:02 UTC,2019-06-19 14:06:54 UTC
+hb_os,Harbor Bay Outside,America,3.999365,16,Good,5.88563,5,Good,2019-03-02 20:15:55 UTC,2019-04-01 08:16:54 UTC
+miramonte_os,Miramonte HS Outside,America,4.371961,18,Good,6.195074,6,Good,2019-05-26 23:36:22 UTC,2019-06-19 14:07:06 UTC
+msjhs_os,Mission San Jose HS Outside,America,2.21,9,Good,3.41,3,Good,2018-05-11 22:35:20 UTC,2018-05-11 22:35:20 UTC
+pinewood_os,Pinewood OS,America,0.671088,3,Good,0.842298,0,Good,2019-03-16 08:51:18 UTC,2019-04-15 04:51:10 UTC
+sakata,Sakata Site,Asia,11.369504,47,Good,15.297961,14,Good,2019-03-16 08:56:56 UTC,2019-04-15 04:51:30 UTC
+uw,University of Washington,America,3.243761,13,Good,4.495299,4,Good,2019-05-31 22:55:41 UTC,2019-06-19 14:06:07 UTC
+westend,Westend,Europe,7.883217,33,Good,10.517664,9,Good,2019-02-13 17:31:58 UTC,2019-02-17 11:51:03 UTC
