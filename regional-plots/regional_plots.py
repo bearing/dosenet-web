@@ -119,14 +119,9 @@ class BarPlot(object):
 
 
 	"""
-	todo:
-	allow hover_template to become an array which can map to each item in fig.data
-	add type assertions for plot() arguments
-	"""
-	"""
 	**kwargs: extra arguments (besides 'fig') to feed into the customize_plot() function
 	"""
-	def create_plot(self, y_col, fig_write_path, title="Average measurements ordered by region", labels={}, hover_template="", customize_plot=None, **kwargs):
+	def create_plot(self, y_col, fig_write_path, title="Average measurements ordered by region", labels={}, hover_template="", hover_data=["Start", "Stop"], customize_plot=None, **kwargs):
 		df_avg = pd.read_csv(os.path.join(self.generated_dir, self.avg_csv))
 
 		fig = px.bar(
@@ -136,7 +131,7 @@ class BarPlot(object):
 			title=title,
 			color="Region",
 			labels=labels,
-			hover_data=["Start", "Stop"]
+			hover_data=hover_data
 		)
 
 		if hover_template:
