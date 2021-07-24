@@ -4,14 +4,14 @@ The helper class, [`BarPlot`](regional_plots.py), assumes a directory structure 
 yay@graphs:~/regional-plots$ tree -F .
 .
 ├── data/
-│  ├── asaka_os_aq_month.csv
-│  ├── asaka_os_month.csv
-│  ├── sakata_aq_month.csv
-│  ├── sakata_month.csv
-│  ├── exploratorium_aq_month.csv
-│  ├── exploratorium_month.csv
-│  ├── westend_aq_month.csv
-│  └── westend_month.csv
+│   ├── asaka_os_aq_month.csv
+│   ├── asaka_os_month.csv
+│   ├── sakata_aq_month.csv
+│   ├── sakata_month.csv
+│   ├── exploratorium_aq_month.csv
+│   ├── exploratorium_month.csv
+│   ├── westend_aq_month.csv
+│   └── westend_month.csv
 └── generated/
 
 2 directories, 8 files
