@@ -1,3 +1,24 @@
+### Directory Structure
+The helper class, [`BarPlot`](regional_plots.py), assumes a directory structure that somewhat resembles the following.
+```console
+yay@graphs:~/regional-plots$ tree -F .
+.
+├── data/
+│  ├── asaka_os_aq_month.csv
+│  ├── asaka_os_month.csv
+│  ├── sakata_aq_month.csv
+│  ├── sakata_month.csv
+│  ├── exploratorium_aq_month.csv
+│  ├── exploratorium_month.csv
+│  ├── westend_aq_month.csv
+│  └── westend_month.csv
+└── generated/
+
+2 directories, 8 files
+```
+A `data_dir` and `generated_dir` can be specified on instantiation, but they default to `data` and `generated` respectively.
+
+
 ### Features
 * dropdown menu that allows users to change units (CPM; μSv/hr and PM2.5/PM10; AQI2.5/AQI10)
 * color-coding by region (America; Asia; Europe)
@@ -11,6 +32,7 @@ Note: [`plot.py`](plot.py) and [`plot_aq.py`](plot_aq.py) both generate files in
 	* [`PM25_plot.html`](generated/PM25_plot.html)
 	* [`AQI10_plot.html`](generated/AQI10_plot.html)
 	* [`AQI25_plot.html`](generated/AQI25_plot.html)
+
 
 ### Resources
 * https://www.airnow.gov/aqi/aqi-calculator/
