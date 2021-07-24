@@ -49,7 +49,7 @@ for unit in units:
 
 		# prettify labels
 		pretty_size = size.replace("25","2.5")
-		label_map ={f"Average {plot_id}": f"Average {unit}{pretty_size}"}
+		label_map = {f"Average {plot_id}": f"Average {unit}{pretty_size}"}
 		if unit == "AQI":
 			label_map.update({f"Average AQI{size}": f"Average AQI (based on PM{pretty_size})"})
 		hover_template = "<b>%{x}</b><br>Region: %{data.legendgroup}<br>" + f"Average {plot_id}" + ": %{y}<br>Data collected from <i>%{customdata[0]}</i> to <i>%{customdata[1]}</i><extra></extra>"
