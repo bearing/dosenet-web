@@ -5,7 +5,7 @@
 * AQI plots have background colors to indicate level of severity
 
 Note: [`plot.py`](plot.py) and [`plot_aq.py`](plot_aq.py) both generate files in the [`generated/`](generated/) directory.
-* `plot.py` generates `cpm_plot.html` and `msv_plot.html`, which will be embedded as iframes within `plot.html`
+* `plot.py` generates [`cpm_plot.html`](generated/cpm_plot.html) and [`msv_plot.html`](generated/msv_plot.html), which will be embedded as iframes within [`plot.html`](plot.html)
 * `plot_aq.py` generates the following:
 	* [`PM10_plot.html`](generated/PM10_plot.html)
 	* [`PM25_plot.html`](generated/PM25_plot.html)
