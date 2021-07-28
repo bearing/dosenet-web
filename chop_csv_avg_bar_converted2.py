@@ -8,6 +8,14 @@ import time
 
 # things to load in once
 display_names = pd.read_csv("station.csv", index_col="nickname").get("Name")
+# print(display_names)
+
+type_suffixes = pd.read_csv("type_suffixes.csv", index_col="datatype").get("fileSuffix")
+for type, suffix in type_suffixes.items():
+    if str(suffix) == "nan":
+        type_suffixes[type] = ""
+# print(type_suffixes)
+
 
 
 def display_name_of(nickname):
@@ -18,10 +26,18 @@ def display_name_of(nickname):
     # return display_names.loc[nickname]
 
 
-# TODO: FIX THIS
+def suffix_of_type(type):
+    if type_suffixes[type] == "NaN":
+        return ""
+    return type_suffixes[type]
+
 def file_name_of(nickname, type):
-    if type == "temperature" or type == "humidity" or type == "pressure":
-        return f"{nickname}_weather.csv"
+    return f"{nickname}{suffix_of_type(type)}.csv"
+
+
+# print(file_name_of("etch_roof", "humidity"))
+# print(file_name_of("etch_roof", "cpm"))
+# print(file_name_of("etch_roof", "temperature"))
 
 
 def month_delta(date, delta):
@@ -186,7 +202,7 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path(""), end_path
 
 def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_path=Path("")):
 
-    type = "cpm"
+    # type = "cpm"
 
     common_date_range = (dt(2016,10,1), dt(2018,3,1))
 
@@ -202,8 +218,44 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
 
     avgs_by_location = dict()
 
-    for file_name, location_name in zip(file_names, location_names):
-        avgs_by_location[location_name] = chop_csv(file_name, types, date_range, interval, src_path, end_path)
+    # for file_name, location_name in zip(file_names, location_names):
+    #     avgs_by_location[location_name] = chop_csv(file_name, types, date_range, interval, src_path, end_path)
+    # print(avgs_by_location)
+
+    for location_name in location_names:
+        files_to_avg = {}
+        for type in types:
+            file_name_of_type = file_name_of(location_name, type)
+            if not file_name_of_type in files_to_avg:
+                files_to_avg[file_name_of_type] = []
+            files_to_avg[file_name_of_type].append(type)
+        
+        avgs_from_files = []
+        for file_name, types_in_file in files_to_avg.items():
+            avgs_from_files.append(chop_csv(file_name, types_in_file, date_range, interval, src_path, end_path))
+        # print(avgs_from_files)
+
+        location_avgs = dict()
+        for file_avg in avgs_from_files:
+            for date, avgs in file_avg.items():
+                if not date in location_avgs:
+                    location_avgs[date] = dict()
+                # TODO:THERE IS A BETTER WAY OF DOING THIS #########################################################
+                # print(avgs)
+                for type in types:
+                    if not type in avgs:
+                        if not type in location_avgs[date]:
+                            location_avgs[date][type] = "NaN"
+                    else:
+                        location_avgs[date][type] = avgs[type]
+                
+                    
+                # for type, avg in avgs.items():
+                #     location_avgs[date][type] = avg
+
+        avgs_by_location[location_name] = location_avgs
+
+    print(avgs_by_location)
 
     avgs_by_date = dict()
 
@@ -214,7 +266,7 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
             for type in types:
                 if not type in avgs_by_date[date]:
                     avgs_by_date[date][type] = dict()
-                # print(interval_avg)
+                print(interval_avg)
                 # print()
                 # print(interval_avg["pressure"])
                 # print()
@@ -306,14 +358,14 @@ start_time = time.perf_counter()
 file_names = ["alameda_hs.csv", "campolindo.csv", "foothills.csv", "ghs.csv", "harbor_bay.csv"]
 file_names = ["alameda_hs.csv", "campolindo.csv", "foothills.csv", "ghs.csv", "harbor_bay.csv", "miramonte.csv", "lbl.csv", "koriyama_ch.csv", "kaist.csv", "jlhs.csv"]
 file_names = ["etch_roof_weather.csv", "miramonte_os_weather.csv", "pinewood_os_weather.csv", "chs_os_weather.csv"]
-# file_names = ["etch_roof.csv", "miramonte_os.csv", "pinewood_os.csv", "chs_os.csv"]
+file_names = ["etch_roof.csv", "miramonte_os.csv", "pinewood_os.csv", "chs_os.csv"]
 
 # file_names = ["alameda_hs.csv", "campolindo.csv"]
 date_range = (dt(2016,10,1), dt(2018,3,1))
 date_range = (dt(2018,3,1), dt(2019,3,1))
 
 # create_avg(file_names, ("temperature", "pressure", "humidity"), date_range, interval="month", end_path=Path("monthly_avgs"))
-create_avg(file_names, ("temperature", "humidity"), date_range, interval="month", end_path=Path("monthly_avgs"))
+create_avg(file_names, ("temperature", "humidity", "cpm"), date_range, interval="month", end_path=Path("monthly_avgs"))
 # create_avg(file_names, ("temperature", "humidity"), date_range, interval="day", end_path=Path("daily_avgs"))
 
 
