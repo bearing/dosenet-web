@@ -2,6 +2,7 @@ const month = ["January", "February", "March", "April", "May", "June", "July", "
 
 let filePath = "";
 let locations = [];
+let datatypes = [];
 let fileName = "";
 let startDateStr = "";
 let startDate;
@@ -51,6 +52,7 @@ function setupGraph(plotFunc, path) {
     $.getJSON(path + "metadata.json", function( data ) {
         try {
             locations = data.display_names;
+            datatypes = data.datatypes;
             fileName = data.file_name;
             fileCount = data.file_count;
             startDateStr = data.start_date;
@@ -86,7 +88,7 @@ function graphFiles(startFile, endFile) {
             filesRemaining--;
             // console.log
             if (filesRemaining === 0)
-                plot(data, locations);
+                plot(data, locations, datatypes);
         });
     }
 }
