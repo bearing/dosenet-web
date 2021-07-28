@@ -1,1 +1,3 @@
 *.csv
+!type_suffixes.csv
+!station.csv
