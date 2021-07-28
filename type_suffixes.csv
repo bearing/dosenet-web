@@ -1,0 +1,5 @@
+datatype,fileSuffix
+cpm,
+temperature,_weather
+humidity,_weather
+pressure,_weather

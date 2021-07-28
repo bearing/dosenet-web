@@ -1,0 +1,68 @@
+ID,Name,Lat,Long,cpmtorem,cpmtousv,display,devices,gitBranch,needsUpdate,IDLatLongHash,nickname,timezone
+0,Test Injector,37.670878,-122.653259,0.0036,0.036,0,100000,master,1,419a89a05caa727f02d4fa1cb84ee2ac,injector,America/Los_Angeles
+1,LBL,37.876886,-122.252211,0.0036,0.036,1,100000,master,0,7c756767412b5346ad79bb9a5cf56f51,lbl,America/Los_Angeles
+2,Campolindo High School,37.8673,-122.12608,0.0036,0.036,1,100000,master,0,c4cffb550a81a421f73bbefc01777c11,campolindo,America/Los_Angeles
+3,Pinewood School,37.387837,-122.142018,0.0036,0.036,1,100000,master,0,670fe01ede8df7fb7c33ad3bf45e7ba1,pinewood,America/Los_Angeles
+4,Etcheverry Hall,37.875644,-122.259265,0.0036,0.036,1,100000,master,0,064b86e4a39b450ca3ca0da747a23fff,etch,America/Los_Angeles
+5,Etcheverry Roof,37.875387,-122.259201,4.27e-05,0.036,1,111110,master,0,00b54d2286ec687683ff54853ee36e78,etch_roof,America/Los_Angeles
+6,Koriyama City Hall,37.400491,140.36044,0.0036,0.036,1,100000,master,0,e6497f572770be411133042735686987,koriyama_ch,Asia/Tokyo
+7,Foothill College,37.361281,-122.131671,0.0036,0.036,1,100000,master,0,0c033cdbf584d27f008e330bb2510ccc,foothills,America/Los_Angeles
+8,James Logan High School,37.589991,-122.026841,0.0036,0.036,1,100000,master,0,5526a0637bd0cc572730a9ba79bcb782,jlhs,America/Los_Angeles
+9,East Bay Innovation Academy,37.746036,-122.141381,0.0036,0.036,1,100000,master,0,06f627fd95a0e2e1b9c9e047bb051efa,ebia,America/Los_Angeles
+10,KAIST,36.372168,127.358417,0.0036,0.036,1,100000,master,0,dd831c53a0f40db847ca5cb14e99d3a4,kaist,Asia/Seoul
+11,Alameda High School,37.764416,-122.247783,0.0036,0.036,1,100000,master,0,a4000c2845db4f281794686e156d5494,alameda_hs,America/Los_Angeles
+12,Harbor Bay,37.746416,-122.246035,0.0036,0.036,1,100000,master,0,669c1bff1c7a6ff120529025a9c921c8,harbor_bay,America/Los_Angeles
+13,Daejeon Science High School,36.373798,127.370909,0.0036,0.036,1,100000,master,0,845a6e3a9c6f97530530c1b7729d8451,dshs,Asia/Seoul
+15,Life Academy,37.78467,-122.21656,0.0036,0.036,1,100000,master,0,97f35dcfe403976e2b52f8bed8323f36,life_academy,America/Los_Angeles
+16,KTH Stockholm,59.353888,18.056465,0.0036,0.036,1,100000,master,0,02e5822122f56aa696eae928cc0ce788,KTH,Europe/Stockholm
+17,Norra Real Gymnasium,59.343872,18.061385,0.0036,0.036,1,100000,master,0,9abd303edce9a6edf7b29ea5c216478a,norrareal,Europe/Stockholm
+18,Gilroy High School,36.99537,-121.575534,0.0036,0.036,1,100000,master,0,414505c3231c9e800e2ae1083c7d9386,ghs,America/Los_Angeles
+19,Miramonte High School,37.841814,-122.145693,0.0036,0.036,1,100000,master,0,2270ff0feedc719bf9d54debefc0f2f2,miramonte,America/Los_Angeles
+20,JAEA Minamisoma,37.633462,140.994933,0.0036,0.036,1,100000,master,0,dffd126a8ab4d3909d63be59abb12fb1,JAEA_ms,Asia/Tokyo
+21,Hillside High School,53.448356,-2.97505,0.0036,0.036,0,100000,master,0,3d76a86879de21b2b8ef4de749fc7141,hillside_high,Europe/London
+22,Bergen-Enkheim,50.153092,8.760545,0.0036,0.036,1,100000,master,0,2bc58982057f33a507805b8a2c041731,frankfurt,Europe/Berlin
+23,Hedangskolan,60.589289,16.52802,0.0036,0.036,1,100000,master,0,35585227090ce2a5ac58750f6a14d1be,hf6,Europe/Stockholm
+24,Harbor Bay Outside,37.746364,-122.246088,0.0036,0.036,1,111110,master,0,e8d63cd18ca756ac464ca79d5fd5af4d,hb_os,America/Los_Angeles
+25,Slavutich branch of NTUU KPI,51.52339,30.761421,0.0036,0.036,1,100000,master,0,d869f8b5671bc95c4a546e312a19bd15,ntuu_kpi,Europe/Kiev
+26,Chernihiv University,51.504895,31.334388,0.0036,0.036,1,100000,master,0,893933c5a16306403238dddc92f62ce3,cnut,Europe/Kiev
+27,Cherkasy University,49.453409,32.044007,0.0036,0.036,1,100000,master,0,3d5a333f598a258c9d6181b1394c43cc,cherkasy,Europe/Kiev
+28,Sabacka Gimnazija,44.755076,19.692767,0.0036,0.036,1,100000,master,0,5aa8ec066731616d40827647b28f3a2f,sabacka,Europe/Berlin
+29,LBL Outside,37.876922,-122.252444,4.27e-05,0.036,1,110000,master,0,9e388b30f8081e7b654abf52b55e71cc,lbl_outside,America/Los_Angeles
+30,Fukushima High School,37.764685,140.461051,0.0036,0.036,1,100000,master,0,dcede7328e27098aef3da128ac70242b,fukushimahs,Asia/Tokyo
+32,Miramonte HS Outside,37.841526,-122.144464,4.27e-05,0.036,1,111110,master,0,e327c00411b9f4f918ed6d607fac22eb,miramonte_os,America/Los_Angeles
+33,Alameda HS Outside,37.764445,-122.247583,4.27e-05,0.036,1,111110,master,0,d8adcf19992527db68657602d7a772e1,ahs_os,America/Los_Angeles
+34,KISR-1,29.339518,47.907812,0.0036,0.036,1,100000,master,0,95bef052cbee999dd0c87138af8d528d,kisr-1,Asia/Riyadh
+35,Futaba Future High School,37.389969,140.350687,0.0036,0.036,1,100000,master,0,3a8bfe904e80a81c98371b1e0d43e9f2,futabahighschool,Asia/Tokyo
+36,Futaba Future School,37.212939,140.996091,0.0036,0.036,1,100000,master,0,6209e8e4c38ed156bd4ac52c55915678,futabafutureschool,Asia/Tokyo
+37,Asaka High School,37.390778,140.349983,0.0036,0.036,1,100000,master,0,856cf4773fc419ac6c9beb5fef2cfa0c,asakahighschool,Asia/Tokyo
+38,Hiroshima University,34.402361,132.715889,0.0036,0.036,1,100000,master,0,0db3ca3860b207db84a2f83b3bcf6e47,hiroshima,Asia/Tokyo
+39,Koriyama City Hall OS,37.400716,140.359702,0.0036,0.036,1,101110,master,0,193cdb52082220839036e646251d1c78,koriyama_ch_multi,Asia/Tokyo
+40,Pinewood OS,37.387986,-122.141365,0.0036,0.036,1,111110,master,0,eebb16caec5303533b099d32fed810ed,pinewood_os,America/Los_Angeles
+41,Campolindo HS Outside,37.867713,-122.126862,0.0036,0.036,1,111110,master,0,71d0a23c9545cc14b792a9ec30b9b5a0,chs_os,America/Los_Angeles
+42,Francis Polytechnic HS,34.223328,-118.402826,0.0036,0.036,0,100000,master,0,9495fcd0b885746adfc4f66a05257f9a,fphs,America/Los_Angeles
+43,Francis Polytechnis HS OS,34.22337,-118.403186,0.0036,0.036,0,111110,master,0,2334efeb034597eb0c2d6846585eaae6,fphs_os,America/Los_Angeles
+44,Mission San Jose High School,37.5454,-121.933777,0.0036,0.036,1,100000,master,0,1b1c93cefe42048283af76cd0d66c805,msjhs,America/Los_Angeles
+45,Mission San Jose HS Outside,37.545255,-121.93361,0.0036,0.036,1,111110,master,0,1d48dbac88df465898d152cd0529b714,msjhs_os,America/Los_Angeles
+46,Exploratorium,37.801645,-122.397408,0.0036,0.036,1,111110,master,0,6ec334dd29f1f5d4e7baf6786ebf0af2,exploratorium,America/Los_Angeles
+47,LA Area House,34.263953,-118.898144,0.0036,0.036,1,111110,master,0,49f0d6e8963deaad897ceaa78fd28b1d,tyler,America/Los_Angeles
+48,Westend,50.11268,8.65874,0.0036,0.036,1,101110,master,0,2187b25cd3685e796deae09c80bfee74,westend,Europe/Berlin
+49,Sakata Site,38.931807,139.850245,0.0036,0.036,1,101110,master,0,cdbf4a533720294b220c65870af15332,sakata,Asia/Tokyo
+50,University of Washington,47.6539,-122.309382,0.0036,0.036,1,111110,master,0,c9b4b8a7ab224a888dfdd9df59a51ba5,uw,America/Los_Angeles
+51,Asaka High School Outside,37.39098,140.350283,0.0036,0.036,1,101110,master,0,d36be415c1f68b3bcffc8eee9879ce78,asaka_os,Asia/Tokyo
+52,iThemba LABS (NRF),-34.02514,18.717757,0.0036,0.036,1,101110,master,0,09b33517562c45d010a823c621d2b280,themba,Africa/Johannesburg
+53,Denver Area Home,39.840278,-105.093889,0.0036,0.036,1,111110,master,0,6356620630895d636f19cc10f466e46b,denver_home,America/Denver
+10001,Test 1,37.875987,-122.355006,0.0036,0.036,0,100000,master,0,b63bf98aad7f5a5d1c185f4294d36618,test1,America/Los_Angeles
+10002,Test 2,37.866073,-122.352841,0.0036,0.036,0,110000,master,0,38fbd052347eb019d3bd2f4ab934aafd,test2,America/Los_Angeles
+10003,Test 3,37.854525,-122.347901,0.0036,0.036,0,100000,master,0,c9d4a876d49f1d31956f64e0d4e21940,test3,America/Los_Angeles
+10004,Test 4,37.686154,-122.305244,0.0036,0.036,0,100000,master,0,1a44cbab62e8279d6a4c62d899ecaed8,test4,America/Los_Angeles
+10005,Test 5,37.752061,-122.283415,0.0036,0.036,0,100000,master,0,b2d3164edc93c9b8b1f369a59d20f8c2,test5,America/Los_Angeles
+10006,Test 6,37.874,-122.34,0.0036,0.036,0,100000,master,0,74cbc98a2164f98ddad59a917ecd7bc2,test6,America/Los_Angeles
+10007,Test 7,37.872,-122.337,0.0036,0.036,0,100000,master,0,9537c1bc378428fa80b7a4172bfad92c,test7,America/Los_Angeles
+10008,Test 8,37.87,-122.336,0.0036,0.036,0,100000,master,0,4da4961fa719c8f3dbdbc3314b341a28,test8,America/Los_Angeles
+10009,Test 9,37.868,-122.337,0.0036,0.036,0,100000,master,0,73a2e1535f8a87460e703eb01547d743,test9,America/Los_Angeles
+10010,Test Chris,37.866,-122.335,0.0036,0.036,0,111110,new-managers,0,9a2ac20ec4c0a402787e20657ec8899b,test10,America/Los_Angeles
+11001,Test Brian,37.863,-122.333,0.0036,0.036,0,100000,master,0,3378abb8754196b26146b58209b19d8e,test_brian,America/Los_Angeles
+11002,Test Tyler,37.859,-122.334,0.0036,0.036,0,100000,master,0,c467a552d1360fe5d419be97c83aa1ce,test_tyler,America/Los_Angeles
+20001,Test 20001,0.0,0.0,0.0036,0.036,0,111110,master,0,924d9a8fd69509de9313a98b96db0669,test20001,America/Los_Angeles
+20002,Test 20002,0.0,0.0,0.0036,0.036,0,000000,master,0,ed35ab73c34e4c595cb1fe51497683e3,test20002,America/Los_Angeles
+20003,Test 20003,0.0,0.0,0.0036,0.036,0,000000,master,0,996c3e984749a31ab3211d4fceed49e7,test20003,America/Los_Angeles
