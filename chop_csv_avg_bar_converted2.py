@@ -351,10 +351,10 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
                 # FIXME: find a better way to check for NaN
                 # print(float(avg))
                 if (not avg == "nan") and (not avg == "NaN"):
-                    print(avg)
-                    print(float(avg))
-                    print(str(float(avg)))
-                    print("---")
+                    # print(avg)
+                    # print(float(avg))
+                    # print(str(float(avg)))
+                    # print("---")
                     sum += float(avg)
                 count += 1
         avgs_of_types[type] = sum / count
@@ -372,6 +372,7 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
             "start_date": format_str_to_year_month(str(date_range[0])),
             "interval": interval,
             "datatypes": types,
+            "overall_avgs": avgs_of_types,
             "description": "insert desription of data to help people know what the data in the files is for. human read, not machine parsed.",
         }
 
