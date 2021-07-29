@@ -127,7 +127,7 @@ def rmdir(directory):
 # the meta function you call to do everything for you
 # ^^ old comment, now is just a part of the more meta function that uses this to chop up the files of
 # many sensors
-def chop_csv(file_name, types, date_range, interval, src_path=Path(""), end_path=Path("")):
+def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
 
     # get the data from the specified csv file
     data = pd.read_csv(src_path / file_name)
@@ -175,27 +175,6 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path(""), end_path
     # print("=======\n")
     return monthly_avgs_dict
 
-    # code below commented out bc it pushed the chopped data to csv, but now it is just a helper func
-
-#     sorted_dates = merge_sort(list(monthly_avgs_dict))
-#     sorted_monthly_avgs = []
-#     for date in sorted_dates:
-# #         print(type(monthly_avgs_dict))
-#         sorted_monthly_avgs.append(monthly_avgs_dict[date])
-
-
-#     data_dict = {
-#         'month_local': sorted_dates,
-#         'avg_cpm': sorted_monthly_avgs
-#     }
-
-#     df = pd.DataFrame(data_dict, columns=['month_local', 'avg_cpm'])
-
-#     end_path.mkdir(parents=True, exist_ok=True)
-#     df.to_csv(end_path / file_name, index=False)
-#     print("pushing averaged data to " + file_name)
-
-
 
 
 
@@ -232,7 +211,7 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
         
         avgs_from_files = []
         for file_name, types_in_file in files_to_avg.items():
-            avgs_from_files.append(chop_csv(file_name, types_in_file, date_range, interval, src_path, end_path))
+            avgs_from_files.append(chop_csv(file_name, types_in_file, date_range, interval, src_path))
         # print(avgs_from_files)
 
         location_avgs = dict()
@@ -394,7 +373,7 @@ date_range = (dt(2016,10,1), dt(2018,3,1))
 date_range = (dt(2018,3,1), dt(2019,3,1))
 
 # create_avg(file_names, ("temperature", "pressure", "humidity"), date_range, interval="month", end_path=Path("monthly_avgs"))
-create_avg(file_names, ("temperature", "humidity", "cpm"), date_range, interval="month", end_path=Path("monthly_avgs"))
+create_avg(file_names, ("temperature", "humidity", "cpm", "pressure"), date_range, interval="month", end_path=Path("monthly_avgs"))
 # create_avg(file_names, ("temperature", "humidity"), date_range, interval="day", end_path=Path("daily_avgs"))
 
 
