@@ -1,3 +1,4 @@
+# TODO: possibly see if these imports can be lightened up
 import pandas as pd
 from datetime import datetime as dt
 import calendar
@@ -8,24 +9,23 @@ import time
 
 # things to load in once
 display_names = pd.read_csv("station.csv", index_col="nickname").get("Name")
-# print(display_names)
 
 type_suffixes = pd.read_csv("type_suffixes.csv", index_col="datatype").get("fileSuffix")
 for type, suffix in type_suffixes.items():
+    # TODO: this is not a good idea to keep, find a better way to test NaN
     if str(suffix) == "nan":
         type_suffixes[type] = ""
-# print(type_suffixes)
 
 
 
 def display_name_of(nickname):
-    # return display_names.loc[nickname]
-    return nickname
+    return display_names.loc[nickname]
+    # return nickname
     # if nickname[-7:] == "weather":
     #     return display_names.loc[nickname[:-8]]
     # return display_names.loc[nickname]
 
-
+# helper function of file_name_of()
 def suffix_of_type(type):
     if type_suffixes[type] == "NaN":
         return ""
@@ -240,7 +240,7 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
             for date, avgs in file_avg.items():
                 if not date in location_avgs:
                     location_avgs[date] = dict()
-                # TODO:THERE IS A BETTER WAY OF DOING THIS #########################################################
+                # TODO: THERE IS A BETTER WAY OF DOING THIS
                 # print(avgs)
                 for type in types:
                     if not type in avgs:
@@ -255,7 +255,8 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
 
         avgs_by_location[location_name] = location_avgs
 
-    print(avgs_by_location)
+    # print("avgs by location")
+    # print(avgs_by_location)
 
     avgs_by_date = dict()
 
@@ -266,7 +267,7 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
             for type in types:
                 if not type in avgs_by_date[date]:
                     avgs_by_date[date][type] = dict()
-                print(interval_avg)
+                # print(interval_avg)
                 # print()
                 # print(interval_avg["pressure"])
                 # print()
@@ -277,11 +278,16 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
                 # print(avgs_by_date[date][type][location])
                 avgs_by_date[date][type][location] = interval_avg[type]
 
+    # temp_start = time.perf_counter()
+
     # print(avgs_by_date)
     # print()
+
+    # print(f"--- {time.perf_counter() - temp_start} seconds ---")
+
     # print("sorted")
     # print()
-
+    
     sorted_dates = merge_sort(list(avgs_by_date))
 #     print(sorted_dates)
 
@@ -333,11 +339,32 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
         df.to_csv(end_path / (f"data_{i}.csv"), index=False)
 
 
+    # get avgs of each datatype for "normalization"
+    avgs_of_types = {}
+    testlist = []
+    for type in types:
+        sum = 0
+        count = 0
+        for date, avgs in avgs_by_date.items():
+            # FIXME: find a more elegant way of getting avg
+            for avg in avgs[type].values():
+                # FIXME: find a better way to check for NaN
+                # print(float(avg))
+                if (not avg == "nan") and (not avg == "NaN"):
+                    print(avg)
+                    print(float(avg))
+                    print(str(float(avg)))
+                    print("---")
+                    sum += float(avg)
+                count += 1
+        avgs_of_types[type] = sum / count
+    
+    print(avgs_of_types)
+            
 
     with open(end_path / "metadata.json", "w") as file:
         metadata = {
             "chart_type": "bar_graph",
-            "description": "insert desription of data to help people know what the data in the files is for. human read, not machine parsed.",
             "file_name": "data",
             "file_count": len(csv_exports),
             "locations": location_names,
@@ -345,6 +372,7 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
             "start_date": format_str_to_year_month(str(date_range[0])),
             "interval": interval,
             "datatypes": types,
+            "description": "insert desription of data to help people know what the data in the files is for. human read, not machine parsed.",
         }
 
         json.dump(metadata, file)

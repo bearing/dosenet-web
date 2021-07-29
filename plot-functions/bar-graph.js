@@ -1,26 +1,26 @@
 // helper function that gets the avg
 function getAvg(data, locations, type) {
-  var avgData = [];
-  locations.forEach((location) => {
-    let dataSum = 0;
-    let dataPoints = 0;
-    for (let i = 0; i < data.length; i++) {
-      for (let j = 0; j < locations.length; j++) {
-        if (data[i][j]["location"] === location) {
-          if (data[i][j][`avg_${type}`] != "NaN") {
-            dataSum += Number(data[i][j][`avg_${type}`]);
-            dataPoints++;
-          }
+    var avgData = [];
+    locations.forEach((location) => {
+        let dataSum = 0;
+        let dataPoints = 0;
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < locations.length; j++) {
+                if (data[i][j]["location"] === location) {
+                    if (data[i][j][`avg_${type}`] != "NaN") {
+                        dataSum += Number(data[i][j][`avg_${type}`]);
+                        dataPoints++;
+                    }
+                }
+            }
         }
-      }
-    }
 
-    if (dataPoints === 0)
-    avgData.push(0);
-    else
-    avgData.push(dataSum / dataPoints);
-  });
-  return avgData;
+        if (dataPoints === 0)
+            avgData.push(0);
+        else
+            avgData.push(dataSum / dataPoints);
+    });
+    return avgData;
 }
 
 function plotBarGraph(data, locations, types) {
