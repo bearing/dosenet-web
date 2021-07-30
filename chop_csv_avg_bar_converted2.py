@@ -11,6 +11,7 @@ import time
 # set whether debug timer calls do anything
 all_debug_timers = ["file", "create_avg", "chop"]
 debug_timers_to_print = ["file", "chop"]
+debug_timers_to_print = []
 # print_debug_timers = False
 
 # TODO: make this its own debug import thing

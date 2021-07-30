@@ -1,5 +1,5 @@
 // helper function that gets the avg
-function getAvg(data, locations, type) {
+function getAvg(data, locations, type, norm=false) {
     var avgData = [];
     locations.forEach((location) => {
         let dataSum = 0;
@@ -17,33 +17,52 @@ function getAvg(data, locations, type) {
 
         if (dataPoints === 0)
             avgData.push(0);
-        else
-            avgData.push(dataSum / dataPoints);
+        else {
+            if (norm) {
+                avgData.push((dataSum / dataPoints) / norm);
+            }
+            else {
+                avgData.push(dataSum / dataPoints);
+            }
+        }
     });
     return avgData;
 }
 
-function plotBarGraph(data, locations, types) {
+function plotBarGraph(data, locations, types, norm=false) {
 
-    let avgCpms = getAvg(data, locations, "humidity");
+    // let avgCpms = getAvg(data, locations, "humidity");
 
     let allAvgs = []
     types.forEach((type, i) => {
+        let avgs;
+        if (norm) {
+            avgs = getAvg(data, locations, type, norm[type]);
+        }
+        else {
+            avgs = getAvg(data, locations, type);
+        }
         allAvgs.push({
             x: locations,
-            y: getAvg(data, locations, type),
+            y: avgs,
             name: type,
             type: 'bar',
-            test: (i+1),
+            // test: (i+1),
             // xaxis: "xaxis",
             // yaxis: "y" + (2-i),
-            yaxis: "y" + (i+1),
-            offsetgroup: (i),
+            // yaxis: "y" + (i+1),
+            // offsetgroup: (i),
             // offset: i,
         });
     });
+    console.log("🚀 ~ file: bar-graph.js ~ line 31 ~ plotBarGraph ~ allAvgs", allAvgs)
+    
+    // console.log(getAvg(data, locations, "humidity"));
 
-    console.log(allAvgs);
+    // console.log(data);
+
+    // console.log("🚀 ~ file: bar-graph.js ~ line 31 ~ plotBarGraph ~ allAvgs", allAvgs)
+    // console.log(allAvgs);
 
     Plotly.newPlot('graph1',
     // trace
@@ -89,9 +108,9 @@ function plotBarGraph(data, locations, types) {
             /*title: 'µSv/hr',*/
             title: 'Averages',
         },
-        yaxis2: {
-            title: 'Averages 2',
-        },
+        // yaxis2: {
+        //     title: 'Averages 2',
+        // },
     },
     {showSendToCloud: true});
 }

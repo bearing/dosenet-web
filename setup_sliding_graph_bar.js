@@ -2,7 +2,9 @@ const month = ["January", "February", "March", "April", "May", "June", "July", "
 
 let filePath = "";
 let locations = [];
+let display_names = [];
 let datatypes = [];
+let normAvgs = [];
 let fileName = "";
 let startDateStr = "";
 let startDate;
@@ -51,8 +53,10 @@ function setupGraph(plotFunc, path) {
     // get data from metadata file
     $.getJSON(path + "metadata.json", function( data ) {
         try {
-            locations = data.display_names;
+            locations = data.locations;
+            displayNames = data.display_names;
             datatypes = data.datatypes;
+            normAvgs = data.overall_avgs;
             fileName = data.file_name;
             fileCount = data.file_count;
             startDateStr = data.start_date;
@@ -88,7 +92,7 @@ function graphFiles(startFile, endFile) {
             filesRemaining--;
             // console.log
             if (filesRemaining === 0)
-                plot(data, locations, datatypes);
+                plot(data, locations, datatypes, normAvgs);
         });
     }
 }
