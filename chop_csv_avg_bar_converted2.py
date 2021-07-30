@@ -7,6 +7,24 @@ from pathlib import Path
 import time
 
 
+
+# set whether debug timer calls do anything
+all_debug_timers = ["file", "create_avg", "chop"]
+debug_timers_to_print = ["file", "chop"]
+# print_debug_timers = False
+
+# TODO: make this its own debug import thing
+start_time = time.perf_counter()
+
+def debug_timer(src, msg, newline=False):
+    if src in debug_timers_to_print:
+        current_time = time.perf_counter()
+        print(f"At {(current_time - start_time) // 60 :0.0f}:{(current_time - start_time) % 60 :0.3f} mins, finished {msg}.")
+        if newline:
+            print()
+
+
+
 # things to load in once
 display_names = pd.read_csv("station.csv", index_col="nickname").get("Name")
 
@@ -129,8 +147,12 @@ def rmdir(directory):
 # many sensors
 def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
 
+    debug_timer("chop", "starting a chop")
+
     # get the data from the specified csv file
     data = pd.read_csv(src_path / file_name)
+
+    debug_timer("chop", "reading the csv file")
 
     monthly_sums = dict()
     monthly_record_count = dict()
@@ -138,6 +160,9 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
     date_range_unix = [date_range[0].timestamp(), date_range[1].timestamp()]
     date_range_str = [date_range[0].strftime("%Y-%m"), date_range[1].strftime("%Y-%m")]
 
+    debug_timer("chop", "formatting the dates")
+
+    # FIXME: the vast majority of the calculation time is happening here
     # figure out which indexes are the right gaps
     for i, row in data.iterrows():
 
@@ -160,6 +185,9 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
                     monthly_sums[year_month][type] = row[type]
                 monthly_record_count[year_month] = 1
 
+    debug_timer("chop", "big loop")
+
+
     # print(monthly_sums)
     # print()
     # print(monthly_record_count)
@@ -170,6 +198,8 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
         monthly_avgs_dict[date] = dict()
         for type in types:
             monthly_avgs_dict[date][type] = monthly_sum[type] / monthly_record_count[date]
+
+    debug_timer("chop", "dividing to create the avgs", True)
 
     # print(monthly_avgs_dict)
     # print("=======\n")
@@ -195,6 +225,8 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
     # location
     # location_names = [file_name[:-12] if file_name[-11:] == "weather.csv" else file_name for file_name in file_names]
 
+    debug_timer("create_avg", "prettying file names")
+
     avgs_by_location = dict()
 
     # for file_name, location_name in zip(file_names, location_names):
@@ -212,6 +244,8 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
         avgs_from_files = []
         for file_name, types_in_file in files_to_avg.items():
             avgs_from_files.append(chop_csv(file_name, types_in_file, date_range, interval, src_path))
+            debug_timer("create_avg", "a chop")
+            
         # print(avgs_from_files)
 
         location_avgs = dict()
@@ -237,6 +271,9 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
     # print("avgs by location")
     # print(avgs_by_location)
 
+    debug_timer("create_avg", "end of chop loop")
+
+
     avgs_by_date = dict()
 
     for location, location_avgs in avgs_by_location.items():
@@ -257,6 +294,8 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
                 # print(avgs_by_date[date][type][location])
                 avgs_by_date[date][type][location] = interval_avg[type]
 
+    debug_timer("create_avg", "reorganizing data")
+
     # temp_start = time.perf_counter()
 
     # print(avgs_by_date)
@@ -268,6 +307,9 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
     # print()
     
     sorted_dates = merge_sort(list(avgs_by_date))
+
+    debug_timer("create_avg", "sorting the dates")
+
 #     print(sorted_dates)
 
     csv_exports = []
@@ -302,6 +344,12 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
         # print(export_dict)
 
         csv_exports.append(pd.DataFrame(export_dict, columns=list(export_dict)))
+        
+        debug_timer("create_avg", "appending a dataframe to the list of exports")
+
+    debug_timer("create_avg", "appending ALL of the dataframes")
+
+
 #         print()
 #         print(export_dict)
 #         print()
@@ -314,9 +362,12 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
     emptydir(end_path)
     end_path.mkdir(parents=True, exist_ok=True)
 
+    debug_timer("create_avg", "\"clearing the path\"")
+
     for i, df in enumerate(csv_exports):
         df.to_csv(end_path / (f"data_{i}.csv"), index=False)
 
+    debug_timer("create_avg", "exporting all of the dicts")
 
     # get avgs of each datatype for "normalization"
     avgs_of_types = {}
@@ -338,8 +389,9 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
                 count += 1
         avgs_of_types[type] = sum / count
     
-    print(avgs_of_types)
-            
+    # print(avgs_of_types)
+    
+    debug_timer("create_avg", "prepping metadata")
 
     with open(end_path / "metadata.json", "w") as file:
         metadata = {
@@ -358,8 +410,7 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
         json.dump(metadata, file)
 
 
-
-start_time = time.perf_counter()
+    debug_timer("create_avg", "exporting metadata")
 
 
 
@@ -372,6 +423,9 @@ file_names = ["etch_roof.csv", "miramonte_os.csv", "pinewood_os.csv", "chs_os.cs
 date_range = (dt(2016,10,1), dt(2018,3,1))
 date_range = (dt(2018,3,1), dt(2019,3,1))
 
+
+debug_timer("file", "loading file", True)
+
 # create_avg(file_names, ("temperature", "pressure", "humidity"), date_range, interval="month", end_path=Path("monthly_avgs"))
 create_avg(file_names, ("temperature", "humidity", "cpm", "pressure"), date_range, interval="month", end_path=Path("monthly_avgs"))
 # create_avg(file_names, ("temperature", "humidity"), date_range, interval="day", end_path=Path("daily_avgs"))
@@ -379,5 +433,5 @@ create_avg(file_names, ("temperature", "humidity", "cpm", "pressure"), date_rang
 
 
 end_time = time.perf_counter()
-
+print()
 print(f"Finished formatting data in {(end_time - start_time) // 60 :0.0f}:{(end_time - start_time) % 60 :0.3f} minutes.")
