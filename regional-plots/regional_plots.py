@@ -1,5 +1,6 @@
 import os, re, csv, json
 import pandas as pd
+from scipy.stats import sem
 import plotly.express as px
 
 class BarPlot(object):
@@ -31,10 +32,11 @@ class BarPlot(object):
 	def sensor_type(self, sensor_type):
 		if not isinstance(sensor_type, str):
 			raise TypeError(f"sensor_type must be a str, not '{type(avg_csv).__name__}'")
-		available_sensors = ['"radiation"', '"aq"', '"adc"', '"d3s"', '"weather"']
+		available_sensors = ["radiation", "aq", "adc", "d3s", "weather"]
 		if sensor_type not in available_sensors:
+			print(sensor_type)
 			formatted_sensors_list = '\n\t* '.join(available_sensors)
-			raise AttributeError(f"sensor_type must be one of the following:\n\t* {formatted_sensors_list}")
+			raise AttributeError(f'sensor_type must be one of the following:\n\t* "{formatted_sensors_list}"')
 		self.__sensor_type = sensor_type
 	@property
 	def avg_csv(self):
@@ -126,14 +128,21 @@ class BarPlot(object):
 
 			for s in primary_sizes:
 				m = csv_data[s].tolist()
-				primary_mes = sum(m) / len(m)
-				avg_measurements[row].append(round(primary_mes, 6))
+				primary_avg = sum(m) / len(m)
+				avg_measurements[row].append(round(primary_avg, 6))
 
-				to_pass_options = {"s": s, "m": primary_mes}
+				primary_sem = sem(m)
+				avg_measurements[row].append(round(primary_sem, 6))
 
+				to_pass_options = {"s": s, "m": primary_avg}
 				if get_custom_value:
 					for additional_mes in get_custom_value(**{k:v for (k,v) in to_pass_options.items() if k in external_vars_needed}):
-						avg_measurements[row].append(additional_mes)
+						avg_measurements[row].append(additional_mes["value"])
+
+						# add "sem" = True to the dictionary if error must be calculated (using the `get_custom_value()` function) for this `additional_mes`
+						if "sem" in additional_mes.keys():
+							for additional_err in get_custom_value(primary_sem):
+								avg_measurements[row].append(additional_err["value"])
 
 			utc_times = csv_data[time_col].tolist()
 			avg_measurements[row].append(utc_times[-1].replace("+00:00", " UTC"))
@@ -143,7 +152,7 @@ class BarPlot(object):
 		df_avg.to_csv(os.path.join(self.generated_dir, self.avg_csv), index=False)
 
 
-	def create_plot(self, y_col, fig_write_path, title="Average measurements ordered by region", labels={}, hover_template="", hover_data=["Start", "Stop"], customize_plot=None, **kwargs):
+	def create_plot(self, y_col, fig_write_path, error_y, title="Average measurements ordered by region", labels={}, hover_template="", hover_data=["Start", "Stop"], customize_plot=None, **kwargs):
 		"""
 		y_col: str - name of column in `df_avg`, int, pandas Series or array_like object; used as the `y` argument in generating the plotly bar graph (px.bar attribute)
 			* "cpm"
@@ -152,6 +161,9 @@ class BarPlot(object):
 		fig_write_path: str - name of file to save `fig` as; use the filename only (include `.html` extension); the value passed in will be automatically joined with `generated_dir`
 			* "cpm_plot.html"
 			* "PM25_plot.html"
+
+		error_y: str - name of column in `df_avg`; used as the error bar in the plotly bar graph
+			* "PM"
 
 		title: str - title of the bar graph; used as the `title` argument in generating the plotly bar graph (px.bar attribute)
 			* "Average dose rates ordered by region"
@@ -170,15 +182,11 @@ class BarPlot(object):
 		"""
 		df_avg = pd.read_csv(os.path.join(self.generated_dir, self.avg_csv))
 
-		fig = px.bar(
-			data_frame=df_avg,
-			x="Location",
-			y=y_col,
-			title=title,
-			color="Region",
-			labels=labels,
-			hover_data=hover_data
-		)
+		bar_graph_args = {"title": title, "data_frame": df_avg, "x": "Location", "y": y_col, "color": "Region", "labels": labels, "hover_data": hover_data}
+		if error_y:
+			bar_graph_args.update({"error_y": error_y})
+
+		fig = px.bar(**bar_graph_args)
 
 		if hover_template:
 			for i in fig.data:

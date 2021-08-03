@@ -11,6 +11,7 @@ sizes = ["25", "10"]
 all_sizes = []
 for size in sizes:
 	all_sizes.append(f"Average PM{size}")
+	all_sizes.append(f"PM{size} Uncertainty (Error)")
 	all_sizes.append(f"Average AQI{size}")
 	all_sizes.append(f"AQI_Category{size}")
 
@@ -25,7 +26,7 @@ def calc_aqi_data(s, m):
 	if avg_AQI > (max_aqi or 0):
 		max_aqi = avg_AQI
 
-	return avg_AQI, AQI_category
+	return [{"value": avg_AQI}, {"value": AQI_category}]
 
 aq_plot.create_csv(measurement_headers=all_sizes, primary_sizes=[f"PM{s}" for s in sizes], get_custom_value=calc_aqi_data, external_vars_needed=["s", "m"])
 
@@ -51,10 +52,14 @@ for unit in units:
 		pretty_size = size.replace("25","2.5")
 		label_map = {f"Average {plot_id}": f"Average {unit}{pretty_size}"}
 		if unit == "AQI":
-			label_map.update({f"Average AQI{size}": f"Average AQI (based on PM{pretty_size})"})
+			label_map.update({f"Average AQI{size}": f"Average AQI (approximation based on measured PM{pretty_size} concentrations)"})
 		hover_template = "<b>%{x}</b><br>Region: %{data.legendgroup}<br>" + f"Average {plot_id}" + ": %{y}<br>Data collected from <i>%{customdata[0]}</i> to <i>%{customdata[1]}</i><extra></extra>"
 		for i in label_map:
 			hover_template = hover_template.replace(i, label_map[i])
 
+		err_col = None
+		if unit == "PM":
+			err_col = f"PM{size} Uncertainty (Error)"
+
 		# big reveal
-		aq_plot.create_plot(y_col=f"Average {plot_id}", fig_write_path=f"{plot_id}_plot.html", title="Average air quality measurements ordered by region", labels=label_map, hover_template=hover_template, customize_plot=customize_plot)
+		aq_plot.create_plot(y_col=f"Average {plot_id}", fig_write_path=f"{plot_id}_plot.html", error_y=err_col, title="Average air quality measurements ordered by region", labels=label_map, hover_template=hover_template, customize_plot=customize_plot)
