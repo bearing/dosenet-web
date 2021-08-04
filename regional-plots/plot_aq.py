@@ -52,7 +52,7 @@ for unit in units:
 		pretty_size = size.replace("25","2.5")
 		label_map = {f"Average {plot_id}": f"Average {unit}{pretty_size}"}
 		if unit == "AQI":
-			label_map.update({f"Average AQI{size}": f"Average AQI (approximation based on measured PM{pretty_size} concentrations)"})
+			label_map.update({f"Average AQI{size}": f"Average AQI (based on PM{pretty_size})"})
 		hover_template = "<b>%{x}</b><br>Region: %{data.legendgroup}<br>" + f"Average {plot_id}" + ": %{y}<br>Data collected from <i>%{customdata[0]}</i> to <i>%{customdata[1]}</i><extra></extra>"
 		for i in label_map:
 			hover_template = hover_template.replace(i, label_map[i])
@@ -61,5 +61,10 @@ for unit in units:
 		if unit == "PM":
 			err_col = f"PM{size} Uncertainty (Error)"
 
+		if unit == "PM":
+			title = f"Average air quality measurements (PM{pretty_size} concentrations)"
+		else:
+			title = f"Average AQI (Air Quality Index) as an approximation based on measured PM{size} concentrations"
+
 		# big reveal
-		aq_plot.create_plot(y_col=f"Average {plot_id}", fig_write_path=f"{plot_id}_plot.html", error_y=err_col, title="Average air quality measurements ordered by region", labels=label_map, hover_template=hover_template, customize_plot=customize_plot)
+		aq_plot.create_plot(y_col=f"Average {plot_id}", fig_write_path=f"{plot_id}_plot.html", error_y=err_col, title=title, labels=label_map, hover_template=hover_template, customize_plot=customize_plot)

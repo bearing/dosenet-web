@@ -23,4 +23,4 @@ for unit in units:
     funit = "Average CPM (counts per minute)" if unit == "cpm" else "Average μSv/hr (microsieverts per hour)"
     hover_template = "<b>%{x}</b><br>Region: %{data.legendgroup}<br>" + funit + ": %{y}<br>Data collected from <i>%{customdata[0]}</i> to <i>%{customdata[1]}</i><extra></extra>"
 
-    rad_plot.create_plot(y_col=unit, fig_write_path=f"{unit}_plot.html", error_y=f"{unit} error", title="Average dose rates ordered by region", labels={unit: funit}, hover_template=hover_template)
+    rad_plot.create_plot(y_col=unit, fig_write_path=f"{unit}_plot.html", error_y=f"{unit} error", title=f"{funit}", labels={unit: funit}, hover_template=hover_template)
