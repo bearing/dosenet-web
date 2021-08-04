@@ -4,8 +4,9 @@ function getAvg(data, locations, type, norm=false) {
     locations.forEach((location) => {
         let dataSum = 0;
         let dataPoints = 0;
+
         for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < locations.length; j++) {
+            for (let j = 0; j < data[i].length; j++) {
                 if (data[i][j]["location"] === location) {
                     if (data[i][j][`avg_${type}`] != "NaN") {
                         dataSum += Number(data[i][j][`avg_${type}`]);
@@ -15,8 +16,10 @@ function getAvg(data, locations, type, norm=false) {
             }
         }
 
-        if (dataPoints === 0)
+        if (dataPoints === 0) {
             avgData.push(0);
+            console.log(`No datapoints found for the ${type} of ${location}.`);
+        }
         else {
             if (norm) {
                 avgData.push((dataSum / dataPoints) / norm);
@@ -29,10 +32,11 @@ function getAvg(data, locations, type, norm=false) {
     return avgData;
 }
 
+// function called by the outside
 function plotBarGraph(data, locations, types, norm=false) {
-
+    
     // let avgCpms = getAvg(data, locations, "humidity");
-
+    
     let allAvgs = []
     types.forEach((type, i) => {
         let avgs;
@@ -42,6 +46,7 @@ function plotBarGraph(data, locations, types, norm=false) {
         else {
             avgs = getAvg(data, locations, type);
         }
+        
         allAvgs.push({
             x: locations,
             y: avgs,
@@ -55,7 +60,7 @@ function plotBarGraph(data, locations, types, norm=false) {
             // offset: i,
         });
     });
-    console.log("🚀 ~ file: bar-graph.js ~ line 31 ~ plotBarGraph ~ allAvgs", allAvgs)
+    // console.log("🚀 ~ file: bar-graph.js ~ line 31 ~ plotBarGraph ~ allAvgs", allAvgs)
     
     // console.log(getAvg(data, locations, "humidity"));
 
@@ -113,4 +118,6 @@ function plotBarGraph(data, locations, types, norm=false) {
         // },
     },
     {showSendToCloud: true});
+    console.log("Files Graphed :)");
+
 }

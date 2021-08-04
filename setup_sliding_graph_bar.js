@@ -47,6 +47,8 @@ function monthDelta(date, delta){
     return new Date(y, m);
 }
 
+
+// called by html file
 function setupGraph(plotFunc, path) {
     filePath = path;
     plot = plotFunc;
@@ -68,6 +70,12 @@ function setupGraph(plotFunc, path) {
         catch (TypeError) {
             console.log("The file [" + file + "] does not exist in [metadata.json].");
         }
+
+        // create location checkboxes
+        for (let i = 0; i < displayNames.length; i++) {
+            $("#location-toggles").append(`<p><input type='checkbox' id='${locations[i]}' name='${locations[i]}' checked> ${displayNames[i]}</input></p>`);
+        }
+
         graphFiles(0, fileCount);
         sliderVals = [0, fileCount];
         setupSlider();
@@ -82,17 +90,32 @@ function setupGraph(plotFunc, path) {
 
 // graphFiles("etch_roof_year", 0, 5);
 
+// called both on load and when the slider is changed
 function graphFiles(startFile, endFile) {
     let data = [];
     let filesRemaining = endFile - startFile;
+
+    // determine which locations are selected
+    let selectedLocations = [];
+    $("#location-toggles input:checked").each(function() {
+        selectedLocations.push($(this).attr("name"));
+    });
+
+
 
     for (let i = startFile; i < endFile; i++) {
         Plotly.d3.csv(filePath + fileName + "_" + i + ".csv", function(csv) {
             data.push(csv);
             filesRemaining--;
             // console.log
-            if (filesRemaining === 0)
-                plot(data, locations, datatypes, normAvgs);
+            if (filesRemaining === 0) {
+                if ($("#normalize").prop("checked")) {
+                    plot(data, selectedLocations, datatypes, normAvgs);
+                }
+                else {
+                    plot(data, selectedLocations, datatypes);
+                }
+            }
         });
     }
 }
@@ -127,7 +150,7 @@ function sliderChanged() {
 }
 
 $(document).ready(function() {
-    $(document).click(function() {
+    $("#inputs").click(function() {
         sliderChanged();
     });
     $(".ui-slider-handle").click(function() {

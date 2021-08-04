@@ -1,47 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <!-- jQuery slider -->
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<head>
+    <!-- jQuery slider -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-        <!-- Plotly.js -->
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- general styling for the inputs -->
+    <style>
+        
+    </style>
+
+    <!-- styling for the slider -->
+    <style>
+        #amount {
+            width: 500px;
+        }
+        #slider-range {
+            width: 500px;
+        }
+    </style>
+
+    <!-- styling for the graph -->
+    <style>
+        #main_wrapper {
+            margin: 30px;
+        }
 
 
+        .plotly-graphs {
+            background: #c7c7c7;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
 
-            <style>
+    <div id="inputs">
 
-                #main_wrapper {
-                    margin: 30px;
-                }
+        <p>
+            <label for="amount">Date range:</label>
+            <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
+        <div id="slider-range"></div>
 
+        <p><input type="checkbox" id="normalize" checked> Normalize</p>
 
-                .plotly-graphs {
-                    background: #c7c7c7;
-                    padding: 5px;
-                    border-radius: 5px;
-                }
-            </style>
+        <div id="location-toggles"></div>
 
-            <style>
-                #amount {
-                    width: 500px;
-                }
-                #slider-range {
-                    width: 500px;
-                }
-            </style>
-    </head>
-    <body>
-
-    <p>
-        <label for="amount">Date range:</label>
-        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-    </p>
-
-    <div id="slider-range"></div>
+    </div>
 
         <!-- Plotly chart will be drawn inside this DIV -->
         <div id="main_wrapper">
@@ -57,5 +68,6 @@
             setupGraph(plotFunc=plotBarGraph, "monthly_avgs/")
             // setupGraph(plotFunc=plotBarGraph, "etch_roof_weather_year/")
         </script>
-    </body>
+
+</body>
 </html>
