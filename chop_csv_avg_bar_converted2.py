@@ -163,12 +163,16 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
 
     debug_timer("chop", "formatting the dates")
 
-    # FIXME: the vast majority of the calculation time is happening here
+    # FIXME: the vast majority of the calculation time is happening here, roughly 1 million rows, only half are important, 1:20, most of time in rows
     # figure out which indexes are the right gaps
+    rows = 0
+    important_rows = 0
     for i, row in data.iterrows():
+        rows += 1
 
         date_unix = row['deviceTime_unix']
         if date_range_unix[0] <= date_unix <= date_range_unix[1]:
+            important_rows += 1
             # print(row)
             # cpm_count = row['humidity'] ###########################cpm####################################
 
@@ -185,6 +189,9 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
                     # print(row[type])
                     monthly_sums[year_month][type] = row[type]
                 monthly_record_count[year_month] = 1
+    # print("rows: " + str(rows))
+    # print("important rows: " + str(important_rows))
+    print(important_rows)
 
     debug_timer("chop", "big loop")
 
