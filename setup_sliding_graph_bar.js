@@ -73,7 +73,11 @@ function setupGraph(plotFunc, path) {
 
         // create location checkboxes
         for (let i = 0; i < displayNames.length; i++) {
-            $("#location-toggles").append(`<p><input type='checkbox' id='${locations[i]}' name='${locations[i]}' checked> ${displayNames[i]}</input></p>`);
+            $("#location-toggles").append(`<label for='${locations[i]}'><input type='checkbox' id='${locations[i]}' name='${locations[i]}' checked> ${displayNames[i]}</input></label>`);
+        }
+        // create type checkboxes
+        for (let i = 0; i < datatypes.length; i++) {
+            $("#type-toggles").append(`<label for='${datatypes[i]}'><input type='checkbox' id='${datatypes[i]}' name='${datatypes[i]}' checked> ${datatypes[i]}</input></label>`);
         }
 
         graphFiles(0, fileCount);
@@ -101,6 +105,11 @@ function graphFiles(startFile, endFile) {
         selectedLocations.push($(this).attr("name"));
     });
 
+    // determine which types are selected
+    let selectedTypes = [];
+    $("#type-toggles input:checked").each(function() {
+        selectedTypes.push($(this).attr("name"));
+    });
 
 
     for (let i = startFile; i < endFile; i++) {
@@ -110,10 +119,10 @@ function graphFiles(startFile, endFile) {
             // console.log
             if (filesRemaining === 0) {
                 if ($("#normalize").prop("checked")) {
-                    plot(data, selectedLocations, datatypes, normAvgs);
+                    plot(data, selectedLocations, selectedTypes, normAvgs);
                 }
                 else {
-                    plot(data, selectedLocations, datatypes);
+                    plot(data, selectedLocations, selectedTypes);
                 }
             }
         });

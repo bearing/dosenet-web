@@ -11,7 +11,22 @@
 
     <!-- general styling for the inputs -->
     <style>
-        
+        #inputs div {
+            padding: 5px;
+        }
+        #inputs label {
+            display: block;
+            margin: 10px;
+        }
+        #inputs #normalize {
+            background-color: #f1c3c3;
+        }
+        #inputs #location-toggles {
+            background-color: #f1dfc3;
+        }
+        #inputs #type-toggles {
+            background-color: #f1f0c3;
+        }
     </style>
 
     <!-- styling for the slider -->
@@ -48,9 +63,10 @@
         </p>
         <div id="slider-range"></div>
 
-        <p><input type="checkbox" id="normalize" checked> Normalize</p>
+        <label for="normalize"><input type="checkbox" id="normalize" checked> Normalize</label>
 
         <div id="location-toggles"></div>
+        <div id="type-toggles"></div>
 
     </div>
 
