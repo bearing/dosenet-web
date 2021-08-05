@@ -11,21 +11,24 @@
 
     <!-- general styling for the inputs -->
     <style>
-        #inputs div {
+        #inputs div.input-section {
             padding: 5px;
         }
         #inputs label {
             display: block;
             margin: 10px;
         }
-        #inputs #normalize {
+        #inputs #slider {
             background-color: #f1c3c3;
         }
-        #inputs #location-toggles {
+        #inputs #norm {
             background-color: #f1dfc3;
         }
-        #inputs #type-toggles {
+        #inputs #location-toggles {
             background-color: #f1f0c3;
+        }
+        #inputs #type-toggles {
+            background-color: #c7f1c3;
         }
     </style>
 
@@ -57,16 +60,20 @@
 
     <div id="inputs">
 
-        <p>
-            <label for="amount">Date range:</label>
-            <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-        </p>
-        <div id="slider-range"></div>
+        <div id="slider" class="input-section">
+            <p>
+                <label for="amount">Date range:</label>
+                <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+            </p>
+            <div id="slider-range"></div>
+        </div>
 
-        <label for="normalize"><input type="checkbox" id="normalize" checked> Normalize</label>
+        <div id="norm" class="input-section">
+            <label for="normalize"><input type="checkbox" id="normalize" checked> Normalize</label>
+        </div>
 
-        <div id="location-toggles"></div>
-        <div id="type-toggles"></div>
+        <div id="location-toggles" class="input-section"></div>
+        <div id="type-toggles" class="input-section"></div>
 
     </div>
 
