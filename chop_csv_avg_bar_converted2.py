@@ -92,7 +92,50 @@ def format_str_to_date(str):
 def format_str_to_year_month(str):
     return str[:7]
 
+# FIXME: this is a horrible implementation, if anyone wants to fix it pls do :) sorry   -zhandavidz
+def cut_date_str(date_str, cut_start="year", cut_end="month"):
+    # what we are using: {"year": "%Y", "month": "%m", "day": "%d", "hour": "%H", "minute": "%M", "second": "%S"}
+    format = ""
 
+    started = False
+    if cut_start == "year":
+        format += "%Y"
+        started = True
+
+    if cut_end != "year":
+        if started:
+            format += "-"
+        format += "%m"
+        started = True
+
+        if cut_end != "month":
+            if started:
+                format += "-"
+            format += "%d"
+            started = True
+            
+            if cut_end != "day":
+                if started:
+                    format += " "
+                format += "%H"
+                started = True
+
+                if cut_end != "hour":
+                    if started:
+                        format += ":"
+                    format += "%M"
+                    started = True
+
+                    if cut_end != "minute":
+                        if started:
+                            format += ":"
+                        format += "%S"
+                        started = True
+    
+    return dt.strftime(date_str, format)
+    # return dt.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+
+print(cut_date_str(format_str_to_date("2020-03-29 21:41:44+00:00") , cut_end="hour"))
 
 def merge_sort(arr):
 
@@ -165,18 +208,21 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
 
     # FIXME: the vast majority of the calculation time is happening here, roughly 1 million rows, only half are important, 1:20, most of time in rows
     # figure out which indexes are the right gaps
-    rows = 0
-    important_rows = 0
+    # rows = 0
+    # important_rows = 0
     for i, row in data.iterrows():
-        rows += 1
+        # rows += 1
 
         date_unix = row['deviceTime_unix']
         if date_range_unix[0] <= date_unix <= date_range_unix[1]:
-            important_rows += 1
+            # important_rows += 1
             # print(row)
             # cpm_count = row['humidity'] ###########################cpm####################################
 
+
+            # 2018-11-08 08:25:55-08:00 --> 2018-11
             year_month = format_str_to_year_month(row['deviceTime_local'])
+
 
             if year_month in monthly_sums:
                 for type in types:
@@ -191,7 +237,7 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
                 monthly_record_count[year_month] = 1
     # print("rows: " + str(rows))
     # print("important rows: " + str(important_rows))
-    print(important_rows)
+    # print(important_rows)
 
     debug_timer("chop", "big loop")
 
@@ -217,7 +263,7 @@ def chop_csv(file_name, types, date_range, interval, src_path=Path("")):
 
 
 
-def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_path=Path("")):
+def create_avg(file_names, types, date_range, intervals, src_path=Path(""), end_path=Path("")):
 
     # type = "cpm"
 
@@ -251,7 +297,7 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
         
         avgs_from_files = []
         for file_name, types_in_file in files_to_avg.items():
-            avgs_from_files.append(chop_csv(file_name, types_in_file, date_range, interval, src_path))
+            avgs_from_files.append(chop_csv(file_name, types_in_file, date_range, intervals, src_path))
             debug_timer("create_avg", "a chop")
             
         # print(avgs_from_files)
@@ -409,7 +455,7 @@ def create_avg(file_names, types, date_range, interval, src_path=Path(""), end_p
             "locations": location_names,
             "display_names": display_names,
             "start_date": format_str_to_year_month(str(date_range[0])),
-            "interval": interval,
+            "intervals": intervals,
             "datatypes": types,
             "overall_avgs": avgs_of_types,
             "description": "insert desription of data to help people know what the data in the files is for. human read, not machine parsed.",
@@ -435,7 +481,7 @@ date_range = (dt(2018,3,1), dt(2019,3,1))
 debug_timer("file", "loading file", True)
 
 # create_avg(file_names, ("temperature", "pressure", "humidity"), date_range, interval="month", end_path=Path("monthly_avgs"))
-create_avg(file_names, ("temperature", "humidity", "cpm", "pressure"), date_range, interval="month", end_path=Path("monthly_avgs"))
+create_avg(file_names, ("temperature", "humidity", "cpm", "pressure"), date_range, intervals=["month"], end_path=Path("processed_data/test_avgs"))
 # create_avg(file_names, ("temperature", "humidity"), date_range, interval="day", end_path=Path("daily_avgs"))
 
 
@@ -443,3 +489,4 @@ create_avg(file_names, ("temperature", "humidity", "cpm", "pressure"), date_rang
 end_time = time.perf_counter()
 print()
 print(f"Finished formatting data in {(end_time - start_time) // 60 :0.0f}:{(end_time - start_time) % 60 :0.3f} minutes.")
+print()
