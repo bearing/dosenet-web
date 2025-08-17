@@ -63,8 +63,8 @@ function updateInfowindowContent(val){
 	graph.style.top = graphY;
 	graph.style.visibility = "visible";	
 	graph.style.position = "absolute";
-	graph.style.width = "500px";
-	graph.style.height = "400px";
+	graph.style.width = "400px";
+	graph.style.height = "350px";
 
 	if (graph.innerHTML.indexOf("Download Data") === -1) {
         //Downloading the data --> adapted from data_download.js		
@@ -280,7 +280,7 @@ function getSelectedDosimeterIndex(){
 }
 
 function goToDosimeter(){
-	var index = getSelectedDosimeterIndex();
+	var index = getSelectedDosimeterIndex() - 1; //subtract by 1 to fix indexing error
 	var centerLocation = getDosimeterCoords(index);
 
 	var sensor_type = getSensor();
@@ -305,7 +305,7 @@ function goToDosimeter(){
 		dragmode: "zoom",
 		mapbox: { style: "open-street-map", center: { lat: centerLocation[0], lon: centerLocation[1] }, zoom: 9 },
 		margin: { r: 0, t: 0, b: 0, l: 0},
-		width: window.innerWidth-475,
+		width: map_rounded.clientWidth - 40,
 		height: 550,
 		hoverlabel: {font: {size: 15}}
 	};
@@ -371,11 +371,22 @@ function goToDosimeter(){
         
 	Plotly.newPlot("map-canvas", data, layout);
 	
+	const map_rounded = document.getElementById('map_rounded');
+		
 	map.style.top = String(600) + "px";
-	map.style.left = String(150) + "px";
+	map.style.left = String(map_rounded.offsetLeft) + "px";
+	map.style.width = String(map_rounded.clientWidth) + "px";
+	const childDivs = map.querySelectorAll('div');
 
-	graphX = String(map.style.left + map.style.width/2) + "px";
-	graphY = String(800) + "px";
+	// Set maxWidth for each child div
+	childDivs.forEach(function(div) {
+	div.style.maxWidth = String(map_rounded.clientWidth) + "px"; // Replace '400px' with your desired value
+	});
+
+
+	graphX = String(map_rounded.offsetLeft + map.width/2 + 50) + "px";
+	graphY = String(950) + "px";
+
 
 	//Event listner for click on map (aka marker event listner)
 	map.on('plotly_click', function(clickdata){
@@ -504,11 +515,13 @@ function initMap(string) {
 		}
 	];
 
+	const map_rounded = document.getElementById('map_rounded');
+
 	var layout = {
 		dragmode: "zoom",
 		mapbox: { style: "open-street-map", center: { lat: 0, lon: -15 }, zoom: 1 },
 		margin: { r: 0, t: 0, b: 0, l: 0},
-		width: window.innerWidth-475,
+		width: map_rounded.clientWidth - 40,
 		height: 550,
 		hoverlabel: {font: {size: 15}}
 	};
@@ -566,12 +579,22 @@ function initMap(string) {
             }		
         });
         Plotly.newPlot("map-canvas", data, layout);
+
 		
 		map.style.top = String(600) + "px";
-	    map.style.left = String(150) + "px";
+	    map.style.left = String(map_rounded.offsetLeft) + "px";
+		map.style.width = String(map_rounded.clientWidth) + "px";
 
-		graphX = String(window.innerWidth/2 - 150) + "px";
-		graphY = String(800) + "px";
+		const childDivs = map.querySelectorAll('div');
+
+		// Set maxWidth for each child div
+		childDivs.forEach(function(div) {
+		div.style.maxWidth = String(map_rounded.clientWidth) + "px"; // Replace '400px' with your desired value
+		});
+
+
+		graphX = String(map_rounded.offsetLeft + map.width/2 + 50) + "px";
+		graphY = String(950) + "px";
 
 		//Event listner for click on map (aka marker event listner)
 		map.on('plotly_click', function(clickdata){
@@ -596,7 +619,9 @@ function initMap(string) {
 
 
 window.onload=function() {
-	document.getElementById("graph").style.background = "#FFFFFF";
+	var graph = document.getElementById("graph"); 
+	graph.style.background = "#FFFFFF";
+
 	initMap("");
 	SetUnitMap();
 	SetD3SUnitMap();
