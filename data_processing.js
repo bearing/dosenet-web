@@ -29,6 +29,42 @@ calibMap.set('air travel/hr',[0.420168067*0.036,0.420168067*0.0000427]);
 calibMap.set('cigarettes/hr',[0.00833333335*0.036,0.00833333335*0.0000427]);
 calibMap.set('X-rays/hr',[0.2*0.036,0.2*0.0000427]);
 
+function checkDataValid(data, div) {
+  let i = 0;  
+  var allZeroes = true;
+
+  for (i = 0; i < data.length; i+=1) {
+    let j = 0;
+    if (data[i].length > 0) {
+      for (j = 0; j < data[i].length; j+= 1) {
+        if (data[i][j] != 0) {     
+          allZeroes = false;      
+        } 
+      }
+    }
+    else {
+      if (data[i] != 0) {
+          allZeroes = false;   
+      }  
+    }
+  }
+    
+  if (allZeroes) {
+    if (jQuery("div:contains('BEWARE: The data on this page may not be accurate.')").length == 0) {
+      document.getElementById(div).innerHTML += "\n BEWARE: The data on this page may not be accurate.";
+      document.getElementById(div).innerHTML.color = "#aaf3f3";
+      document.getElementById(div).innerHTML.size = "15px";
+      document.getElementById(div).style.height = "400px";
+      document.getElementById(div).style.backgroundColor = "#FFFFFF";
+    }
+  }  
+  else {
+    if (jQuery("div:contains('BEWARE: The data on this page may not be accurate.')").length == 0) {
+      document.getElementById(div).innerHTML + "";
+    }
+  }
+}
+ 
 function componentToHex(c) {
    var hex = c.toString(16);
    return hex.length == 1 ? "0" + hex : hex;
@@ -684,28 +720,573 @@ function darkenColor(colorStr) {
   return 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')';
 }
 
-function barChartPlotter(e) {
-  var ctx = e.drawingContext;
-  var points = e.points;
-  var y_bottom = e.dygraph.toDomYCoord(0);
+function plot_bar_chart(location_averages, locations, dose, div) {
+  var title_text = "Average dose rate over last month";
+  var y_text = dose;
+  var npoints = locations.length;
+  if ( dose=="&microSv/hr" ) { y_text = 'µSv/hr'; }
 
-  ctx.fillStyle = darkenColor(e.color);
+  var ydata = [];
+  var error = [];
 
-  var sep = points[1].canvasx - points[0].canvasx;
-  var bar_width = Math.floor(2.0 / 3 * sep);
-
-  // Do the actual plotting.
-  for (var i = 0; i < points.length; i++) {
-    var p = points[i];
-    var center_x = p.canvasx;
-
-    ctx.fillRect(center_x - bar_width / 2, p.canvasy,
-        bar_width, y_bottom - p.canvasy);
-
-    ctx.strokeRect(center_x - bar_width / 2, p.canvasy,
-        bar_width, y_bottom - p.canvasy);
+  for (let i = 0; i < location_averages.length; i+= 1) {
+    ydata.push(location_averages[i][1][0]);
+    error.push(location_averages[i][1][1]);
   }
+
+  checkDataValid(ydata, div);
+
+  // Prepare the data for Plotly
+  var data = [{
+      x: locations,
+      y: ydata,
+      error_y: {
+                type: 'data',
+                array: error,
+                visible: true
+      },
+      type: 'bar'
+  }];
+  
+  var layout = {
+      title: title_text,
+      yaxis: {
+          title: y_text,
+          autorange: true,
+          zeroline: true
+      },
+      xaxis: {
+          title: 'Location',
+      },
+      margin: {
+                l: 100,
+                r: 70,
+                t: 70,
+                b: 200,
+                pad: 10
+              }
+  };
+  
+  Plotly.newPlot(div, data, layout);
 }
+
+function plot_spectra(location,spectra_input,time,div) {
+    var ydata = [];
+    var error = [];
+    var timedata = [];
+
+    for (let i = 0; i < spectra_input.length; i+= 1) {
+      ydata.push(spectra_input[i][1][0]);
+      error.push(spectra_input[i][1][1]);
+      timedata.push(spectra_input[i][0]);
+    }
+
+    checkDataValid(ydata, div);
+
+    var data = [{
+            x: timedata,
+            y: ydata,
+            error_y: {
+                type: 'data',
+                array: error,
+                visible: true
+            },
+            mode: 'lines',
+            type: 'scatter',
+          }];
+  
+      var layout = {
+            title: 'Integrated spectrum',
+            xaxis: {title: "Energy (keV)"},
+            autosize: true,
+            yaxis: {hoverformat: '.4r', 
+                    title: "Counts", 
+                    type: 'log', 
+                    autorange: true},
+            margin: {
+                  l: 100,
+                  r: 70,
+                  t: 70,
+                  b: 100,
+                  pad: 10
+              },
+      };
+
+      Plotly.newPlot(div, data, layout);
+  }
+  
+function plot_data(location,data_input,unit,timezone,d_labels,time,
+                     div,range,show_title = true,show_x = true) {
+    var title_text = location;
+    if( !show_title ) title_text = null;
+    var y_text = unit;
+    
+    // add x-label to beginning of data label array
+    var time_label = 'Time ('+timezone+')';
+    d_labels.unshift(time_label);
+    if( !show_x ) time_label = null;
+    if( time=="All" ) { title_text = 'All data for ' + title_text; }
+
+    if (y_text.indexOf('&') > -1) {
+      var index = y_text.indexOf('&')
+      y_text = y_text.substring(0, index) + "\u00B5"	+ y_text.substring(index + 1);
+    }
+
+    if (y_text === "All PM concentrations") {
+      var aq1 = [];
+      var error1 = [];
+      var timedata = [];
+      for (let i = 0; i < data_input.length; i+= 1) {
+        aq1.push(data_input[i][1][0]);
+        error1.push(data_input[i][1][1]);
+        timedata.push(data_input[i][0]);
+      }
+      checkDataValid(aq1, div);
+
+      var aq2 = [];
+      var error2 = [];
+      for (let i = 0; i < data_input.length; i+= 1) {
+        aq2.push(data_input[i][2][0]);
+        error2.push(data_input[i][2][1]);
+      }
+      checkDataValid(aq2, div);
+
+      var aq3 = [];
+      var error3 = [];
+      for (let i = 0; i < data_input.length; i+= 1) {
+        aq3.push(data_input[i][3][0]);
+        error3.push(data_input[i][3][1]);
+      }
+      checkDataValid(aq3, div);
+      
+      var line1 = {
+        x: timedata,
+        y: aq1, 
+        error_y: {
+            type: 'data',
+            array: error1,
+            visible: true
+          },
+        mode: 'markers',
+        type: 'scatter',
+        name: "PM 1",
+      };
+
+      var line2 = {
+        x: timedata,
+        y: aq2, 
+        error_y: {
+            type: 'data',
+            array: error2,
+            visible: true
+          },
+        mode: 'markers',
+        type: 'scatter',
+        name: "PM 2.5",
+      };
+
+      var line3 = {
+        x: timedata,
+        y: aq3, 
+        error_y: {
+            type: 'data',
+            array: error3,
+            visible: true
+          },
+        mode: 'markers',
+        type: 'scatter',
+        name: "PM 10",
+      };
+
+      var data = [line1, line2, line3];
+
+    }
+    else {
+      var ydata = [];
+      var error = [];
+      var timedata = [];
+      for (let i = 0; i < data_input.length; i+= 1) {
+        ydata.push(data_input[i][1][0]);
+        error.push(data_input[i][1][1]);
+        timedata.push(data_input[i][0]);
+      }
+      checkDataValid(ydata, div);
+    
+
+      var data = [
+          {
+            x: timedata,
+            y: ydata,
+          error_y: {
+            type: 'data',
+            array: error,
+            visible: true
+          },
+            mode: 'markers',
+        type: 'scatter',
+          }];
+      }
+  
+      var layout = {
+            title: title_text,
+            
+            xaxis: {title: time_label},
+            yaxis: {hoverformat: '.3r', 
+                    title: y_text},
+            autosize:true,
+            margin: {
+                  l: 100,
+                  r: 70,
+                  t: 70,
+                  b: 100,
+                  pad: 10
+            },
+      };
+
+      Plotly.newPlot(div, data, layout);
+  }
+
+function plot_d3s_data(location,data_input,dose,timezone,data_labels,time,div) {
+  //Function not used, uses Dygraph instead of Plotly
+
+  var title_text = location;
+  var y_text = dose;
+  // add x-label to beginning of data label array
+  time_label = 'Time ('+timezone+')';
+  data_labels.unshift(time_label);
+  if( time=="All" ) { title_text = 'All data for ' + title_text; }
+
+  g = new Dygraph(
+    // containing div
+    document.getElementById(div),
+    data_input,
+    { title: title_text,
+      errorBars: true,
+      connectSeparatedPoints: false,
+      drawPoints: true,
+      pointSize: 3,
+      showRangeSelector: false,
+      sigFigs: 3,
+      ylabel: y_text,
+      xlabel: data_labels[0],
+      labels: data_labels,
+      strokeWidth: 0.0,
+      highlightCircleSize: 5,
+      plotter: [
+        singleErrorPlotter,
+        Dygraph.Plotters.linePlotter
+        ],
+      axes: {
+        y: {
+              //reserveSpaceLeft: 2,
+              axisLabelFormatter: function(x) {
+                                          var shift = Math.pow(10, 5);
+                                          return Math.round(x * shift) / shift;
+                                        }
+           },
+      }
+    }
+  );
+}
+
+function add_data_string(data,location) {
+  data_string_map.set(location,data);
+}
+
+function process_urls(url_array,locations) {
+  var csv_get_done = [];
+  jQuery.each(url_array,function(i,url) {
+    csv_get_done.push(jQuery.get(url, function(data) {
+      add_data_string(data,locations[i]);
+    }, dataType='text'));
+  });
+  return csv_get_done;
+}
+
+function get_key_array(map) {
+  var key_array = [];
+  map.forEach( function(value, key, map) {
+    key_array.push(key);
+  });
+  return key_array;
+}
+
+function get_bar_chart(url_array,locations,dose,div) {
+  data_string_map.clear();
+  var location_averages = [];
+  csv_get_done = process_urls(url_array,locations);
+  $ = jQuery.noConflict();
+  jQuery.when.apply($, csv_get_done).then( function() {
+    var return_locations = get_key_array(data_string_map);
+    location_averages = get_averages(data_string_map,dose);
+    sub_locations = remove_zeros(return_locations,location_averages)
+    plot_bar_chart(sub_locations[1],sub_locations[0],dose,div);
+  });
+}
+
+function get_all_data(url_array,locations,dose,time,div) {
+  data_string_map.clear();
+  csv_get_done = process_urls(url_array,locations);
+  $ = jQuery.noConflict();
+  jQuery.when.apply($, csv_get_done).then( function() {
+    var return_locations = get_key_array(data_string_map);
+    get_colors(return_locations);
+    colorMap.forEach( function(color, location, colorMap ) {
+      document.getElementById(location+'_div').style.color = color;
+      document.getElementById(location).checked = true;
+    });
+    var data_input = [];
+    data_input = process_all_data(data_string_map,dose,time);
+    if (data_input.length === 0) {
+      if (time === "hour") {
+        time = "day";
+        url = url.replace("hour", "day");
+        get_all_data(url_array,locations,dose,time,div);
+        return;
+      }
+      else if (time === "day") {
+        time = "week";
+        url = url.replace("day", "week");
+        get_all_data(url_array,locations,dose,time,div);
+        return;
+      }
+      else if (time === "week") {
+        time = "month";
+        url = url.replace("week", "month");
+        get_all_data(url_array,locations,dose,time,div);
+        return;
+      }
+    }
+    
+    plot_data("All locations",data_input,dose,"local time zone",return_locations,time,div);
+    g.updateOptions({
+      colors: colors,
+    });
+  });
+}
+
+function data_reset(){
+  start_date = new Date();
+  end_date = new Date();
+  nentries = 0;
+}
+
+function get_aq_data(url,location,timezone,pm,time,div,range) {
+  jQuery.get(url, function (data) {
+     var data_input = [];
+     data_reset();
+     get_time_range(data,time,timezone);
+     var data_label = [];
+     var y_label = "";
+     if( pm=="All Plots") {
+       data_input = process_all_aq_csv(data,timezone);
+       if (data_input.length === 0) {
+        if (time === "hour") {
+          time = "day";
+          url = url.replace("hour", "day");
+          get_aq_data(url,location,timezone,pm,time,div,range);
+          return;
+        }
+        else if (time === "day") {
+          time = "week";
+          url = url.replace("day", "week");
+          get_aq_data(url,location,timezone,pm,time,div,range);
+          return;
+        }
+        else if (time === "week") {
+          time = "month";
+          url = url.replace("week", "month");
+          get_aq_data(url,location,timezone,pm,time,div,range);
+          return;
+        }
+     }
+       data_label.push("1.0 PM");
+       data_label.push("2.5 PM");
+       data_label.push("10 PM");
+       y_label = "All PM concentrations";
+     }
+     else {
+       data_input = process_aq_csv(data,pm,timezone);
+       if( pm=="All Plots") {
+        data_input = process_all_aq_csv(data,timezone);
+        if (data_input.length === 0) {
+         if (time === "hour") {
+           time = "day";
+           url = url.replace("hour", "day");
+           get_aq_data(url,location,timezone,pm,time,div,range);
+           return;
+         }
+         else if (time === "day") {
+           time = "week";
+           url = url.replace("day", "week");
+           get_aq_data(url,location,timezone,pm,time,div,range);
+           return;
+         }
+         else if (time === "week") {
+           time = "month";
+           url = url.replace("week", "month");
+           get_aq_data(url,location,timezone,pm,time,div,range);
+           return;
+         }
+       }
+      }
+       data_label.push(pm);
+       y_label = pm + " conentration";
+     }
+     plot_data(location,data_input,y_label,timezone,data_label,time,div,range);
+  },dataType='text');
+}
+
+function get_weather_data(url,location,timezone,type,time,div,range,
+                          show_title,show_x) {
+  jQuery.get(url, function (data) {
+     var data_input = [];
+     data_reset();
+     get_time_range(data,time,timezone);
+     data_input = process_weather_csv(data,type,timezone);
+     if (data_input.length === 0) {
+        if (time === "hour") {
+          time = "day";
+          url = url.replace("hour", "day");
+          get_weather_data(url,location,timezone,type,time,div,range,
+            show_title,show_x);
+          return;
+        }
+        else if (time === "day") {
+          time = "week";
+          url = url.replace("day", "week");
+          get_weather_data(url,location,timezone,type,time,div,range,
+            show_title,show_x);
+          return;
+        }
+        else if (time === "week") {
+          time = "month";
+          url = url.replace("week", "month");
+          get_weather_data(url,location,timezone,type,time,div,range,
+            show_title,show_x);
+          return;
+        }
+     }
+     
+     var labels = [];
+     if( type == "Temperature" ) type += " (C)";
+     if( type == "Pressure" ) type += " (hPa)";
+     if( type == "Humidity" ) type += " (%)";
+     labels.push(type);
+     plot_data(location,data_input,type,timezone,labels,time,div,range,
+               show_title,show_x);
+  },dataType='text');
+}
+
+function get_co2_data(url,location,timezone,time,div,range) {
+  jQuery.get(url, function (data) {
+     var data_input = [];
+     data_reset();
+     get_time_range(data,time,timezone);
+     data_input = process_adc_csv(data,"CO2",timezone);
+     if (data_input.length === 0) {
+      if (time === "hour") {
+        time = "day";
+        url = url.replace("hour", "day");
+        get_co2_data(url,location,timezone,time,div,range);
+        return;
+      }
+      else if (time === "day") {
+        time = "week";
+        url = url.replace("day", "week");
+        get_co2_data(url,location,timezone,time,div,range);
+        return;
+      }
+      else if (time === "week") {
+        time = "month";
+        url = url.replace("week", "month");
+        get_co2_data(url,location,timezone,time,div,range);
+        return;
+      }
+    }
+     var labels = [];
+     labels.push("CO2 (ppm)");
+     plot_data(location,data_input,"CO2 (ppm)",timezone,labels,time,div,range);
+  },dataType='text');
+}
+
+function get_data(url,location,timezone,dose,time,div,range) {
+  jQuery.get(url, function (data) {
+     var data_input = []; // Clear any old data out before filling!
+     data_reset();
+     get_time_range(data,time,timezone);
+     data_input = process_time_csv(data,dose);
+     if (data_input.length === 0) {
+      if (time === "hour") {
+        time = "day";
+        url = url.replace("hour", "day");
+        get_data(url,location,timezone,dose,time,div,range)
+        return;
+      }
+      else if (time === "day") {
+        time = "week";
+        url = url.replace("day", "week");
+        get_data(url,location,timezone,dose,time,div,range)
+        return;
+      }
+      else if (time === "week") {
+        time = "month";
+        url = url.replace("week", "month");
+        get_data(url,location,timezone,dose,time,div,range)
+        return;
+      }
+    }
+     var data_label = [];
+     if ( dose=="&microSv/hr" ) { data_label.push("µSv/hr"); }
+     else data_label.push(dose);
+     plot_data(location,data_input,dose,timezone,data_label,time,div,range);
+     plot_data(location,data_input,dose,timezone,data_label,time,div,range);
+ },dataType='text');
+}
+
+function get_d3s_data(url,location,timezone,dose,time,div,range) {
+  jQuery.get(url, function (data) {
+     var data_input = []; // Clear any old data out before filling!
+     data_reset();
+     get_time_range(data,time,timezone);
+     data_input = process_d3s_csv(data,dose);
+     if (data_input.length === 0) {
+      if (time === "hour") {
+        time = "day";
+        url = url.replace("hour", "day");
+        get_d3s_data(url,location,timezone,dose,time,div,range)
+        return;
+      }
+      else if (time === "day") {
+        time = "week";
+        url = url.replace("day", "week");
+        get_d3s_data(url,location,timezone,dose,time,div,range)
+        return;
+      }
+      else if (time === "week") {
+        time = "month";
+        url = url.replace("week", "month");
+        get_d3s_data(url,location,timezone,dose,time,div,range)
+        return;
+      }
+    }
+     var data_label = [];
+     if ( dose=="&microSv/hr" ) { data_label.push("ÂµSv/hr"); }
+     else data_label.push(dose);
+     plot_data(location,data_input,dose,timezone,data_label,time,div,range);
+   },dataType='text');
+}
+
+function get_d3s_spectra(url,location,time,div) {
+  jQuery.get(url, function(data) {
+    var data_input = [];
+    data_input = process_d3s_spectrum(data);
+    plot_spectra(location,data_input,time,div);
+  },dataType='text');
+}
+
+/*  Old functions using Dygraph, still works; kept in case its useful
+
 
 function plot_bar_chart(location_averages,locations,dose,div) {
   var title_text = "Average dose rate over last month";
@@ -811,189 +1392,4 @@ function plot_data(location,data_input,unit,timezone,d_labels,time,
     }
   );
 }
-
-function plot_d3s_data(location,data_input,dose,timezone,data_labels,time,div) {
-  var title_text = location;
-  var y_text = dose;
-  // add x-label to beginning of data label array
-  time_label = 'Time ('+timezone+')';
-  data_labels.unshift(time_label);
-  if( time=="All" ) { title_text = 'All data for ' + title_text; }
-
-  g = new Dygraph(
-    // containing div
-    document.getElementById(div),
-    data_input,
-    { title: title_text,
-      errorBars: true,
-      connectSeparatedPoints: false,
-      drawPoints: true,
-      pointSize: 3,
-      showRangeSelector: false,
-      sigFigs: 3,
-      ylabel: y_text,
-      xlabel: data_labels[0],
-      labels: data_labels,
-      strokeWidth: 0.0,
-      highlightCircleSize: 5,
-      plotter: [
-        singleErrorPlotter,
-        Dygraph.Plotters.linePlotter
-        ],
-      axes: {
-        y: {
-              //reserveSpaceLeft: 2,
-              axisLabelFormatter: function(x) {
-                                          var shift = Math.pow(10, 5);
-                                          return Math.round(x * shift) / shift;
-                                        }
-           },
-      }
-    }
-  );
-}
-
-function add_data_string(data,location) {
-  data_string_map.set(location,data);
-}
-
-function process_urls(url_array,locations) {
-  var csv_get_done = [];
-  $.each(url_array,function(i,url) {
-    csv_get_done.push($.get(url, function(data) {
-      add_data_string(data,locations[i]);
-    }, dataType='text'));
-  });
-  return csv_get_done;
-}
-
-function get_key_array(map) {
-  var key_array = [];
-  map.forEach( function(value, key, map) {
-    key_array.push(key);
-  });
-  return key_array;
-}
-
-function get_bar_chart(url_array,locations,dose,div) {
-  data_string_map.clear();
-  var location_averages = [];
-  csv_get_done = process_urls(url_array,locations);
-  $.when.apply($, csv_get_done).then( function() {
-    var return_locations = get_key_array(data_string_map);
-    location_averages = get_averages(data_string_map,dose);
-    sub_locations = remove_zeros(return_locations,location_averages)
-    plot_bar_chart(sub_locations[1],sub_locations[0],dose,div);
-  });
-}
-
-function get_all_data(url_array,locations,dose,time,div) {
-  data_string_map.clear();
-  csv_get_done = process_urls(url_array,locations);
-  $.when.apply($, csv_get_done).then( function() {
-    var return_locations = get_key_array(data_string_map);
-    get_colors(return_locations);
-    colorMap.forEach( function(color, location, colorMap ) {
-      document.getElementById(location+'_div').style.color = color;
-      document.getElementById(location).checked = true;
-    });
-    var data_input = [];
-    data_input = process_all_data(data_string_map,dose,time);
-    plot_data("All locations",data_input,dose,"local time zone",return_locations,time,div);
-    g.updateOptions({
-      colors: colors,
-    });
-  });
-}
-
-function data_reset(){
-  start_date = new Date();
-  end_date = new Date();
-  nentries = 0;
-}
-
-function get_aq_data(url,location,timezone,pm,time,div,range) {
-  $.get(url, function (data) {
-     var data_input = [];
-     data_reset();
-     get_time_range(data,time,timezone);
-     var data_label = [];
-     var y_label = "";
-     if( pm=="All Plots") {
-       data_input = process_all_aq_csv(data,timezone);
-       data_label.push("1.0 PM");
-       data_label.push("2.5 PM");
-       data_label.push("10 PM");
-       y_label = "All PM concentrations";
-     }
-     else {
-       data_input = process_aq_csv(data,pm,timezone);
-       data_label.push(pm);
-       y_label = pm + " conentration";
-     }
-     plot_data(location,data_input,y_label,timezone,data_label,time,div,range);
-  },dataType='text');
-}
-
-function get_weather_data(url,location,timezone,type,time,div,range,
-                          show_title,show_x) {
-  $.get(url, function (data) {
-     var data_input = [];
-     data_reset();
-     get_time_range(data,time,timezone);
-     data_input = process_weather_csv(data,type,timezone);
-     var labels = [];
-     if( type == "Temperature" ) type += " (C)";
-     if( type == "Pressure" ) type += " (hPa)";
-     if( type == "Humidity" ) type += " (%)";
-     labels.push(type);
-     plot_data(location,data_input,type,timezone,labels,time,div,range,
-               show_title,show_x);
-  },dataType='text');
-}
-
-function get_co2_data(url,location,timezone,time,div,range) {
-  $.get(url, function (data) {
-     var data_input = [];
-     data_reset();
-     get_time_range(data,time,timezone);
-     data_input = process_adc_csv(data,"CO2",timezone);
-     var labels = [];
-     labels.push("CO2 (ppm)");
-     plot_data(location,data_input,"CO2 (ppm)",timezone,labels,time,div,range);
-  },dataType='text');
-}
-
-function get_data(url,location,timezone,dose,time,div,range) {
- $.get(url, function (data) {
-     var data_input = []; // Clear any old data out before filling!
-     data_reset();
-     get_time_range(data,time,timezone);
-     data_input = process_time_csv(data,dose);
-     var data_label = [];
-     if ( dose=="&microSv/hr" ) { data_label.push("µSv/hr"); }
-     else data_label.push(dose);
-     plot_data(location,data_input,dose,timezone,data_label,time,div,range);
- },dataType='text');
-}
-
-function get_d3s_data(url,location,timezone,dose,time,div,range) {
-  $.get(url, function (data) {
-     var data_input = []; // Clear any old data out before filling!
-     data_reset();
-     get_time_range(data,time,timezone);
-     data_input = process_d3s_csv(data,dose);
-     var data_label = [];
-     if ( dose=="&microSv/hr" ) { data_label.push("ÂµSv/hr"); }
-     else data_label.push(dose);
-     plot_data(location,data_input,dose,timezone,data_label,time,div,range);
-   },dataType='text');
-}
-
-function get_d3s_spectra(url,location,time,div) {
-  $.get(url, function(data) {
-    var data_input = [];
-    data_input = process_d3s_spectrum(data);
-    plot_spectra(location,data_input,time,div);
-  },dataType='text');
-}
+  */
